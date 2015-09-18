@@ -31,8 +31,9 @@ function Get-LinkedReleaseNotes($vssEndpoint, $comments, $workItems) {
 	
 	$releaseNotes = ""
 	$nl = "`r`n`r`n"
+    Write-Host $env:BUILD_REPOSITORY_PROVIDER
 	if ($comments -eq $true) {
-		if ($env:BUILD_REPOSITORY_PROVIDER -eq "Tfvc") {
+		if ($env:BUILD_REPOSITORY_PROVIDER -eq "Tfvc" -or $env:BUILD_REPOSITORY_PROVIDER -eq "TfsVersionControl") {
 			Write-Host "Adding changeset comments to release notes"
 			$releaseNotes += "**Changeset Comments:**$nl"
 			$relatedChanges.value | ForEach-Object {$releaseNotes += "* [$($_.id) - $($_.author.displayName)]($(ChangesetUrl $_.location)): $($_.message)$nl"}
