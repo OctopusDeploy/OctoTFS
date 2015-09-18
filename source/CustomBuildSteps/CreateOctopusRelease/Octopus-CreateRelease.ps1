@@ -26,7 +26,7 @@ function Get-LinkedReleaseNotes($vssEndpoint, $comments, $workItems) {
 	
 	$changesUri = "$($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)$($env:SYSTEM_TEAMPROJECTID)/_apis/build/builds/$($env:BUILD_BUILDID)/changes"
 	$headers = @{Authorization = "Bearer $personalAccessToken"}
-	$relatedChanges = (Invoke-WebRequest -Uri $changesUri -Headers $headers -UseBasicParsing) | ConvertFrom-Json
+	$relatedChanges = (Invoke-WebRequest -Uri $changesUri -Headers $headers -UseBasicParsing).Content | ConvertFrom-Json
 	Write-Host "Related Changes = $relatedChanges"
 	
 	$releaseNotes = ""
