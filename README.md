@@ -8,10 +8,10 @@ Team Build Preview Custom Steps
 
 Custom Build Steps for [Team Build vNext](http://aka.ms/tfbuild)
 
-For usage, see the Build Steps [Readme](source/CustomBuildSteps)
+For usage, see the Build Steps [Readme](source/VSTSExtensions)
 
 **Build Steps:**
-* [Create Octopus Release](source/CustomBuildSteps/CreateOctopusRelease)
+* [Create Octopus Release](source/VSTSExtensions/OctopusBuildTasks/CreateOctopusRelease/)
 
 Build PowerShell Scripts
 ------------------------
