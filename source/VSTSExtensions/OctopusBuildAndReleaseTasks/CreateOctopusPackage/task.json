@@ -1,0 +1,128 @@
+{
+  "id": "14806320-0adc-11e6-90be-c7575b8e7061",
+  "name": "OctopusCreatePackage",
+  "friendlyName": "Create Octopus Package",
+  "description": "Create a Package with OctoPack",
+  "category": "Package",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Octopus Deploy",
+  "version": {
+    "Major": "0",
+    "Minor": "2",
+    "Patch": "23"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "groups": [
+    {
+      "name": "releasenotes",
+      "displayName": "Release Notes",
+      "isExpanded": true
+    },
+    {
+      "name": "publishdetails",
+      "displayName": "Publish Details",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "packageId",
+      "type": "string",
+      "label": "Package Id",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Id of package to be created"
+    },
+    {
+      "name": "packageVersion",
+      "type": "string",
+      "label": "Package Version",
+      "defaultValue": "$(Build.BuildNumber)",
+      "required": true,
+      "helpMarkDown": "Version of package to be created"
+    },
+    {
+      "name": "directoryToFind",
+      "type": "string",
+      "label": "Directory",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Directory in build output that will be packaged"
+    },
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "Package type",
+      "defaultValue": "zip",
+      "required": true,
+      "options": {
+        "Zip": "Zip",
+        "NuPkg": "NuPkg"
+      }
+    },
+    {
+      "name": "additionalOctopackArguments",
+      "type": "string",
+      "label": "Additional OctoPack arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional arguments assed to octo.exe pack call. See [here](http://docs.octopusdeploy.com/display/OD/Using+Octo.exe#UsingOcto.exe-Usage) for more information."
+    },
+    {
+      "name": "WorkItemReleaseNotes",
+      "type": "boolean",
+      "label": "Include Work Items",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Whether to include linked Work Item Titles in Octopus Release notes",
+      "groupName": "releasenotes"
+    },
+    {
+      "name": "ChangesetCommentReleaseNotes",
+      "type": "boolean",
+      "label": "Include Changeset Comments",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Whether to include linked Changeset comments in Octopus Release notes",
+      "groupName": "releasenotes"
+    },
+    {
+      "name": "CustomReleaseNotes",
+      "type": "string",
+      "label": "Custom Notes",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Custom notes appended to Octopus Release notes",
+      "groupName": "releasenotes"
+    },
+    {
+      "name": "pushPackage",
+      "type": "boolean",
+      "label": "Push Package",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Push package to Octopus Deploy package feed",
+      "groupName": "publishdetails"
+    },
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "Octopus Deploy server",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "pushPackage = true",
+      "groupName": "publishdetails"
+    }    
+  ],
+  "instanceNameFormat": "Create Octopus Package: $(packageId)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Octopus-CreatePackage.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

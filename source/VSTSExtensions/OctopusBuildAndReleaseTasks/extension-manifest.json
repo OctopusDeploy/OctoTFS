@@ -17,7 +17,8 @@
     "tags": [
         "octopus",
         "octopus deploy",
-        "deploy"
+        "deploy",
+        "package"
     ],
     "icons": {
         "default": "extension-icon.png"
@@ -54,6 +55,9 @@
     },
     "files": [
         {
+            "path": "CreateOctopusPackage"
+        },
+        {
             "path": "CreateOctopusRelease"
         },
         {
@@ -66,6 +70,16 @@
         "vso.build_execute"
     ],
     "contributions": [
+        {
+            "id": "octopus-create-package",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "CreateOctopusPackage"
+            }
+        },
         {
             "id": "octopus-create-release",
             "type": "ms.vss-distributed-task.task",
