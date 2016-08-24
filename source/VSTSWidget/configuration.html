@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="sdk/scripts/VSS.SDK.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="scripts/configuration.js"></script>
+</head>
+<body>
+<div class="widget-configuration">
+    <div class="single-line-text-input">
+        <label>Octopus Deploy url</label>
+        <input id="octopusUrl" type="text"/>
+    </div>
+    <div class="single-line-text-input">
+        <label>Octopus Deploy API key</label>
+        <input id="octopusApiKey" type="text"/>
+    </div>
+    <div class="dropdown">
+        <label>Environment </label>
+        <div class="wrapper">
+            <select id="environments-dropdown">
+                <option value="" selected disabled hidden>Please select an environment</option>
+            </select>
+        </div>
+    </div>
+    <div class="dropdown">
+        <label>Project </label>
+        <div class="wrapper">
+            <select id="projects-dropdown">
+                <option value="" selected disabled hidden>Please select a project</option>
+            </select>
+        </div>
+    </div>
+</div>
+</body>
+</html>
