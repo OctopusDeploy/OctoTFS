@@ -81,7 +81,7 @@ function Create-ReleaseNotes($linkedItemReleaseNotes) {
 	$projectName = $env:SYSTEM_TEAMPROJECT	#works
 	#$buildUri = $env:BUILD_BUILDURI #works but is a vstfs:/// link
 	#Note: This URL will undoubtedly change in the future
-	$buildUri = "$($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)$projectName/_BuildvNext#_a=summary&buildId=$buildId"
+	$buildUri = "$($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)$projectName/_build#_a=summary&buildId=$buildId"
 	$buildName = $env:BUILD_DEFINITIONNAME	#works
 	$repoName = $env:BUILD_REPOSITORY_NAME	#works
 	#$repoUri = $env:BUILD_REPOSITORY_URI #nope :(
