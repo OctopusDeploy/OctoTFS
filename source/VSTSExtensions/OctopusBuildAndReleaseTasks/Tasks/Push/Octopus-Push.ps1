@@ -7,11 +7,18 @@ try {
 
     . .\Octopus-VSTS.ps1
 
+    $IgnorePullRequestMergeBuilds = Get-VstsInput -Name IgnorePullRequestMergeBuilds -AsBool
     $OctoConnectedServiceName = Get-VstsInput -Name OctoConnectedServiceName
     $ConnectedServiceName = Get-VstsInput -Name ConnectedServiceName
     $Packages = Get-VstsInput -Name Package -Require
     $AdditionalArguments = Get-VstsInput -Name AdditionalArguments
     $Replace = Get-VstsInput -Name Replace -AsBool
+
+    if( ${env:BUILD_SOURCEBRANCH}  -match "refs/pull/.*/merge$" -and [System.Convert]::ToBoolean($IgnorePullRequestMergeBuilds))
+    {
+        Write-Output "Skipping push step - Pull Request build detected (branch name: ${env:BUILD_SOURCEBRANCH})"
+        return
+    }
 
     # Get required parameters
 	if ([System.String]::IsNullOrWhiteSpace($OctoConnectedServiceName) -and [System.String]::IsNullOrWhiteSpace($ConnectedServiceName)) {
