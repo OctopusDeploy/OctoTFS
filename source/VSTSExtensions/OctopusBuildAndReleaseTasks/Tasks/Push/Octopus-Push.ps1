@@ -14,7 +14,7 @@ try {
     $AdditionalArguments = Get-VstsInput -Name AdditionalArguments
     $Replace = Get-VstsInput -Name Replace -AsBool
 
-    if( ${env:BUILD_SOURCEBRANCH}  -match "refs/pull/.*/merge$" -and [System.Convert]::ToBoolean($IgnorePullRequestMergeBuilds))
+    if( $IgnorePullRequestMergeBuilds -and ${env:BUILD_SOURCEBRANCH} -match "^refs/pull/.*/merge$")
     {
         Write-Output "Skipping push step - Pull Request build detected (branch name: ${env:BUILD_SOURCEBRANCH})"
         return
