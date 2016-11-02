@@ -64,6 +64,14 @@
             "required": false,
             "helpMarkDown": "Additional arguments to be supplied to Octo.exe. See [Octo.exe Command Line documentation](http://docs.octopusdeploy.com/display/OD/Pushing+packages) for available parameters.",
             "groupName": "advanced"
+        },
+        {
+          "name": "IgnorePullRequestMergeBuilds",
+          "type": "boolean",
+          "label": "Ignore Pull Request merge builds",
+          "defaultValue" : "True",
+          "required" : "False",
+          "helpMarkDown" : "Don't push on builds resulting from pull request merge builds (`refs/pull/*/merge` branch)"  
         }
     ],
     "instanceNameFormat": "Push Packages to Octopus",
