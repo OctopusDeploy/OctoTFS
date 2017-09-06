@@ -181,7 +181,7 @@ try {
     	$cmd = "$cmd --channel=`"$Channel`""
     }
     
-    Invoke-VstsTool -FileName $octoPath -Arguments  -RequireExitCodeZero
+    Invoke-VstsTool -FileName $octoPath -Arguments $cmd -RequireExitCodeZero
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
