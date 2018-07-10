@@ -32,12 +32,12 @@ try {
 
     # Call Octo.exe
     $octoPath = Get-OctoExePath
-    $Arguments = "promote-release --project=`"$ProjectName`" --from=`"$From`" --server=$octopusUrl $credentialParams $AdditionalArguments"
-    
+    $Arguments = "`"$octoPath`" promote-release --project=`"$ProjectName`" --from=`"$From`" --server=$octopusUrl $credentialParams $AdditionalArguments"
+
     if ($ShowProgress) {
        $Arguments += " --progress"
     }
-    
+
     if ($To) {
         ForEach($Environment in $To.Split(',').Trim()) {
             $Arguments = $Arguments + " --to=`"$Environment`""
@@ -56,8 +56,8 @@ try {
             $Arguments = $Arguments + " --tenanttag=`"$Tenant`""
 		}
 	}
-    
-    Invoke-VstsTool -FileName $octoPath -Arguments $Arguments -RequireExitCodeZero
+
+    Invoke-VstsTool -FileName "dotnet" -Arguments $Arguments -RequireExitCodeZero
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation

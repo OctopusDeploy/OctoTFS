@@ -19,7 +19,7 @@ try {
 
     # Call Octo.exe
     $octoPath = Get-OctoExePath
-    $Arguments = "push --server=$octopusUrl $credentialParams $AdditionalArguments"
+    $Arguments = "`"$octoPath`" push --server=$octopusUrl $credentialParams $AdditionalArguments"
 
     ForEach($Package in ($Packages.Split("`r`n|`r|`n").Trim())) {
         if (-not [string]::IsNullOrEmpty($Package)) {
@@ -34,7 +34,7 @@ try {
         $Arguments = $Arguments + " --replace-existing"
     }
 
-    Invoke-VstsTool -FileName $octoPath -Arguments $Arguments -RequireExitCodeZero
+    Invoke-VstsTool -FileName "dotnet" -Arguments $Arguments -RequireExitCodeZero
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation

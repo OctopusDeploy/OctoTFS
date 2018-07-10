@@ -16,7 +16,7 @@
         "Patch": 0
     },
     "demands": [
-        "DotNetFramework"
+        "DotNetCore"
     ],
     "minimumAgentVersion": "1.95.0",
     "groups": [
@@ -38,7 +38,7 @@
             "label": "Octopus Deploy Server",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Octopus Deploy server connection" 
+            "helpMarkDown": "Octopus Deploy server connection"
         },
         {
             "name": "Project",

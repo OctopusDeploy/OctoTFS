@@ -1,6 +1,6 @@
 # Returns a path to the Octo.exe file
 function Get-OctoExePath() {
-    return Join-Path $PSScriptRoot "Octo.exe"
+    return Join-Path $PSScriptRoot "Octo.dll"
 }
 
 # Returns the Octo.exe arguments for credentials

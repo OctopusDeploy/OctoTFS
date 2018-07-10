@@ -39,7 +39,7 @@ try {
 
     # Call Octo.exe
     $octoPath = Get-OctoExePath
-    $Arguments = "pack --id=`"$PackageId`" --format=$PackageFormat --version=$PackageVersion --outFolder=`"$OutputPath`" --basePath=`"$SourcePath`" --author=`"$NugetAuthor`" --title=`"$NugetTitle`" --description=`"$NugetDescription`" --releaseNotes=`"$NuGetReleaseNotes`" $releaseNotesFileArg --overwrite=$Overwrite"
+    $Arguments = "`"$octoPath`" pack --id=`"$PackageId`" --format=$PackageFormat --version=$PackageVersion --outFolder=`"$OutputPath`" --basePath=`"$SourcePath`" --author=`"$NugetAuthor`" --title=`"$NugetTitle`" --description=`"$NugetDescription`" --releaseNotes=`"$NuGetReleaseNotes`" $releaseNotesFileArg --overwrite=$Overwrite"
     if ($Include) {
        ForEach ($IncludePath in $Include.replace("`r", "").split("`n")) {
        $Arguments = $Arguments + " --include=`"$IncludePath`""
@@ -49,7 +49,7 @@ try {
         $Arguments = $Arguments + " --verbose"
     }
 
-    Invoke-VstsTool -FileName $octoPath -Arguments $Arguments -RequireExitCodeZero
+    Invoke-VstsTool -FileName "dotnet" -Arguments $Arguments -RequireExitCodeZero
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
