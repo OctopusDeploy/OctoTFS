@@ -27,8 +27,9 @@ interface Dictionary {
 }
 
 const RestClient = TypedRestClient.RestClient;
+const OctopurlsUrl = "https://g.octopushq.com";
 
-var octopurls = new RestClient("OctoTFS/Tasks",  "https://g.octopushq.com");
+var octopurls = new RestClient("OctoTFS/Tasks",  OctopurlsUrl);
 
 const applyTemplate = (dictionary: Dictionary, template: string) => {
     return Object.keys(dictionary).reduce((result, key) =>
@@ -63,12 +64,13 @@ function findOcto(rootFolder: string){
     return matches[0];
 }
 
-async function getOrDownloadOcto(option: DownloadOption): Promise<string>{
+async function getOrDownloadOcto(option: DownloadOption, download?: (option: DownloadOption) => Promise<string>): Promise<string>{
     var cachedToolPath = getLocalTool(option.version);
 
     if(!cachedToolPath){
         try{
-            let downloadPath = await tools.downloadTool(option.location);
+            console.log("Attempting to download octo cli");
+            let downloadPath = await (download !== undefined && download != null ? download(option) : tools.downloadTool(option.location));
             let toolPath = await extract(downloadPath);
 
             tools.debug(`Adding ${ToolName} ${option.version} to cache`);
@@ -92,6 +94,8 @@ async function getOrDownloadOcto(option: DownloadOption): Promise<string>{
 }
 
 async function resolvePublishedOctoVersion(version?: string): Promise<DownloadOption> {
+    console.log(`Attempting to contact ${OctopurlsUrl} to find latest CLI tools`);
+
     const response =  await octopurls.get<LatestResponse>("LatestTools");
 
     if(response.result === null || response.result === undefined){
@@ -124,4 +128,42 @@ function addToolToPath(toolPath: string){
     return toolPath;
 }
 
-export { resolvePublishedOctoVersion, getOrDownloadOcto, addToolToPath }
+async function getEmbeddedOcto(folderPath: string){
+
+    const versionPath = path.join(folderPath, "version.json");
+    const option = <DownloadOption>JSON.parse(await readFile(versionPath));
+    const tempDirectory = getAgentTempDirectory();
+
+    tasks.cp(folderPath, tempDirectory, "-rf");
+
+    if(!option)
+    {
+        throw "Could not resolve original download location of embedded Octo version";
+    }
+
+    return getOrDownloadOcto(option, () => {
+        return new Promise((resolve) => resolve(path.join(tempDirectory, path.basename(folderPath), path.basename(option.location))))
+    });
+}
+
+async function readFile(path: string, encoding = "utf8"): Promise<string>{
+    return new Promise<string>((resolve, reject) => {
+        fs.readFile(path, encoding, (err, data) =>{
+            if (err){
+                reject(err);
+            }else{
+                resolve(data);
+            }
+        });
+    });
+}
+
+function getAgentTempDirectory(){
+    let tempDirectory = tasks.getVariable('Agent.TempDirectory');
+    if (!tempDirectory) {
+        throw new Error('Agent.TempDirectory is not set');
+    }
+    return tempDirectory;
+}
+
+export { resolvePublishedOctoVersion, getOrDownloadOcto, addToolToPath, getEmbeddedOcto }

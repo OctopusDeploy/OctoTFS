@@ -18,18 +18,35 @@ function stringOption(value?: string): Option<string> {
     return isNullOrWhitespace(value) ? none : some(value);
 }
 
-export async function getOrInstallOctoCommandRunner(command: string) : Promise<Either<string, ToolRunner>>{
+export class OctoLauncher {
+    runner: ToolRunner;
+
+    constructor (runner: ToolRunner) {
+        this.runner = runner;
+    }
+
+    public launchOcto(configurations: Array<(tool: ToolRunner) => ToolRunner>) {
+        const options: any = { env: {"OCTOEXTENSION": process.env.EXTENSION_VERSION, ...process.env }};
+
+        const configure = configureTool(configurations);
+        configure(this.runner);
+
+        return this.runner.exec(options);
+    }
+}
+
+export async function getOrInstallOctoCommandRunner(command: string) : Promise<Either<string, OctoLauncher>>{
     //If we can't find octo then it hasn't been added as an installer task
     //or it hasn't been added to the path.
     let octo = getOctoCommandRunner(command);
     if (octo.isSome()){
-        return right(octo.value);
+        return right(new OctoLauncher(octo.value));
     }
 
     return resolvePublishedOctoVersion("latest")
     .then(getOrDownloadOcto)
     .then(addToolToPath)
-    .then(() => getOctoCommandRunner(command))
+    .then(() => getOctoCommandRunner(command).map(x => new OctoLauncher(x)))
     .then(fromOption("Unable to find or install octo."));
 }
 

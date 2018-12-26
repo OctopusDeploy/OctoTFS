@@ -227,6 +227,19 @@
                         "resultSelector": "jsonpath:$"
                     }
                 ],
+                "inputDescriptors": [
+                    {
+                        "id": "ignoreSslErrors",
+                        "name": "Ignore SSL Errors",
+                        "description": "Enable this option to ignore SSL errors when connecting to the Octopus server from the agent.",
+                        "inputMode": "checkbox",
+                        "isConfidential": false,
+                        "validation": {
+                            "isRequired": false,
+                            "dataType": "boolean"
+                        }
+                    }
+                ],
                 "authenticationSchemes": [
                     {
                         "type": "ms.vss-endpoint.endpoint-auth-scheme-token",

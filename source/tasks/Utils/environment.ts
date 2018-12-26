@@ -18,6 +18,7 @@ export interface BuildEnvironmentVariables{
     buildName: string;
     buildRepositoryName: string;
     buildRepositoryProvider: string;
+    buildRepositoryUri: string;
 }
 
 export interface SystemEnvironmentVariables{
@@ -33,8 +34,8 @@ export const getVstsEnvironmentVariables= () : VstsEnvironmentVariables =>{
     return {
         projectId: process.env["SYSTEM_TEAMPROJECTID"],
         projectName: process.env["SYSTEM_TEAMPROJECT"],
-        buildNumber: process.env["BUILD_BUILDNUMBER"],
-        buildId: process.env["BUILD_BUILDID"],
+        buildNumber: Number(process.env["BUILD_BUILDNUMBER"]),
+        buildId: Number(process.env["BUILD_BUILDID"]),
         buildName: process.env["BUILD_DEFINITIONNAME"],
         buildRepositoryName: process.env["BUILD_REPOSITORY_NAME"],
         releaseName: process.env["RELEASE_RELEASENAME"],
@@ -43,6 +44,7 @@ export const getVstsEnvironmentVariables= () : VstsEnvironmentVariables =>{
         teamCollectionUri: process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"],
         defaultWorkingDirectory: process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"],
         buildRepositoryProvider: process.env["BUILD_REPOSITORY_PROVIDER"],
+        buildRepositoryUri: process.env["BUILD_REPOSITORY_URI"]
     }
 }
 
@@ -112,10 +114,23 @@ export const getLinkedReleaseNotes = async (client: vsts.WebApi, includeComments
                 releaseNotes += changes.reduce((prev, current) => {
                     return prev + `* [${current.id} - ${current.author.displayName}](${getChangesetUrl(environment, current.location)}): ${current.message}${newLine}`;
                 }, `**Changeset Comments:**${newLine}`)
-            } else {
+            } else if (environment.buildRepositoryProvider === "TfsGit") {
+                /*
+                    TfsGit repo has a known URL that individual commits can be linked to,
+                    so the release notes have markdown URLs
+                 */
                 console.log("Adding commit message to release notes");
                 releaseNotes += changes.reduce((prev, current) => {
                     return prev + `* [${current.id} - ${current.author.displayName}](${getCommitUrl(environment, current)}): ${current.message}${newLine}`;
+                }, `**Commit Messages:${newLine}`);
+            } else {
+                /*
+                    This could be any other git repo like Git, GitHub, SVN etc. We don't know
+                    how to link to the commits here, so leave out the URLs.
+                 */
+                console.log("Adding commit message to release notes");
+                releaseNotes += changes.reduce((prev, current) => {
+                    return prev + `* ${current.id} - ${current.author.displayName}: ${current.message}${newLine}`;
                 }, `**Commit Messages:${newLine}`);
             }
         }

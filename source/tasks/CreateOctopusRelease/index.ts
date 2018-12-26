@@ -4,7 +4,6 @@ import {
     multiArgument,
     connectionArguments,
     includeArguments,
-    configureTool,
     flag,
     argumentEnquote,
     argumentIfSet
@@ -16,6 +15,7 @@ async function run() {
         const vstsConnection = utils.createVstsConnection(environmentVariables);
         const octoConnection = utils.getDefaultOctopusConnectionDetailsOrThrow();
 
+        const space = tasks.getInput("Space");
         const project = await utils.resolveProjectName(octoConnection, tasks.getInput("ProjectName", true))
         .then(x => x.value);
         const releaseNumber = tasks.getInput("ReleaseNumber");
@@ -40,7 +40,8 @@ async function run() {
             return utils.generateReleaseNotesContent(environmentVariables, linkedReleaseNotes, customReleaseNotes);
         },  environmentVariables.defaultWorkingDirectory);
 
-        const configure = configureTool([
+        const configure = [
+            argumentIfSet(argumentEnquote, "space", space),
             argumentEnquote("project", project),
             argumentIfSet(argumentEnquote, "releaseNumber", releaseNumber),
             argumentIfSet(argumentEnquote, "channel", channel),
@@ -52,11 +53,10 @@ async function run() {
             multiArgument(argumentEnquote, "tenanttag", deployForTenantTags),
             argumentEnquote("releaseNotesFile", realseNotesFile),
             includeArguments(additionalArguments)
-        ]);
+        ];
 
-        const code:Number = await octo.map(configure)
-            .getOrElseL((x) => { throw new Error(x); })
-            .exec();
+        const code:Number = await octo.map(x => x.launchOcto(configure))
+            .getOrElseL((x) => { throw new Error(x); });
 
         tasks.setResult(tasks.TaskResult.Succeeded, "Create octopus release succeeded with code " + code);
     }catch(err){

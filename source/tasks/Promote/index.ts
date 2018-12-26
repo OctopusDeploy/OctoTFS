@@ -4,14 +4,16 @@ import {
     multiArgument,
     connectionArguments,
     includeArguments,
-    configureTool,
     flag,
-    argumentEnquote
+    argumentEnquote,
+    argumentIfSet
 } from '../Utils/tool';
 
 async function run() {
     try {
         const connection = utils.getDefaultOctopusConnectionDetailsOrThrow();
+
+        const space = tasks.getInput("Space");
         const project = await utils.resolveProjectName(connection, tasks.getInput("Project", true))
         .then(x => x.value);
 
@@ -24,8 +26,8 @@ async function run() {
 
         const octo = await utils.getOrInstallOctoCommandRunner("promote-release");
 
-        const configure = configureTool([
-
+        const configure = [
+            argumentIfSet(argumentEnquote, "space", space),
             argumentEnquote("project", project),
             connectionArguments(connection),
             argumentEnquote("from", from),
@@ -34,11 +36,10 @@ async function run() {
             multiArgument(argumentEnquote, "tenanttag", deployForTenantTags),
             flag("progress", showProgress),
             includeArguments(additionalArguments)
-        ]);
+        ];
 
-        const code:Number = await octo.map(configure)
-            .getOrElseL((x) => { throw new Error(x); })
-            .exec();
+        const code:Number = await octo.map(x => x.launchOcto(configure))
+            .getOrElseL((x) => { throw new Error(x); });
 
         tasks.setResult(tasks.TaskResult.Succeeded, "Succeeded promoting release with code " + code);
     }catch(err){

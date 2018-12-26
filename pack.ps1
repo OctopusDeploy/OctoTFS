@@ -5,13 +5,38 @@ param (
     $environment,
     [Parameter(Mandatory=$true,HelpMessage="The three number version for this release")]
     [string]
-    $version
+    $version,
+    [string]
+    $basePath = $PSScriptRoot
 )
 
 $ErrorActionPreference = "Stop"
 
-$buildDirectoryPath = "$PSScriptRoot/dist"
+$buildDirectoryPath = "$basePath/dist"
 $buildArtifactsPath = "$buildDirectoryPath/Artifacts"
+
+function CleanNodeModules() {
+    $command = "node-prune.exe";
+
+    if ((Get-Command node-prune -ErrorAction SilentlyContinue) -eq $null)
+    {
+        $command = "$($env:GOPATH)\bin\node-prune.exe"
+
+        if(-Not (Test-Path $command)){
+            Write-Error "Install go and then install node-prune (https://github.com/tj/node-prune)"
+            Write-Error "go get github.com/tj/node-prune/cmd/node-prune"
+            Exit 1
+        }
+    }
+
+    Invoke-Expression "$command $($basePath)\dist\tasks\CreateOctopusRelease\node_modules"
+    Invoke-Expression "$command $($basePath)\dist\tasks\Deploy\node_modules"
+    Invoke-Expression "$command $($basePath)\dist\tasks\OctoCli\node_modules"
+    Invoke-Expression "$command $($basePath)\dist\tasks\OctoInstaller\node_modules"
+    Invoke-Expression "$command $($basePath)\dist\tasks\Pack\node_modules"
+    Invoke-Expression "$command $($basePath)\dist\tasks\Promote\node_modules"
+    Invoke-Expression "$command $($basePath)\dist\tasks\Push\node_modules"
+}
 
 function UpdateTfxCli() {
     Write-Host "Updating tfx-cli..."
@@ -70,7 +95,7 @@ function Get-ObjectMembers {
 
 function InstallTaskDependencies($workingDirectory) {
     $taskManifestFiles = Get-ChildItem $workingDirectory -Include "task.json" -Recurse
-    $dependencies = (ConvertFrom-JSON (Get-Content "./package.json" -Raw)).dependencies | Get-ObjectMembers | foreach { $dependencies="" } {$dependencies += "$($_.Key)@$($_.Value) "} {$dependencies}
+    $dependencies = (ConvertFrom-JSON (Get-Content "$basePath/package.json" -Raw)).dependencies | Get-ObjectMembers | foreach { $dependencies="" } {$dependencies += "$($_.Key)@$($_.Value) "} {$dependencies}
 
     foreach ($manifestFile in $taskManifestFiles){
         $directory = Split-Path -parent $manifestFile
@@ -89,7 +114,7 @@ function InstallTaskDependencies($workingDirectory) {
 }
 
 function Get-TaskId($envName, $taskName) {
-    $taskIds = ConvertFrom-Json -InputObject (Get-Content "task-ids.json" -Raw)
+    $taskIds = ConvertFrom-Json -InputObject (Get-Content "$basePath/task-ids.json" -Raw)
     $result = $taskIds.$envName.$taskName
 
     if([String]::IsNullOrEmpty($result))
@@ -138,4 +163,5 @@ function Pack($envName, $environment, $workingDirectory) {
 
 UpdateTfxCli
 InstallTaskDependencies $buildDirectoryPath
+CleanNodeModules
 Pack "VSTSExtensions" $environment $buildDirectoryPath

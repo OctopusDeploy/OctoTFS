@@ -1,6 +1,6 @@
 import * as glob from "glob";
 import * as path from "path";
-import { Configuration } from "webpack";
+import { Configuration, DefinePlugin } from "webpack";
 let nodeExternals = require("webpack-node-externals");
 let paths = require("./build/paths");
 
@@ -20,9 +20,18 @@ const createTaskConfig = (filePath: string): Configuration => {
 
     return {
         target: "node",
+        node:{
+            __dirname: false,
+            __filename: false
+        },
         context: path.resolve(paths.sourceRoot),
         entry: path.resolve(filePath),
-        plugins: [],
+        plugins: [
+            new DefinePlugin({
+                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+                'process.env.EXTENSION_VERSION': JSON.stringify(process.env.EXTENSION_VERSION)
+            }),
+        ],
         module: {
             rules: [
                 {

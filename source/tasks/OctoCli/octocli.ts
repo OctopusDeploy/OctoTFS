@@ -3,7 +3,6 @@ import * as utils from "../Utils";
 import {
     connectionArguments,
     includeArguments,
-    configureTool,
 
 } from '../Utils/tool';
 
@@ -14,14 +13,13 @@ async function run(){
         const command = tasks.getInput("command", true);
         const octo = await utils.getOrInstallOctoCommandRunner(command);
 
-        const configure = configureTool([
+        const configure = [
             connectionArguments(connection),
             includeArguments(args)
-        ]);
+        ];
 
-        const code:Number = await octo.map(configure)
-            .getOrElseL((x) => { throw new Error(x); })
-            .exec();
+        const code:Number = await octo.map(x => x.launchOcto(configure))
+            .getOrElseL((x) => { throw new Error(x); });
 
         tasks.setResult(tasks.TaskResult.Succeeded, `Succeeded executing octo command ${command} with code ${code}`);
     }catch(err){

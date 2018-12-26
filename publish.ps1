@@ -10,27 +10,46 @@ param (
     [string]
     $accessToken,
     [string]
-    $shareWith="octopus-deploy-test"
+    $shareWith="octopus-deploy-test",
+    [string]
+    $basePath= $PSScriptRoot
 )
 
 $ErrorActionPreference = "Stop"
 
-$buildArtifactsPath = "$PSScriptRoot\dist\Artifacts"
+$buildArtifactsPath = "$basePath\dist\Artifacts"
+$buildDirectoryPath = "$basePath\dist"
 
 function UpdateTfxCli() {
     Write-Host "Updating tfx-cli..."
     & npm up -g tfx-cli
 }
 
+function IsPublishRequired($extensionManifest){
+    $manifest = Get-Content $extensionManifest | ConvertFrom-Json
+	Write-Host "Checking whether publish is required for '$($manifest.publisher)' extension id '$($manifest.id)' version '$version'"
+    $versions = & tfx extension show --publisher $manifest.publisher --extension-id $manifest.id --token $accessToken --json --no-prompt | ConvertFrom-Json | Select-Object -ExpandProperty versions | Group-Object -AsHashTable -Property version
+    return !($versions.ContainsKey($version))
+}
+
 function PublishVSIX($vsixFile, $environment) {
+    $manifest = "$buildDirectoryPath/extension-manifest.$environment.json"
+
+    if(!($environment -eq "Production") -and !($environment -eq "Test")){
+        throw "The valid environments are 'Test' and 'Production'"
+    }
+
+    if(!(IsPublishRequired $manifest)){
+        Write-Host "Version already published. Skipping publishing."
+        return;
+    }
+
     if ($environment -eq "Production") {
-            Write-Output "Publishing $vsixFile to everyone (public extension)..."
-            & tfx extension publish --vsix $vsixFile --token $accessToken --no-prompt
-        } elseif ($environment -eq "Test") {
-            Write-Output "Publishing $vsixFile as a private extension, sharing with $shareWith using access token $accessToken"
-            & tfx extension publish --vsix $vsixFile --token $accessToken --share-with $shareWith --no-prompt
-        } else {
-            Write-Error "The valid environments are 'Test' and 'Production'"
+        Write-Host "Publishing $vsixFile to everyone (public extension)..."
+        & tfx extension publish --vsix $vsixFile --token $accessToken --no-prompt
+    } elseif ($environment -eq "Test") {
+        Write-Host "Publishing $vsixFile as a private extension, sharing with $shareWith using access token $accessToken"
+        & tfx extension publish --vsix $vsixFile --token $accessToken --share-with $shareWith --no-prompt
     }
 }
 

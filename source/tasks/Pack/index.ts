@@ -1,7 +1,8 @@
 import * as tasks from 'vsts-task-lib/task';
 import * as fs from "fs";
 import * as utils from "../Utils";
-import { configureTool, argument, argumentIfSet, flag, multiArgument, argumentEnquote } from '../Utils';
+import { argument, argumentIfSet, flag, multiArgument, argumentEnquote } from '../Utils';
+import {ToolRunner} from "vsts-task-lib/toolrunner";
 
 export interface PackageRequiredInputs {
     packageId : string;
@@ -24,7 +25,7 @@ export interface PackageOptionalInputs{
 export type PackageInputs = PackageRequiredInputs & PackageOptionalInputs;
 
 export const configure = (inputs: PackageInputs) => {
-    return configureTool([
+    return [
         argumentEnquote("id", inputs.packageId),
         argument("format", inputs.packageFormat),
         argumentIfSet(argument, "version", inputs.packageVersion),
@@ -35,7 +36,7 @@ export const configure = (inputs: PackageInputs) => {
         argumentIfSet(argumentEnquote, "description",inputs.nuGetDescription),
         argumentIfSet(argumentEnquote, "releaseNotes", inputs.nuGetReleaseNotes),
         argument("overwrite", inputs.overwrite.toString()),
-        (tool) => {
+        (tool: ToolRunner) => {
             if(!utils.isNullOrWhitespace(inputs.nuGetReleaseNotesFile) && fs.existsSync(inputs.nuGetReleaseNotesFile) && fs.lstatSync(inputs.nuGetReleaseNotesFile).isFile()){
                 console.log(`Release notes file: ${inputs.nuGetReleaseNotesFile}`);
                 argumentEnquote("releaseNotesFile", inputs.nuGetReleaseNotesFile, tool);
@@ -46,7 +47,7 @@ export const configure = (inputs: PackageInputs) => {
         },
         multiArgument(argumentEnquote, "include", inputs.include || []),
         flag("verbose", inputs.listFiles)
-    ]);
+    ];
 }
 
 export const getInputs = (): PackageInputs => {
@@ -72,9 +73,8 @@ async function run() {
         const octo = await utils.getOrInstallOctoCommandRunner("pack");
         const configureTool = configure(getInputs());
 
-        const code:Number = await octo.map(configureTool)
-            .getOrElseL((x) => { throw new Error(x); })
-            .exec();
+        const code:Number = await octo.map(x => x.launchOcto(configureTool))
+            .getOrElseL((x) => { throw new Error(x); });
 
         tasks.setResult(tasks.TaskResult.Succeeded, "Pack succeeded with code " + code);
     }catch(err){

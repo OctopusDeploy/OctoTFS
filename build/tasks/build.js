@@ -5,6 +5,7 @@ var clean = require("gulp-clean");
 var runSequence = require("run-sequence");
 var paths = require("../paths");
 var glob = require("glob");
+const argv = require('yargs').argv
 
 gulp.task("build", (callback) => {
     return runSequence("clean", ["build:tasks", "build:widgets", "build:copy", "build:copy:task:content"], callback);
@@ -12,7 +13,8 @@ gulp.task("build", (callback) => {
 
 gulp.task("build:tasks", [], run("./node_modules/.bin/webpack --mode=development --require ts-node/register --require tsconfig-paths/register", {
     env: {
-        TS_NODE_PROJECT: "build/tsconfig-webpack.json"
+        TS_NODE_PROJECT: "build/tsconfig-webpack.json",
+        EXTENSION_VERSION: argv.extensionVersion
     }
 }));
 
@@ -33,7 +35,7 @@ gulp.task("build:copy", [], () => {
 });
 
 gulp.task("build:copy:task:content", ["build:tasks"], (cb) => {
-    var stream = gulp.src(`${paths.sourceRoot}tasks/**/*.{json,png,svg}`, { base: paths.sourceRoot}).pipe(gulp.dest(paths.outputPath));
+    var stream = gulp.src(`${paths.sourceRoot}tasks/**/*.{json,png,svg,zip,gz}`, { base: paths.sourceRoot}).pipe(gulp.dest(paths.outputPath));
 });
 
 gulp.task("build:copy:externals", ["build:tasks"], (cb) => {
