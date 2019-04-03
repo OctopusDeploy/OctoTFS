@@ -7,8 +7,19 @@ param (
     [string]
     $version,
     [string]
-    $basePath = $PSScriptRoot
+    $basePath = $PSScriptRoot,
+    [string]
+    $certificatePath = "$PSScriptRoot/certificates/OctopusDevelopment.pfx",
+    [string]
+    $certificatePassword
 )
+
+$signing_timestamp_urls = @(
+		"http://timestamp.globalsign.com/scripts/timestamp.dll",
+		"http://www.startssl.com/timestamp",
+		"http://timestamp.comodoca.com/rfc3161",
+		"http://timestamp.verisign.com/scripts/timstamp.dll",
+		"http://tsa.starfieldtech.com")
 
 $ErrorActionPreference = "Stop"
 
@@ -18,7 +29,7 @@ $buildArtifactsPath = "$buildDirectoryPath/Artifacts"
 function CleanNodeModules() {
     $command = "node-prune.exe";
 
-    if ((Get-Command node-prune -ErrorAction SilentlyContinue) -eq $null)
+    if ($null -eq (Get-Command node-prune -ErrorAction SilentlyContinue))
     {
         $command = "$($env:GOPATH)\bin\node-prune.exe"
 
@@ -47,7 +58,7 @@ function UpdateExtensionManifestOverrideFile($workingDirectory, $environment, $v
     Write-Host "Finding environment-specific manifest overrides..."
     $overridesSourceFilePath = "$workingDirectory/extension-manifest.$environment.json"
     $overridesSourceFile = Get-ChildItem -Path $overridesSourceFilePath
-    if ($overridesSourceFile -eq $null) {
+    if ($null -eq $overridesSourceFile) {
         Write-Error "Could not find the extension-manifest override file: $overridesSourceFilePath"
         return $null
     }
@@ -101,12 +112,12 @@ function InstallTaskDependencies($workingDirectory) {
         $directory = Split-Path -parent $manifestFile
         $packageFile = Join-Path $directory "package.json"
 
-        try{
+        try {
             "{}" | Out-File -FilePath $packageFile -Encoding utf8
             Push-Location $directory
 
             Invoke-Expression "& npm install $dependencies"
-        }finally{
+        } finally {
             Remove-Item $packageFile
             Pop-Location
         }
@@ -161,7 +172,58 @@ function Pack($envName, $environment, $workingDirectory) {
     & tfx extension create --root $workingDirectory --manifest-globs extension-manifest.json --overridesFile $overridesFile --outputPath "$buildArtifactsPath/$environment" --no-prompt
 }
 
+function SignAndTimeStamp($assemblies, $display, $displayUrl, $certificatePath, $certificatePassword) {
+
+    $signtool_path = ".\tools\signtool\signtool.exe"
+    $items = Get-ChildItem -Path $assemblies -Recurse -Exclude "*vshost.exe" -File -Include *.exe,*.dll
+
+    if ($certificatePath -ne "") {
+        write-host "Signing and time-stamping assemblies, certificate path: $certificatePath"
+        foreach ($assembly in $items)
+        {
+            if(HasAuthenticodeSignature($assembly) -eq $true) {
+                write-host "Skipping $assembly as it is already signed."
+                continue
+            }
+
+            if ($display -eq "") {
+                & "$signtool_path" sign /fd SHA256 /f $certificatePath /p $certificatePassword $assembly | write-host
+            } else {
+                & "$signtool_path" sign /fd SHA256 /f $certificatePath /p $certificatePassword /d "$display" /du "$displayUrl" $assembly | write-host
+            }
+
+            foreach ($url in $signing_timestamp_urls) {
+                write-host "  Trying to time stamp $assembly using $url"
+                & "$signtool_path" timestamp /tr $url "$assembly" | write-host
+                if ($?) {
+                    break
+                }
+            }
+            if (!($?)) {
+                write-error "Failed to sign $assembly"
+                break
+            }
+        }
+        if ($?) {
+            write-host "Completed signing and time stamping"
+        }
+    }
+    else {
+        write-error "Missing certificatePath, did not sign or time stamp assemblies"
+    }
+}
+
+function HasAuthenticodeSignature($fileToCheck) {
+    try {
+    [System.Security.Cryptography.X509Certificates]::X509Certificate.CreateFromSignedFile($fileToCheck.FullPath)
+    return $true;
+    } catch {
+    return $false;
+    }
+}
+
 UpdateTfxCli
 InstallTaskDependencies $buildDirectoryPath
 CleanNodeModules
+SignAndTimeStamp $buildDirectoryPath "Octopus Deploy Integration for Azure Dev Ops" "https://octopus.com" $certificatePath $certificatePassword
 Pack "VSTSExtensions" $environment $buildDirectoryPath
