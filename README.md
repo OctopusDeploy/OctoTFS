@@ -12,6 +12,7 @@ To learn more about how to use the extension and custom tasks, read the [VSTS RE
 
 * [Package Application](source/tasks/Pack)
 * [Push Package(s) to Octopus](source/tasks/Push)
+* [Push Package Metadata to Octopus](source/tasks/Metadata)
 * [Create Octopus Release](source/tasks/CreateOctopusRelease)
 * [Deploy Octopus Release](source/tasks/Deploy)
 * [Promote Octopus Release](source/tasks/Promote)

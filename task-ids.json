@@ -5,6 +5,7 @@
         "OctopusPack": "ba79430a-bd26-4fc0-b827-6e442de623e4",
         "OctopusPromote": "60c1aa6c-2d9a-455a-a4c6-5835eeddbd2d",
         "OctopusPush": "72153241-00c1-4f78-a64f-8b2c0d187b3c",
+        "OctopusMetadata": "2032df04-eeb2-4afc-9854-cec4d7169e4c",
         "OctoInstaller": "0bb4020f-14f3-409b-ac87-b6ec75066419",
         "OctoCli": "92d8efb7-1c1f-4803-865e-54baac6ba644"
     },
@@ -14,6 +15,7 @@
         "OctopusPack": "179fac12-2402-486e-80cf-5a6a8571f7c0",
         "OctopusPromote": "1627fcfe-f292-4904-adac-26cfb14bdb07",
         "OctopusPush": "d05ad9a2-5d9e-4a1c-a887-14034334d6f2",
+        "OctopusMetadata": "b1861ef4-b62e-40c1-bcb0-be00d454a8a7",
         "OctoInstaller": "ccdc7423-0f15-48d1-a104-78e181ea8c2f",
         "OctoCli": "ca025f3d-d8b6-4ca2-aa94-7785e784581f"
     },
@@ -23,6 +25,7 @@
         "OctopusPack": "179fac12-2402-486e-80cf-5a6a8571f7c0",
         "OctopusPromote": "1627fcfe-f292-4904-adac-26cfb14bdb07",
         "OctopusPush": "d05ad9a2-5d9e-4a1c-a887-14034334d6f2",
+        "OctopusMetadata": "b1861ef4-b62e-40c1-bcb0-be00d454a8a7",
         "OctoInstaller": "7aeae2f5-8529-4326-b127-a66c334c6e60",
         "OctoCli": "ac1f0794-ad67-4c60-a386-8704226392be"
     }

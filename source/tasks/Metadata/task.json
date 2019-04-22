@@ -1,0 +1,98 @@
+﻿{
+    "id": "b1861ef4-b62e-40c1-bcb0-be00d454a8a7",
+    "name": "OctopusMetadata",
+    "friendlyName": "Push Package Metadata to Octopus",
+    "description": "Collect metadata related to the build, including work items from commit messages, and push to your Octopus Deploy Server.",
+    "helpMarkDown": "set-by-pack.ps1",
+    "category": "Package",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Octopus Deploy",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.115.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "OctoConnectedServiceName",
+            "type": "connectedService:OctopusEndpoint",
+            "label": "Octopus Deploy Server",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Octopus Deploy server connection"
+        },
+        {
+            "name": "PackageId",
+            "type": "string",
+            "label": "Package ID",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The ID of the package. e.g. MyCompany.App"
+        },
+        {
+            "name": "PackageVersion",
+            "type": "string",
+            "label": "Package Version",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The version of the package; must be a valid [SemVer](http://semver.org/) version."
+        },
+        {
+            "name": "CommentParser",
+            "type": "pickList",
+            "label": "Work Items Source",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The source of work items or issues addressed by changes in the package",
+            "options": {
+                "-": "",
+                "Jira": "Jira",
+                "GitHub": "GitHub",
+                "Azure DevOps": "Azure DevOps"
+            }
+        },
+        {
+            "name": "Replace",
+            "type": "boolean",
+            "label": "Replace Existing",
+            "defaultValue": "False",
+            "required": true,
+            "helpMarkDown": "If the package already exists in the repository, the default behavior is to reject the new package being pushed. Set this flag to 'True' to overwrite the existing package."
+        },
+        {
+            "name": "AdditionalArguments",
+            "type": "string",
+            "label": "Additional Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments to be supplied to Octo.exe. See [Octo.exe Command Line documentation](http://docs.octopusdeploy.com/display/OD/Pushing+packages) for available parameters.",
+            "groupName": "advanced"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "SpaceName",
+            "endpointId": "$(OctoConnectedServiceName)",
+            "dataSourceName": "OctopusAllSpaces",
+            "resultTemplate": "{\"Value\":\"{{{Name}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
+        }
+    ],
+    "instanceNameFormat": "Push Package Metadata to Octopus",
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}

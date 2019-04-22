@@ -36,6 +36,7 @@ function CleanNodeModules() {
     Invoke-Expression "$command $($basePath)/dist/tasks/OctoCli/node_modules"
     Invoke-Expression "$command $($basePath)/dist/tasks/OctoInstaller/node_modules"
     Invoke-Expression "$command $($basePath)/dist/tasks/Pack/node_modules"
+    Invoke-Expression "$command $($basePath)/dist/tasks/Metadata/node_modules"
     Invoke-Expression "$command $($basePath)/dist/tasks/Promote/PromoteV3/node_modules"
     Invoke-Expression "$command $($basePath)/dist/tasks/Promote/PromoteV4/node_modules"
     Invoke-Expression "$command $($basePath)/dist/tasks/Push/PushV3/node_modules"

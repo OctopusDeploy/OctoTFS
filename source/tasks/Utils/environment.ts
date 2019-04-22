@@ -19,6 +19,11 @@ export interface BuildEnvironmentVariables{
     buildRepositoryName: string;
     buildRepositoryProvider: string;
     buildRepositoryUri: string;
+    buildSourceVersion: string;
+}
+
+export interface AgentEnvironmentVariables {
+    agentBuildDirectory: string;
 }
 
 export interface SystemEnvironmentVariables{
@@ -28,7 +33,7 @@ export interface SystemEnvironmentVariables{
     defaultWorkingDirectory: string;
 }
 
-export type VstsEnvironmentVariables = ReleaseEnvironmentVariables & BuildEnvironmentVariables & SystemEnvironmentVariables
+export type VstsEnvironmentVariables = ReleaseEnvironmentVariables & BuildEnvironmentVariables & AgentEnvironmentVariables & SystemEnvironmentVariables
 
 export const getVstsEnvironmentVariables= () : VstsEnvironmentVariables =>{
     return {
@@ -44,7 +49,9 @@ export const getVstsEnvironmentVariables= () : VstsEnvironmentVariables =>{
         teamCollectionUri: process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"],
         defaultWorkingDirectory: process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"],
         buildRepositoryProvider: process.env["BUILD_REPOSITORY_PROVIDER"],
-        buildRepositoryUri: process.env["BUILD_REPOSITORY_URI"]
+        buildRepositoryUri: process.env["BUILD_REPOSITORY_URI"],
+        buildSourceVersion: process.env["BUILD_SOURCEVERSION"],
+        agentBuildDirectory: process.env["AGENT_BUILDDIRECTORY"]
     }
 }
 
@@ -182,3 +189,21 @@ export const createVstsConnection = (environment: SystemEnvironmentVariables) =>
     let authHandler = vsts.getPersonalAccessTokenHandler(token);
     return new vsts.WebApi(environment.teamCollectionUri, authHandler);
 }
+
+export const getVcsTypeFromProvider = (buildRepositoryProvider: string) => {
+    switch (buildRepositoryProvider) {
+        case 'TfsGit':
+        case 'GitHub':
+            return 'Git';
+        case 'TfsVersionControl':
+            return 'TFVC';
+        default:
+            return buildRepositoryProvider;
+    }
+};
+
+export const getBuildChanges = async (client: vsts.WebApi) => {
+    const environment = getVstsEnvironmentVariables();
+    const api = await client.getBuildApi();
+    return await api.getBuildChanges(environment.projectName, environment.buildId);
+};
