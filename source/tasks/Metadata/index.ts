@@ -72,9 +72,9 @@ async function run() {
         const configure: Array<(tool: ToolRunner) => ToolRunner> = [
             connectionArguments(connection),
             argumentIfSet(argumentEnquote, "space", space),
-            argument("package-id", packageId),
+            argumentEnquote("package-id", packageId),
             argument("version", packageVersion),
-            argument("metadata-file", metadataFile),
+            argumentEnquote("metadata-file", metadataFile),
             flag("replace-existing", replace),
             includeArguments(additionalArguments)
         ];
