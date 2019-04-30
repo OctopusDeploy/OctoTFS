@@ -36,6 +36,15 @@ OctoTFS.Tests.resources.tasks.Deploy.task.json
 	'DeployForTenantsInSpace': pickList
 	'DeployForTenantTagsInSpace': string
 	'AdditionalArguments': string
+OctoTFS.Tests.resources.tasks.Metadata.task.json
+	'OctoConnectedServiceName': connectedService:OctopusEndpoint
+	'HasSpaces': boolean
+	'SpaceName': pickList
+	'PackageId': string
+	'PackageVersion': string
+	'CommentParser': pickList
+	'Replace': boolean
+	'AdditionalArguments': string
 OctoTFS.Tests.resources.tasks.OctoCli.task.json
 	'OctoConnectedServiceName': connectedService:OctopusEndpoint
 	'command': string
