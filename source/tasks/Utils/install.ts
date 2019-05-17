@@ -64,14 +64,14 @@ function findOcto(rootFolder: string){
     return matches[0];
 }
 
-async function getOrDownloadOcto(option: DownloadOption, download?: (option: DownloadOption) => Promise<string>): Promise<string>{
+async function getOrDownloadOcto(option: DownloadOption, download?: (option: DownloadOption) => Promise<string>, extractTool: boolean = true): Promise<string>{
     var cachedToolPath = getLocalTool(option.version);
 
     if(!cachedToolPath){
         try{
             console.log("Attempting to download octo cli");
             let downloadPath = await (download !== undefined && download != null ? download(option) : tools.downloadTool(option.location));
-            let toolPath = await extract(downloadPath);
+            let toolPath = extractTool ? await extract(downloadPath) : downloadPath;
 
             tools.debug(`Adding ${ToolName} ${option.version} to cache`);
             tasks.writeFile(path.join(toolPath, `${ToolName}.cmd`), `dotnet "%~dp0/${ToolName}.dll" %*`);
@@ -142,8 +142,8 @@ async function getEmbeddedOcto(folderPath: string){
     }
 
     return getOrDownloadOcto(option, () => {
-        return new Promise((resolve) => resolve(path.join(tempDirectory, path.basename(folderPath), path.basename(option.location))))
-    });
+        return new Promise((resolve) => resolve(path.join(tempDirectory, path.basename(folderPath), "bin")))
+    }, false);
 }
 
 async function readFile(path: string, encoding = "utf8"): Promise<string>{

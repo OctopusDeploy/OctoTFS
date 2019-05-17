@@ -59,18 +59,28 @@ $option = $manifest.downloads | Where-Object { $_.platform -ieq $platform -and $
 $option = Resolve-Version $version $option
 $name = (Split-Path $option.location -Leaf)
 $destinationFolder = Join-Path (Resolve-InstallerTask $buildDirectoryPath) "embedded"
-$destination = Join-Path $destinationFolder $name
+$destinationBinFolder = Join-Path $destinationFolder "bin"
 
 if(!(Test-Path $destinationFolder)){
     New-Item -ItemType Directory -Path $destinationFolder | Out-Null
 }
 
+function Expand-EmbeddedOctoZip($zipPath, $extractPath) {
+    Write-Host "Extracting $zipPath to $extractPath"
+    Add-Type -assembly "System.IO.Compression.Filesystem"
+    [IO.Compression.Zipfile]::ExtractToDirectory($zipPath, $extractPath)
+}
+
 if($override){
     Write-Host "Using octo override $($override) for embedded octo"
-    Copy-Item -Path $override -Destination $destination
+    Expand-EmbeddedOctoZip $override $destinationBinFolder
 }else{
-   Write-Host "Downloading Octo $($option.version) from $($option.location) and saving to $($destination)"
-   (New-Object System.Net.WebClient).DownloadFile($option.location, $destination)
+   $downloadFolder = Join-Path $env:TEMP "octo"
+   $downloadDestination = Join-Path $downloadFolder $name
+   Write-Host "Downloading Octo $($option.version) from $($option.location) and saving to $($downloadDestination)"
+   (New-Object System.Net.WebClient).DownloadFile($option.location, $downloadDestination)
+   Expand-EmbeddedOctoZip $downloadDestination $destinationBinFolder
+   Remove-Item $downloadFolder -Force
 }
 
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
