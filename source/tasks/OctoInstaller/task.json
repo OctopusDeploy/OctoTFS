@@ -34,7 +34,7 @@
             "name": "version",
             "type": "string",
             "label": "Octopus Tool Version",
-            "defaultValue": "latest",
+            "defaultValue": "embedded",
             "required": true,
             "helpMarkDown": "Specify the exact version of the octo tools to use.<br/>"
         }
