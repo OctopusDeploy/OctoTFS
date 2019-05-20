@@ -5,7 +5,7 @@ import { curry } from "ramda";
 import { isNullOrWhitespace } from "./inputs";
 import { Option, some, none } from "fp-ts/lib/Option"
 import { Either, right, fromOption  } from "fp-ts/lib/Either";
-import { getOrDownloadOcto, addToolToPath, resolvePublishedOctoVersion } from './install';
+import { addToolToPath, getEmbeddedOcto } from './install';
 
 export const ToolName = "Octo";
 
@@ -43,11 +43,10 @@ export async function getOrInstallOctoCommandRunner(command: string) : Promise<E
         return right(new OctoLauncher(octo.value));
     }
 
-    return resolvePublishedOctoVersion("latest")
-    .then(getOrDownloadOcto)
-    .then(addToolToPath)
-    .then(() => getOctoCommandRunner(command).map(x => new OctoLauncher(x)))
-    .then(fromOption("Unable to find or install octo."));
+    return await getEmbeddedOcto(tasks.resolve(__dirname, "embedded"))
+        .then(addToolToPath)
+        .then(() => getOctoCommandRunner(command).map(x => new OctoLauncher(x)))
+        .then(fromOption("Unable to find or install octo."));
 }
 
 export function getOctoCommandRunner(command: string) : Option<ToolRunner> {
