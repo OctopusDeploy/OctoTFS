@@ -78,9 +78,14 @@ if($override){
    $downloadFolder = Join-Path $env:TEMP "octo"
    $downloadDestination = Join-Path $downloadFolder $name
    Write-Host "Downloading Octo $($option.version) from $($option.location) and saving to $($downloadDestination)"
+   
+   if(!(Test-Path $downloadFolder)) {
+     New-Item -ItemType Directory -Path $downloadFolder | Out-Null   
+   }
+
    (New-Object System.Net.WebClient).DownloadFile($option.location, $downloadDestination)
    Expand-EmbeddedOctoZip $downloadDestination $destinationBinFolder
-   Remove-Item $downloadFolder -Force
+   Remove-Item $downloadFolder -Force -Recurse
 }
 
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
