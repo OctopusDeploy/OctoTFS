@@ -75,6 +75,19 @@ Options include:
  * **Replace Existing**: If the package already exists in the repository, the default behavior is to reject the new package being pushed. Set this flag to 'True' to overwrite the existing package.
  * **Additional Arguments**: Any additional [Octo.exe arguments](http://docs.octopusdeploy.com/display/OD/Pushing+packages) to include
 
+### <a name="push-package-metadata-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Package Metadata to Octopus
+
+ ![Configure Push Package Metadata Step](img/push-package-metadata-options.png)
+ Options include:
+ * **Octopus Deploy Server**: Dropdown for selecting your Octopus Server (click Add or Manage to [create](#create-connected-service)).
+ * **Push Metadata to Space**: Toggle to push your package metadata to a [space](https://octopus.com/spaces). This is available in Octopus 2019.1 and newer.
+ * **Space**: The name of the Octopus space to push package metadata to.
+ * **Package ID**: The ID of the package, pushed previously, to push metadata onto. e.g. MyCompany.App
+ * **Package Version**: The version of the package, pushed previously, to push metadata onto.
+ * **Replace Existing**: If the package metadata already exists in the repository, the default behavior is to reject the new metadata being pushed. Set this flag to 'True' to overwrite the existing package metadata.
+ * **Work Items Source**: The service hosting any work items associated with each version of the package. Octopus will add information about the work items to the package metadata, which can be used in release notes.
+ * **Additional Arguments**: Any additional [Octo.exe arguments](http://docs.octopusdeploy.com/display/OD/Pushing+packages) to include
+
 ### <a name="create-octopus-release"></a>![Create Release Icon](img/octopus_create-release-04.png) Create Octopus Release
 
  ![Configure Create Release Step](img/create-release-options-2.0.png)
