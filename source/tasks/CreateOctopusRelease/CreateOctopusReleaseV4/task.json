@@ -83,7 +83,7 @@
             "type": "pickList",
             "label": "Channel",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
