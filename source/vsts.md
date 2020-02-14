@@ -9,13 +9,13 @@ This extension provides Build and Release tasks to integrate with [Octopus Deplo
 
 You will need a minimum build agent version of `2.115.0` with .NET Core SDK `2.0` or later. When targeting build agents without the SDK, you can use the **.NET Core SDK Installer** task to install it. Generally the Hosted Linux, Mac and Hosted VS2017 agent queues already provide it, however please refer to Microsoft documentation regarding what capabilities are provided by which hosted agent pools.
 
-## Add Octo Command Line tool
+## Add Octopus CLI tool
 
-The Octopus tasks require the Octo Command Line tool, which can be supplied any of the following ways:
+The Octopus tasks require the Octopus CLI tool, which can be supplied any of the following ways:
 
-* Add the **Octopus tools installer** task to the build pipeline, before other Octopus tasks. If you leave the version as `embedded`, a built-in copy of the Octo command line tool will be supplied to the other tasks. If you set the version to `latest` or a specific number like `6.10.0`, that version will be downloaded and supplied to the other tasks. If the download fails, the built-in copy of the tool will be used.
-* Update the system `PATH` environment variable to include a folder containing `Octo.exe` or `Octo.cmd`, on all systems running VSTS agents. You will need to restart the `VSTS Agent` service (or the whole system) for the change to take effect.
-* If the Octo command line tool is not supplied, the Octopus tasks will attempt to download the latest version themselves.
+* Add the **Octopus CLI installer** task to the build pipeline, before other Octopus tasks. If you leave the version as `embedded`, a built-in copy of the Octopus CLI tool will be supplied to the other tasks. If you set the version to `latest` or a specific number like `6.10.0`, that version will be downloaded and supplied to the other tasks. If the download fails, the built-in copy of the tool will be used.
+* Update the system `PATH` environment variable to include a folder containing the Octopus CLI, on all systems running VSTS agents. You will need to restart the `VSTS Agent` service (or the whole system) for the change to take effect.
+* If the Octopus CLI tool is not supplied, the Octopus tasks will attempt to download the latest version themselves.
 
 ## Add a service connection to Octopus Deploy
 
@@ -32,13 +32,14 @@ For example, if your build needs to create a Release for Project A, the user who
 
 This extension adds the following tasks:
 
-- Octopus tools installer
+- Octopus CLI Installer
 - Package Application for Octopus
-- Push Packages to Octopus
+- Push Package(s) to Octopus
 - Push Package Build Information to Octopus
 - Create Octopus Release
 - Deploy Octopus Release
 - Promote Octopus Release
+- Invoke Octopus CLI command
 
 And the following widget:
 
@@ -46,11 +47,11 @@ And the following widget:
 
 <hr />
 
-## <a name="tools-installer"></a>![Installer Icon](img/octopus_installer.png) Octopus tools installer
+## <a name="tools-installer"></a>![Installer Icon](img/octopus_installer.png) Octopus CLI Installer
 
-Optional. Use this task to supply the Octo command line tool to other tasks, by downloading them or using a built-in copy.
+Optional. Use this task to supply the Octopus CLI tool to other tasks, by downloading them or using a built-in copy.
 
-Alternatively, you can supply the tool using the system `PATH` environment variable, or allow the other tasks to download the latest version themselves. For more information, see [Add Octo Command Line tool](#add-octo-command-line-tool) above.
+Alternatively, you can supply the tool using the system `PATH` environment variable, or allow the other tasks to download the latest version themselves. For more information, see [Add Octopus CLI tool](#add-octo-command-line-tool) above.
 
  Options include:
 
@@ -70,7 +71,7 @@ Options include:
  * **Source Path**: The folder containing the files and folders to package. Defaults to working directory.
  * **Output Path**: The directory into which the generated package will be written. Defaults to working directory.
  * **NuGet** section: Additional details for the NuGet Package Metadata.
- * **Advanced Options** section: Additional files to include in the package, whether to overwrite any existing file of the same name, and additional [Octo arguments](https://octopus.com/docs/octopus-rest-api/octo.exe-command-line/pack) to include.
+ * **Advanced Options** section: Additional files to include in the package, whether to overwrite any existing file of the same name, and additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/pack) to include.
 
 ## <a name="push-packages-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Packages to Octopus
 
@@ -82,7 +83,7 @@ Options include:
  * **Space**: The Octopus space to push a package to.
  * **Package**: Package file to push. To push multiple packages, enter multiple lines.
  * **Replace Existing**: If the package already exists in the repository, the default behavior is to reject the new package being pushed. Set this flag to **True** to overwrite the existing package.
- * **Additional Arguments**: Any additional [Octo arguments](https://octopus.com/docs/octopus-rest-api/octo.exe-command-line/push) to include.
+ * **Additional Arguments**: Any additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/push) to include.
 
 ## <a name="push-package-build-information-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Package Build Information to Octopus
 
@@ -96,7 +97,7 @@ Options include:
  * **Package Version**: The version of the package, pushed separately, to push build information onto.
  * **Work Items Source**: The service hosting any work items or issues associated with each version of the package. Octopus will add information about the work items or issues to the package build information, which can be used in release notes. For more information see the [Issue Trackers documentation](https://octopus.com/docs/deployment-process/issue-tracking).
  * **Replace Existing**: If the package build information already exists in the repository, the default behavior is to reject the new build information being pushed. Set this flag to 'True' to overwrite the existing package build information.
- * **Additional Arguments**: Any additional [Octo arguments](https://octopus.com/docs/octopus-rest-api/octo.exe-command-line/push-metadata) to include.
+ * **Additional Arguments**: Any additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/push-metadata) to include.
 
 ## <a name="create-octopus-release"></a>![Create Release Icon](img/octopus_create-release-04.png) Create Octopus Release
 
@@ -119,7 +120,7 @@ Options include:
  * **Tenants** section:
    * **Tenant(s)**: Comma-separated list of tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
    * **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
- * **Additional Octo.exe Arguments**:  Any additional [Octo arguments](https://g.octopushq.com/OctoExeCreateRelease) to include.
+ * **Additional Arguments**:  Any additional [Octopus CLI arguments](https://g.octopushq.com/OctoExeCreateRelease) to include.
 
 ### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release
 
@@ -136,7 +137,7 @@ Options include:
  * **Tenants** section:
    * **Tenant(s)**: Comma-separated list of tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
    * **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
- * **Additional Arguments**:  Any additional [Octo arguments](https://octopus.com/docs/octopus-rest-api/octo.exe-command-line/deploy-release) to include.
+ * **Additional Arguments**:  Any additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/deploy-release) to include.
 
 ### <a name="promote-octopus-release"></a>![Promote Release Image](img/octopus_promote-05.png) Promote Octopus Release
 
@@ -152,7 +153,7 @@ Options include:
  * **Tenants** section:
    * **Tenant(s)**: Comma-separated list of tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
    * **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
- * **Additional Arguments**:  Any additional [Octo arguments](https://octopus.com/docs/octopus-rest-api/octo.exe-command-line/promote-release) to include.
+ * **Additional Arguments**:  Any additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/promote-release) to include.
 
 <hr/>
 

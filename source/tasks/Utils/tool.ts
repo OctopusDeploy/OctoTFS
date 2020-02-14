@@ -55,13 +55,13 @@ export async function getOrInstallOctoCommandRunner(command: string) : Promise<E
     .then(getOrDownloadOcto)
     .catch(err => {
         tasks.error(err);
-        throw Error("Unable to locate and download the latest Octo command line tool. To use the embedded copy"
+        throw Error("Unable to locate and download the latest Octopus CLI tool. To use the embedded copy"
             + " or another specific version, add the Octopus tools installer task to the build pipeline"
             + " before this task.");
     })
     .then(addToolToPath)
     .then(() => getOctoCommandRunner(command).map(x => new OctoLauncher(x)))
-    .then(fromOption("Unable to run the Octo command line tool."));
+    .then(fromOption("Unable to run the Octopus CLI tool."));
 }
 
 export function getOctoCommandRunner(command: string) : Option<ToolRunner> {
@@ -110,7 +110,7 @@ export const assertOctoVersionAcceptsIds = async function (): Promise<void> {
         || (major == 6 && minor > 10)
         || (major == 6 && minor == 10 && patch >= 0);
     if (!compatible) {
-        throw new Error("The Octo command line tool is too old to run this task. Please use version 6.10.0 or newer, or downgrade the task to version 3.*.");
+        throw new Error("The Octopus CLI tool is too old to run this task. Please use version 6.10.0 or newer, or downgrade the task to version 3.*.");
     }
 };
 

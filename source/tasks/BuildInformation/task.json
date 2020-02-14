@@ -78,7 +78,7 @@
             "label": "Additional Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments to be supplied to Octo.exe. See [Octo.exe Command Line documentation](https://octopus.com/docs/octopus-rest-api/octo.exe-command-line/push-metadata) for available parameters.",
+            "helpMarkDown": "Additional arguments to be supplied to the Octopus CLI. See the [Octopus CLI documentation](https://octopus.com/docs/octopus-rest-api/octopus-cli/push-metadata) for available parameters.",
             "groupName": "advanced"
         }
     ],

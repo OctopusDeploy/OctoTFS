@@ -114,7 +114,7 @@
             "label": "Additional Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments to be supplied to Octo.exe. See [Octo.exe Command Line documentation](https://g.octopushq.com/OctoExeDeployRelease) for available parameters.",
+            "helpMarkDown": "Additional arguments to be supplied to the Octopus CLI. See the [Octopus CLI documentation](https://g.octopushq.com/OctoExeDeployRelease) for available parameters.",
             "groupName": "advanced"
         }
     ],

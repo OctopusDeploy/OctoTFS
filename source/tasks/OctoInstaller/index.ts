@@ -7,11 +7,11 @@ async function run(){
 
     try{
         if(forceEmbedded){
-            console.log("Forcing the use of the embedded Octo command line tool.");
+            console.log("Forcing the use of the embedded Octopus CLI tool.");
             await getEmbeddedOcto(tasks.resolve(__dirname, "embedded")).then(addToolToPath);
         }else{
             let option = await resolvePublishedOctoVersion(version);
-            console.log(`Using Octo command line tool version ${option.version}`);
+            console.log(`Using Octopus CLI tool version ${option.version}`);
             await getOrDownloadOcto(option).then(addToolToPath);
 
         }
@@ -23,7 +23,7 @@ async function run(){
             return;
         }
 
-        console.log(`Failed to resolve Octo command line tool version ${version}. Using the embedded version. ${error}`);
+        console.log(`Failed to resolve Octopus CLI tool version ${version}. Using the embedded version. ${error}`);
 
         try {
             await getEmbeddedOcto(tasks.resolve(__dirname, "embedded")).then(addToolToPath);

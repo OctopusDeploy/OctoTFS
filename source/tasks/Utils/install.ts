@@ -69,7 +69,7 @@ async function getOrDownloadOcto(option: DownloadOption, download?: (option: Dow
 
     if(!cachedToolPath){
         try{
-            console.log("Attempting to download the Octo command line tool");
+            console.log("Attempting to download the Octopus CLI tool");
             let downloadPath = await (download !== undefined && download != null ? download(option) : tools.downloadTool(option.location));
             let toolPath = extractTool ? await extract(downloadPath) : downloadPath;
 
@@ -78,13 +78,13 @@ async function getOrDownloadOcto(option: DownloadOption, download?: (option: Dow
             cachedToolPath = await tools.cacheDir(toolPath, ToolName, option.version);
 
         }catch(exception){
-            throw new Error(`Failed to download Octo command line tool version ${option.version}. ${exception}`)
+            throw new Error(`Failed to download Octopus CLI tool version ${option.version}. ${exception}`)
         }
     }
 
     const octoPath = findOcto(cachedToolPath);
     if(!octoPath){
-        throw new Error("The Octo command line tool wasn't found in tools directory")
+        throw new Error("The Octopus CLI tool wasn't found in tools directory")
     }
 
     tools.debug(`Found ${ToolName} at ${octoPath}`)
@@ -97,18 +97,18 @@ async function resolvePublishedOctoVersion(version?: string): Promise<DownloadOp
     if (!version) {
         version = "latest";
     }
-    console.log(`Attempting to contact ${OctopurlsUrl} to find Octo command line tool version ${version}`);
+    console.log(`Attempting to contact ${OctopurlsUrl} to find Octopus CLI tool version ${version}`);
 
     const response =  await octopurls.get<LatestResponse>("LatestTools");
 
     if(response.result === null || response.result === undefined){
-        throw Error(`Failed to resolve Octo command line tool version ${version}. Endpoint returned status code ${response.statusCode})`);
+        throw Error(`Failed to resolve Octopus CLI tool version ${version}. Endpoint returned status code ${response.statusCode})`);
     }
 
     var option = filterPortableDownload(response.result.downloads);
 
     if(option === null || option === undefined){
-        throw Error(`Failed to resolve the Octo command line tool portable download location. The result did not contain the download location.`);
+        throw Error(`Failed to resolve the Octopus CLI tool portable download location. The result did not contain the download location.`);
     }
 
     if(version === "latest" || version === response.result.latest){
@@ -141,10 +141,10 @@ async function getEmbeddedOcto(folderPath: string): Promise<string> {
 
     if(!option)
     {
-        throw "Could not resolve the original download location of the embedded Octo command line tool.";
+        throw "Could not resolve the original download location of the embedded Octopus CLI tool.";
     }
 
-    console.log(`Using the embedded Octo command line tool (version ${option.version}).`);
+    console.log(`Using the embedded Octopus CLI tool (version ${option.version}).`);
 
     return getOrDownloadOcto(option, () => {
         return new Promise((resolve) => resolve(path.join(tempDirectory, path.basename(folderPath), "bin")))
