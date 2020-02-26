@@ -71,7 +71,7 @@ Options include:
  * **Source Path**: The folder containing the files and folders to package. Defaults to working directory.
  * **Output Path**: The directory into which the generated package will be written. Defaults to working directory.
  * **NuGet** section: Additional details for the NuGet Package Metadata.
- * **Advanced Options** section: Additional files to include in the package, whether to overwrite any existing file of the same name, and additional [Octopus CLI arguments](https://g.octopus.com/OctopusCliPack) to include.
+ * **Advanced Options** section: Additional files to include in the package, whether to overwrite any existing file of the same name, and additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliPack) to include.
 
 ## <a name="push-packages-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Packages to Octopus
 
