@@ -55,7 +55,7 @@ Alternatively, you can supply the tool using the system `PATH` environment varia
 
  Options include:
 
- * **Octopus Tool Version**: If you leave the version as `embedded`, a built-in copy of the tool will be supplied to the other tasks. If you set the version to `latest` or a specific number like `6.10.0`, that version will be downloaded and supplied to the other tasks. If the download fails, the built-in copy of the tool will be used.
+ * **Octopus CLI Version**: If you leave the version as `embedded`, a built-in copy of the Octopus CLI will be supplied to the other tasks. If you set the version to `latest` or a specific number like `6.10.0`, that version will be downloaded and supplied to the other tasks. If the download fails, the built-in copy of the tool will be used.
 
 ## <a name="package-application"></a>![Package Icon](img/octopus_package-03.png) Package Application for Octopus
 
@@ -71,7 +71,7 @@ Options include:
  * **Source Path**: The folder containing the files and folders to package. Defaults to working directory.
  * **Output Path**: The directory into which the generated package will be written. Defaults to working directory.
  * **NuGet** section: Additional details for the NuGet Package Metadata.
- * **Advanced Options** section: Additional files to include in the package, whether to overwrite any existing file of the same name, and additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/pack) to include.
+ * **Advanced Options** section: Additional files to include in the package, whether to overwrite any existing file of the same name, and additional [Octopus CLI arguments](https://g.octopus.com/OctopusCliPack) to include.
 
 ## <a name="push-packages-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Packages to Octopus
 
@@ -83,7 +83,7 @@ Options include:
  * **Space**: The Octopus space to push a package to.
  * **Package**: Package file to push. To push multiple packages, enter multiple lines.
  * **Replace Existing**: If the package already exists in the repository, the default behavior is to reject the new package being pushed. Set this flag to **True** to overwrite the existing package.
- * **Additional Arguments**: Any additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/push) to include.
+ * **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/docOctopusCliPush) to include.
 
 ## <a name="push-package-build-information-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Package Build Information to Octopus
 
@@ -95,9 +95,9 @@ Options include:
  * **Space**: The Octopus space to push package build information to.
  * **Package ID**: The ID of the package, pushed separately, to push build information onto. e.g. MyCompany.App
  * **Package Version**: The version of the package, pushed separately, to push build information onto.
- * **Work Items Source**: The service hosting any work items or issues associated with each version of the package. Octopus will add information about the work items or issues to the package build information, which can be used in release notes. For more information see the [Issue Trackers documentation](https://octopus.com/docs/deployment-process/issue-tracking).
+ * **Work Items Source**: The service hosting any work items or issues associated with each version of the package. Octopus will add information about the work items or issues to the package build information, which can be used in release notes. For more information see the [Issue Trackers documentation](https://g.octopus.com/IssueTracking).
  * **Replace Existing**: If the package build information already exists in the repository, the default behavior is to reject the new build information being pushed. Set this flag to 'True' to overwrite the existing package build information.
- * **Additional Arguments**: Any additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/push-metadata) to include.
+ * **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliBuildInformation) to include.
 
 ## <a name="create-octopus-release"></a>![Create Release Icon](img/octopus_create-release-04.png) Create Octopus Release
 
@@ -137,7 +137,7 @@ Options include:
  * **Tenants** section:
    * **Tenant(s)**: Comma-separated list of tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
    * **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
- * **Additional Arguments**:  Any additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/deploy-release) to include.
+ * **Additional Arguments**:  Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliDeployRelease) to include.
 
 ### <a name="promote-octopus-release"></a>![Promote Release Image](img/octopus_promote-05.png) Promote Octopus Release
 
@@ -153,7 +153,7 @@ Options include:
  * **Tenants** section:
    * **Tenant(s)**: Comma-separated list of tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
    * **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
- * **Additional Arguments**:  Any additional [Octopus CLI arguments](https://octopus.com/docs/octopus-rest-api/octopus-cli/promote-release) to include.
+ * **Additional Arguments**:  Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliPromoteRelease) to include.
 
 <hr/>
 

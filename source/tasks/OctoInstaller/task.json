@@ -2,8 +2,8 @@
     "id": "57342b23-3a76-490a-8e78-25d4ade2f2e3",
     "name": "OctoInstaller",
     "friendlyName": "Octopus CLI Installer",
-    "description": "Install a specific version of the octopus tools",
-    "helpMarkDown": "Install a specific version of the octopus tools",
+    "description": "Install a specific version of the Octopus CLI",
+    "helpMarkDown": "Install a specific version of the Octopus CLI",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -33,7 +33,7 @@
         {
             "name": "version",
             "type": "string",
-            "label": "Octopus Tool Version",
+            "label": "Octopus CLI Version",
             "defaultValue": "embedded",
             "required": true,
             "helpMarkDown": "Specify `latest` or the version number to download. If you specify `embedded`, or the download fails, a built-in copy of the tool will be used."

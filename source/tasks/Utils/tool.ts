@@ -56,7 +56,7 @@ export async function getOrInstallOctoCommandRunner(command: string) : Promise<E
     .catch(err => {
         tasks.error(err);
         throw Error("Unable to locate and download the latest Octopus CLI tool. To use the embedded copy"
-            + " or another specific version, add the Octopus tools installer task to the build pipeline"
+            + " or another specific version, add the Octopus CLI installer task to the build pipeline"
             + " before this task.");
     })
     .then(addToolToPath)

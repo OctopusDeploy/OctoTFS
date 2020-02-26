@@ -166,7 +166,7 @@
             "label": "Additional Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments to be supplied to the Octopus CLI. See the [Octopus CLI documentation](https://octopus.com/docs/octopus-rest-api/octopus-cli/pack) for available parameters.",
+            "helpMarkDown": "Additional arguments to be supplied to the Octopus CLI. See the [Octopus CLI documentation](https://g.octopushq.com/OctopusCliPack) for available parameters.",
             "groupName": "advanced"
         }
     ],
