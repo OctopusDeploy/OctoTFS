@@ -83,7 +83,7 @@ Options include:
  * **Space**: The Octopus space to push a package to.
  * **Package**: Package file to push. To push multiple packages, enter multiple lines.
  * **Replace Existing**: If the package already exists in the repository, the default behavior is to reject the new package being pushed. Set this flag to **True** to overwrite the existing package.
- * **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/docOctopusCliPush) to include.
+ * **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliPush) to include.
 
 ## <a name="push-package-build-information-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Package Build Information to Octopus
 
