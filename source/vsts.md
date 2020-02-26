@@ -95,7 +95,7 @@ Options include:
  * **Space**: The Octopus space to push package build information to.
  * **Package ID**: The ID of the package, pushed separately, to push build information onto. e.g. MyCompany.App
  * **Package Version**: The version of the package, pushed separately, to push build information onto.
- * **Work Items Source**: The service hosting any work items or issues associated with each version of the package. Octopus will add information about the work items or issues to the package build information, which can be used in release notes. For more information see the [Issue Trackers documentation](https://g.octopus.com/IssueTracking).
+ * **Work Items Source**: The service hosting any work items or issues associated with each version of the package. Octopus will add information about the work items or issues to the package build information, which can be used in release notes. For more information see the [Issue Trackers documentation](https://g.octopushq.com/IssueTracking).
  * **Replace Existing**: If the package build information already exists in the repository, the default behavior is to reject the new build information being pushed. Set this flag to 'True' to overwrite the existing package build information.
  * **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliBuildInformation) to include.
 
