@@ -1,17 +1,9 @@
-import * as tasks from 'azure-pipelines-task-lib/task';
-import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import * as tasks from "azure-pipelines-task-lib/task";
+import { ToolRunner } from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "../Utils";
 import * as path from "path";
 
-import {
-    connectionArguments,
-    includeArguments,
-    argument,
-    argumentEnquote,
-    argumentIfSet,
-    getOverwriteModeFromReplaceInput,
-    multiArgument
-} from '../Utils';
+import { connectionArguments, includeArguments, argument, argumentEnquote, argumentIfSet, getOverwriteModeFromReplaceInput, multiArgument } from "../Utils";
 
 export interface IOctopusBuildInformation {
     BuildEnvironment: string;
@@ -46,16 +38,12 @@ async function run() {
         const buildInformation: IOctopusBuildInformation = {
             BuildEnvironment: "Azure DevOps",
             BuildNumber: environment.buildNumber,
-            BuildUrl: (
-                environment.teamCollectionUri.replace(/\/$/, '')
-                + '/' + environment.projectName
-                + '/_build/results?buildId=' + environment.buildId
-            ),
+            BuildUrl: environment.teamCollectionUri.replace(/\/$/, "") + "/" + environment.projectName + "/_build/results?buildId=" + environment.buildId,
             Branch: branch,
             VcsType: utils.getVcsTypeFromProvider(environment.buildRepositoryProvider),
             VcsRoot: environment.buildRepositoryUri,
             VcsCommitNumber: environment.buildSourceVersion,
-            Commits: commits.map(change => ({ Id: change.id, Comment: change.message }))
+            Commits: commits.map((change) => ({ Id: change.id, Comment: change.message })),
         };
 
         if (!environment.agentBuildDirectory) {
@@ -78,11 +66,14 @@ async function run() {
             argument("version", packageVersion),
             argumentEnquote("file", buildInformationFile),
             argument("overwrite-mode", overwriteMode),
-            includeArguments(additionalArguments)
+            includeArguments(additionalArguments),
         ];
 
-        const code: Number = await octo.map(x => x.launchOcto(configure))
-            .getOrElseL((x) => { throw new Error(x); });
+        const code: Number = await octo
+            .map((x) => x.launchOcto(configure))
+            .getOrElseL((x) => {
+                throw new Error(x);
+            });
 
         tasks.setResult(tasks.TaskResult.Succeeded, "Succeeded with code " + code);
     } catch (err) {

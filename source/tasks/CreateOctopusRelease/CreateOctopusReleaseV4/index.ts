@@ -1,13 +1,6 @@
-import * as tasks from 'azure-pipelines-task-lib/task';
+import * as tasks from "azure-pipelines-task-lib/task";
 import * as utils from "../../Utils";
-import {
-    multiArgument,
-    connectionArguments,
-    includeArguments,
-    flag,
-    argumentEnquote,
-    argumentIfSet
-} from '../../Utils';
+import { multiArgument, connectionArguments, includeArguments, flag, argumentEnquote, argumentIfSet } from "../../Utils";
 
 async function run() {
     try {
@@ -41,13 +34,11 @@ async function run() {
             multiArgument(argumentEnquote, "deployTo", deployToEnvironments),
             flag("progress", deployToEnvironments.length > 0 && deploymentProgress),
             multiArgument(argumentEnquote, "tenant", deployForTenants),
-            multiArgument(argumentEnquote, "tenanttag", deployForTenantTags)
+            multiArgument(argumentEnquote, "tenanttag", deployForTenantTags),
         ];
 
         if (workItemReleaseNotes || changesetCommentReleaseNotes || (customReleaseNotes && /[^\s]/.test(customReleaseNotes))) {
-            const linkedReleaseNotes = (workItemReleaseNotes || changesetCommentReleaseNotes)
-                ? await utils.getLinkedReleaseNotes(vstsConnection, changesetCommentReleaseNotes, workItemReleaseNotes)
-                : "";
+            const linkedReleaseNotes = workItemReleaseNotes || changesetCommentReleaseNotes ? await utils.getLinkedReleaseNotes(vstsConnection, changesetCommentReleaseNotes, workItemReleaseNotes) : "";
 
             const releaseNotesFile = utils.createReleaseNotesFile(() => {
                 return utils.generateReleaseNotesContent(environmentVariables, linkedReleaseNotes, customReleaseNotes);
@@ -58,11 +49,14 @@ async function run() {
 
         configure.push(includeArguments(additionalArguments));
 
-        const code:Number = await octo.map(x => x.launchOcto(configure))
-            .getOrElseL((x) => { throw new Error(x); });
+        const code: Number = await octo
+            .map((x) => x.launchOcto(configure))
+            .getOrElseL((x) => {
+                throw new Error(x);
+            });
 
         tasks.setResult(tasks.TaskResult.Succeeded, "Create octopus release succeeded with code " + code);
-    }catch(err){
+    } catch (err) {
         tasks.error(err);
         tasks.setResult(tasks.TaskResult.Failed, "Failed to deploy release " + err.message);
     }

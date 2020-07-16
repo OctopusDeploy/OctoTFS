@@ -7,11 +7,11 @@ export class OctoApiKeyHandler implements IRequestHandler {
         this.key = key;
     }
 
-    prepareRequest(options:any): void {
+    prepareRequest(options: any): void {
         options.headers["X-Octopus-ApiKey"] = this.key;
     }
 
-    canHandleAuthentication() : boolean {
+    canHandleAuthentication(): boolean {
         return false;
     }
 

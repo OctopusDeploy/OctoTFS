@@ -1,15 +1,7 @@
-import * as tasks from 'azure-pipelines-task-lib/task';
+import * as tasks from "azure-pipelines-task-lib/task";
 import * as utils from "../../Utils";
 
-import {
-    multiArgument,
-    connectionArguments,
-    includeArguments,
-    argument,
-    argumentEnquote,
-    argumentIfSet,
-    getOverwriteModeFromReplaceInput
-} from '../../Utils';
+import { multiArgument, connectionArguments, includeArguments, argument, argumentEnquote, argumentIfSet, getOverwriteModeFromReplaceInput } from "../../Utils";
 
 async function run() {
     try {
@@ -24,19 +16,16 @@ async function run() {
         const octo = await utils.getOrInstallOctoCommandRunner("push");
         const matchedPackages = await utils.resolveGlobs(packages);
 
-        const configure = [
-            connectionArguments(connection),
-            argumentIfSet(argumentEnquote, "space", space),
-            multiArgument(argumentEnquote, "package", matchedPackages),
-            argument("overwrite-mode", overwriteMode),
-            includeArguments(additionalArguments)
-        ];
+        const configure = [connectionArguments(connection), argumentIfSet(argumentEnquote, "space", space), multiArgument(argumentEnquote, "package", matchedPackages), argument("overwrite-mode", overwriteMode), includeArguments(additionalArguments)];
 
-        const code:Number = await octo.map(x => x.launchOcto(configure))
-            .getOrElseL((x) => { throw new Error(x); });
+        const code: Number = await octo
+            .map((x) => x.launchOcto(configure))
+            .getOrElseL((x) => {
+                throw new Error(x);
+            });
 
         tasks.setResult(tasks.TaskResult.Succeeded, "Succeeded with code " + code);
-    }catch(err){
+    } catch (err) {
         tasks.error(err);
         tasks.setResult(tasks.TaskResult.Failed, "Failed to push package. " + err.message);
     }
