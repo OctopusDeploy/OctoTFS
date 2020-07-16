@@ -7,7 +7,6 @@ function OctopusStatusWidgetConfiguration() {
             var $projectDropdown = $("#octopus-project");
             var $environmentDropdown = $("#octopus-environment");
 
-            // Saving Settings
             var saveSettings = function (configurationContext, connectionId, spaceId, spaceName, projectId, projectName, environmentId, environmentName) {
                 console.debug("Saving settings - Connection: " + connectionId + ", Space: " + spaceId + ", Project: " + projectId + ", Environment: " + environmentId);
                 var customSettings = {
@@ -32,7 +31,6 @@ function OctopusStatusWidgetConfiguration() {
 
             var fetchDataSourceContent = function (queryUri, token, name, spaceId) {
                 let query;
-
                 if (spaceId) {
                     query = '{"dataSourceDetails": {"dataSourceName":"' + name + '", "parameters": {"SpaceId":"' + spaceId + '"} } }';
                 } else {
@@ -51,7 +49,7 @@ function OctopusStatusWidgetConfiguration() {
 
             var appendDropdownOptions = function ($element, resultSelector, idSelector, nameSelector, selection) {
                 return function (data) {
-                    //A failed data source request will come back as okay but with an associated error message.
+                    // A failed data source request will come back as okay but with an associated error message.
                     if (data.errorMessage) {
                         console.error(data.errorMessage);
                         return;
@@ -61,10 +59,8 @@ function OctopusStatusWidgetConfiguration() {
                         if (!selected) {
                             selected = idSelector(result);
                         }
-
                         $element.append($('<option value="' + idSelector(result) + '">' + nameSelector(result) + "</option>"));
                     });
-
                     $element.val(selected);
                 };
             };
@@ -80,7 +76,6 @@ function OctopusStatusWidgetConfiguration() {
                 if (!val) {
                     return null;
                 }
-
                 return val.name ? val.name : val.Name;
             };
 
@@ -110,23 +105,14 @@ function OctopusStatusWidgetConfiguration() {
                 fetchDataSourceContent(queryUri, authToken, "OctopusAllSpaces", null).done(function (data) {
                     const hasSpaces = !data.errorMessage;
                     if (hasSpaces) {
-                        // Spaces
                         $spaceDropdown.prop("disabled", false);
                         appendSpaceData(data);
+
                         const selectedSpaceId = $spaceDropdown.val();
-
-                        // Projects
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllProjectsInSpace", selectedSpaceId).done(appendProjectData);
-
-                        // Environments
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironmentsInSpace", selectedSpaceId).done(appendEnvironmentData);
                     } else {
-                        // No Spaces
-
-                        // Projects
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllProjects", null).done(appendProjectData);
-
-                        // Environments
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironments", null).done(appendEnvironmentData);
                     }
                 });
@@ -136,11 +122,9 @@ function OctopusStatusWidgetConfiguration() {
                 $projectDropdown.empty();
                 $environmentDropdown.empty();
 
-                // Projects
                 var appendProjectData = appendDropdownOptions($projectDropdown, parseResult, selectId, selectName, settings ? settings.projectId : null);
                 fetchDataSourceContent(queryUri, authToken, "OctopusAllProjectsInSpace", spaceId).done(appendProjectData);
 
-                // Environments
                 var appendEnvironmentData = appendDropdownOptions($environmentDropdown, parseResult, selectId, selectName, settings ? settings.environmentId : null);
                 fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironmentsInSpace", spaceId).done(appendEnvironmentData);
             };
@@ -227,7 +211,7 @@ function OctopusStatusWidgetConfiguration() {
                                     );
                                 });
 
-                                //init the widget with initial settings as these values don't exist yet.
+                                // Initialise the widget with initial settings as these values don't exist yet.
                                 if (!settings) {
                                     saveSettings(
                                         widgetConfigurationContext,

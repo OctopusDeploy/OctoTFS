@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head></head>
-
     <body>
         <div class="widget-configuration">
             <div class="dropdown">
@@ -10,9 +9,8 @@
                     <select id="octopus-connection"></select>
                 </div>
             </div>
-
             <div class="dropdown">
-                <label>Space</label>
+                <label>Octopus Space</label>
                 <div class="wrapper">
                     <select id="octopus-space"></select>
                 </div>
@@ -24,13 +22,12 @@
                 </div>
             </div>
             <div class="dropdown">
-                <label>Environment</label>
+                <label>Octopus Environment</label>
                 <div class="wrapper">
                     <select id="octopus-environment"></select>
                 </div>
             </div>
         </div>
-
         <script src="lib/VSS.SDK.min.js"></script>
         <script src="js/configuration.js"></script>
         <script type="text/javascript">
@@ -40,7 +37,6 @@
                 usePlatformStyles: true,
                 usePlatformScripts: true,
             });
-
             VSS.ready(function () {
                 var statusWidgetConfig = new OctopusStatusWidgetConfiguration();
                 VSS.require(["TFS/Dashboards/WidgetHelpers", "VSS/Authentication/Services"], statusWidgetConfig.Configure);
