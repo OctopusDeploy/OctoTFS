@@ -215,11 +215,9 @@ export const getBuildChanges = async (client: vsts.WebApi) => {
 
     const changes = await api.getBuildChanges(environment.projectName, environment.buildId);
 
-    if(environment.buildRepositoryProvider === "TfsGit") 
-    {
+    if (environment.buildRepositoryProvider === "TfsGit") {
         let promises = changes.map(async x => {
-            if(x.messageTruncated)
-            {
+            if (x.messageTruncated) {
                 const segments = x.location.split("/");
                 const repositoryId = segments[segments.length - 3];
 
@@ -233,5 +231,5 @@ export const getBuildChanges = async (client: vsts.WebApi) => {
         await Promise.all(promises);
     }
 
-    return changes; 
+    return changes;
 };
