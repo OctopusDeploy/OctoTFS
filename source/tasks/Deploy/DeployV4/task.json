@@ -148,7 +148,7 @@
         {
             "target": "Project",
             "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusAllProjectsInSpace",
+            "dataSourceName": "OctopusAllProjectsInSpaceInProjectGroup",
             "parameters": {
                 "SpaceId": "$(Space)",
                 "ProjectGroupId": "$(ProjectGroup)"

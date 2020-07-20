@@ -139,7 +139,7 @@
         {
             "target": "Project",
             "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusAllProjects",
+            "dataSourceName": "OctopusAllProjectsInProjectGroup",
             "parameters": {
                 "ProjectGroupId": "$(ProjectGroup)"
             },
