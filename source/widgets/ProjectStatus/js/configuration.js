@@ -208,6 +208,21 @@ function OctopusStatusWidgetConfiguration() {
                                     refreshProjectsAndEnvironmentsInSpaceDropdowns(settings, queryUri(), authToken, $spaceDropdown.val(), $projectGroupDropdown.val());
                                 });
 
+                                $projectGroupDropdown.on("change", function () {
+                                    saveSettings(
+                                        widgetConfigurationContext,
+                                        $connectionDropdown.val(),
+                                        $spaceDropdown.val(),
+                                        $(":selected", $spaceDropdown).text(),
+                                        $projectGroupDropdown.val(),
+                                        $(":selected", $projectGroupDropdown).text(),
+                                        $projectDropdown.val(),
+                                        $(":selected", $projectDropdown).text(),
+                                        $environmentDropdown.val(),
+                                        $(":selected", $environmentDropdown).text()
+                                    );
+                                });
+
                                 $projectDropdown.on("change", function () {
                                     saveSettings(
                                         widgetConfigurationContext,
