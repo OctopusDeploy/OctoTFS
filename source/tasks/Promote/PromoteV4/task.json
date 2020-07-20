@@ -50,6 +50,17 @@
             "helpMarkDown": "The space within Octopus."
         },
         {
+            "name": "ProjectGroup",
+            "type": "pickList",
+            "label": "Project Group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "The project group within Octopus."
+        },
+        {
             "name": "Project",
             "type": "pickList",
             "label": "Project",
@@ -129,11 +140,21 @@
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },
         {
-            "target": "Project",
+            "target": "ProjectGroup",
             "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusAllProjectsInSpace",
+            "dataSourceName": "OctopusAllProjectGroupsInSpace",
             "parameters": {
                 "SpaceId": "$(Space)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
+        },
+        {
+            "target": "Project",
+            "endpointId": "$(OctoConnectedServiceName)",
+            "dataSourceName": "OctopusAllProjectsInSpaceInProjectGroup",
+            "parameters": {
+                "SpaceId": "$(Space)",
+                "ProjectGroupId": "$(ProjectGroup)"
             },
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },

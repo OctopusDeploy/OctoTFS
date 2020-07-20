@@ -50,6 +50,17 @@
             "helpMarkDown": "Version 3 of this task has limited support for spaces. We recommend using version 4 of this task for a better experience."
         },
         {
+            "name": "ProjectGroup",
+            "type": "pickList",
+            "label": "Project Group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "The project group within Octopus."
+        },
+        {
             "name": "Project",
             "type": "pickList",
             "label": "Project",
@@ -123,9 +134,18 @@
     ],
     "dataSourceBindings": [
         {
+            "target": "ProjectGroup",
+            "endpointId": "$(OctoConnectedServiceName)",
+            "dataSourceName": "OctopusAllProjectGroups",
+            "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
+        },
+        {
             "target": "Project",
             "endpointId": "$(OctoConnectedServiceName)",
             "dataSourceName": "OctopusAllProjects",
+            "parameters": {
+                "ProjectGroupId": "$(ProjectGroup)"
+            },
             "resultTemplate": "{\"Value\":\"{{{Name}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },
         {
