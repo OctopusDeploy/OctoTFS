@@ -116,6 +116,9 @@ function OctopusStatusWidgetConfiguration() {
                 const appendProjectData = appendDropdownOptions($projectDropdown, parseResult, selectId, selectName, settings ? settings.projectId : null);
                 const appendEnvironmentData = appendDropdownOptions($environmentDropdown, parseResult, selectId, selectName, settings ? settings.environmentId : null);
 
+                // Populate our project search with our project name.
+                $projectFilterInput.val(settings.projectName);
+
                 fetchDataSourceContent(queryUri, authToken, "OctopusAllSpaces", null, null).done(function (data) {
                     const hasSpaces = !data.errorMessage;
                     if (hasSpaces) {

@@ -52,10 +52,10 @@
         {
             "name": "ProjectFilter",
             "type": "string",
-            "label": "Project search by name",
+            "label": "Filter project by name",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "This helps your find projects and populates the next Project dropdown with results."
+            "helpMarkDown": "This helps you narrow the next Project dropdown with more specific results."
         },
         {
             "name": "Project",
