@@ -19,11 +19,6 @@
     "minimumAgentVersion": "2.115.0",
     "groups": [
         {
-            "name": "project",
-            "displayName": "Projects",
-            "isExpanded": true
-        },
-        {
             "name": "tenant",
             "displayName": "Tenants",
             "isExpanded": false
@@ -60,8 +55,7 @@
             "label": "Project search by name",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "This helps your find projects and populates the next Project dropdown with results.",
-            "groupName": "project"
+            "helpMarkDown": "This helps your find projects and populates the next Project dropdown with results."
         },
         {
             "name": "Project",
@@ -143,6 +137,7 @@
             "parameters": {
                 "PartialNameFilter": "$(ProjectFilter)"
             },
+            "resultSelector": "jsonpath:$.Items[*]",
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },
         {

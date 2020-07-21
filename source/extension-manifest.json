@@ -219,12 +219,12 @@
                     {
                         "name": "OctopusListProjects",
                         "endpointUrl": "$(endpoint.url)/api/projects?partialName=$(PartialNameFilter)",
-                        "resultSelector": "jsonpath:$.[*]"
+                        "resultSelector": "jsonpath:$.Items[*]"
                     },
                     {
                         "name": "OctopusListProjectsInSpace",
                         "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projects?partialName=$(PartialNameFilter)",
-                        "resultSelector": "jsonpath:$.[*]"
+                        "resultSelector": "jsonpath:$.Items[*]"
                     },
                     {
                         "name": "OctopusAllEnvironments",
