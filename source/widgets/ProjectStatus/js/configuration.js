@@ -128,10 +128,10 @@ function OctopusStatusWidgetConfiguration() {
                         appendSpaceData(data);
 
                         const selectedSpaceId = $spaceDropdown.val();
-                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInSpace", selectedSpaceId, "").done(appendProjectData);
+                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInSpace", selectedSpaceId, $projectFilterInput.val()).done(appendProjectData);
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironmentsInSpace", selectedSpaceId, null).done(appendEnvironmentData);
                     } else {
-                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjects", null, "").done(appendProjectData);
+                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjects", null, $projectFilterInput.val()).done(appendProjectData);
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironments", null, null).done(appendEnvironmentData);
                     }
                 });
