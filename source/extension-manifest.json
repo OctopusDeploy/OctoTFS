@@ -207,26 +207,6 @@
                         "resultSelector": "jsonpath:$.[*]"
                     },
                     {
-                        "name": "OctopusAllProjectGroups",
-                        "endpointUrl": "$(endpoint.url)/api/projectgroups/all",
-                        "resultSelector": "jsonpath:$.[*]"
-                    },
-                    {
-                        "name": "OctopusAllProjectGroupsInSpace",
-                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projectgroups/all",
-                        "resultSelector": "jsonpath:$.[*]"
-                    },
-                    {
-                        "name": "OctopusAllProjectsInProjectGroup",
-                        "endpointUrl": "$(endpoint.url)/api/projectgroups/$(ProjectGroupId)/projects",
-                        "resultSelector": "jsonpath:$.[*]"
-                    },
-                    {
-                        "name": "OctopusAllProjectsInSpaceInProjectGroup",
-                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projectgroups/$(ProjectGroupId)/projects",
-                        "resultSelector": "jsonpath:$.[*]"
-                    },
-                    {
                         "name": "OctopusAllProjects",
                         "endpointUrl": "$(endpoint.url)/api/projects/all",
                         "resultSelector": "jsonpath:$.[*]"
@@ -234,6 +214,16 @@
                     {
                         "name": "OctopusAllProjectsInSpace",
                         "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projects/all",
+                        "resultSelector": "jsonpath:$.[*]"
+                    },
+                    {
+                        "name": "OctopusListProjects",
+                        "endpointUrl": "$(endpoint.url)/api/projects?partialName=$(PartialNameFilter)",
+                        "resultSelector": "jsonpath:$.[*]"
+                    },
+                    {
+                        "name": "OctopusListProjectsInSpace",
+                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projects?partialName=$(PartialNameFilter)",
                         "resultSelector": "jsonpath:$.[*]"
                     },
                     {

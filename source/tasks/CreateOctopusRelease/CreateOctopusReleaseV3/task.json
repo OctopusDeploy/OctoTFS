@@ -19,6 +19,11 @@
     "minimumAgentVersion": "2.115.0",
     "groups": [
         {
+            "name": "project",
+            "displayName": "Projects",
+            "isExpanded": true
+        },
+        {
             "name": "releasenotes",
             "displayName": "Release Notes",
             "isExpanded": true
@@ -60,15 +65,13 @@
             "helpMarkDown": "Version 3 of this task has limited support for spaces. We recommend using version 4 of this task for a better experience."
         },
         {
-            "name": "ProjectGroup",
-            "type": "pickList",
-            "label": "Project Group",
+            "name": "ProjectFilter",
+            "type": "string",
+            "label": "Project search by name",
             "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "The project group within Octopus."
+            "required": false,
+            "helpMarkDown": "This helps your find projects and populates the next Project dropdown with results.",
+            "groupName": "project"
         },
         {
             "name": "ProjectName",
@@ -181,17 +184,11 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "ProjectGroup",
-            "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusAllProjectGroups",
-            "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
-        },
-        {
             "target": "ProjectName",
             "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusAllProjectsInProjectGroup",
+            "dataSourceName": "OctopusListProjects",
             "parameters": {
-                "ProjectGroupId": "$(ProjectGroup)"
+                "PartialNameFilter": "$(ProjectFilter)"
             },
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },

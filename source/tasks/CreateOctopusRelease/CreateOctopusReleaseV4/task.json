@@ -19,6 +19,11 @@
     "minimumAgentVersion": "2.115.0",
     "groups": [
         {
+            "name": "project",
+            "displayName": "Projects",
+            "isExpanded": true
+        },
+        {
             "name": "releasenotes",
             "displayName": "Release Notes (Legacy)",
             "isExpanded": true
@@ -60,15 +65,13 @@
             "helpMarkDown": "The space within Octopus."
         },
         {
-            "name": "ProjectGroup",
-            "type": "pickList",
-            "label": "Project Group",
+            "name": "ProjectFilter",
+            "type": "string",
+            "label": "Project search by name",
             "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "The project group within Octopus."
+            "required": false,
+            "helpMarkDown": "This helps your find projects and populates the next Project dropdown with results.",
+            "groupName": "project"
         },
         {
             "name": "ProjectName",
@@ -187,21 +190,11 @@
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },
         {
-            "target": "ProjectGroup",
-            "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusAllProjectGroupsInSpace",
-            "parameters": {
-                "SpaceId": "$(Space)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
-        },
-        {
             "target": "ProjectName",
             "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusAllProjectsInSpaceInProjectGroup",
+            "dataSourceName": "OctopusListProjectsInSpace",
             "parameters": {
-                "SpaceId": "$(Space)",
-                "ProjectGroupId": "$(ProjectGroup)"
+                "PartialNameFilter": "$(ProjectFilter)"
             },
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },
