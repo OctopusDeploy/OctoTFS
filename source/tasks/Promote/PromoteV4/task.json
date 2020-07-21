@@ -141,6 +141,7 @@
             "endpointId": "$(OctoConnectedServiceName)",
             "dataSourceName": "OctopusListProjectsInSpace",
             "parameters": {
+                "SpaceId": "$(Space)",
                 "PartialNameFilter": "$(ProjectFilter)"
             },
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
