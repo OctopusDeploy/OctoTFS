@@ -33,19 +33,20 @@ function OctopusStatusWidgetConfiguration() {
             var fetchDataSourceContent = function (queryUri, token, name, spaceId, projectNameFilter) {
                 let parameters = [];
                 if (spaceId) {
-                    parameters.push('{"SpaceId":"' + spaceId + '"}');
+                    parameters.push('"SpaceId":"' + spaceId + '"');
                 }
                 if (projectNameFilter) {
-                    parameters.push('{"PartialNameFilter":"' + projectNameFilter + '"}');
+                    parameters.push('"PartialNameFilter":"' + projectNameFilter + '"');
                 }
 
                 let query;
                 if (parameters.length > 0) {
-                    let parametersCsv = parameters.join(", ");
+                    let parametersCsv = "{" + parameters.join(", ") + "}";
                     query = '{"dataSourceDetails": {"dataSourceName":"' + name + '", "parameters": ' + parametersCsv + ' } }';
                 } else {
                     query = '{"dataSourceDetails": {"dataSourceName":"' + name + '"}}';
                 }
+                console.debug("query=", query);
 
                 return $.ajax({
                     type: "POST",
