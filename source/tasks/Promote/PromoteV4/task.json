@@ -143,7 +143,6 @@
             "parameters": {
                 "PartialNameFilter": "$(ProjectFilter)"
             },
-            "resultSelector": "jsonpath:$.Items[*]",
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },
         {
