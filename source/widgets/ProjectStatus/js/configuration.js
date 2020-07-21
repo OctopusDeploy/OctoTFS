@@ -30,13 +30,15 @@ function OctopusStatusWidgetConfiguration() {
                 return customSettings;
             };
 
-            var fetchDataSourceContent = function (queryUri, token, name, spaceId, projectNameFilter) {
+            var fetchDataSourceContent = function (queryUri, token, name, spaceId, partialNameFilter) {
                 let parameters = [];
                 if (spaceId) {
                     parameters.push('"SpaceId":"' + spaceId + '"');
                 }
-                if (projectNameFilter) {
-                    parameters.push('"PartialNameFilter":"' + projectNameFilter + '"');
+
+                // We check explicitly for `null` in this case. There are cases where we need to pass an empty string through to our endpointUrl.
+                if (partialNameFilter != null) {
+                    parameters.push('"PartialNameFilter":"' + partialNameFilter + '"');
                 }
 
                 let query;
@@ -121,10 +123,10 @@ function OctopusStatusWidgetConfiguration() {
                         appendSpaceData(data);
 
                         const selectedSpaceId = $spaceDropdown.val();
-                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInSpace", selectedSpaceId, null).done(appendProjectData);
+                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInSpace", selectedSpaceId, "").done(appendProjectData);
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironmentsInSpace", selectedSpaceId, null).done(appendEnvironmentData);
                     } else {
-                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjects", null, null).done(appendProjectData);
+                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjects", null, "").done(appendProjectData);
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironments", null, null).done(appendEnvironmentData);
                     }
                 });
@@ -138,7 +140,7 @@ function OctopusStatusWidgetConfiguration() {
                 fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInSpace", spaceId, projectNameFilter).done(appendProjectData);
 
                 var appendEnvironmentData = appendDropdownOptions($environmentDropdown, parseResult, selectId, selectName, settings ? settings.environmentId : null);
-                fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironmentsInSpace", spaceId, projectNameFilter).done(appendEnvironmentData);
+                fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironmentsInSpace", spaceId, null).done(appendEnvironmentData);
             };
 
             var refreshProjectsInSpaceDropdowns = function (settings, queryUri, authToken, spaceId, projectNameFilter) {
