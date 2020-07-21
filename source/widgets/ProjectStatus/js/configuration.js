@@ -44,7 +44,7 @@ function OctopusStatusWidgetConfiguration() {
                 let query;
                 if (parameters.length > 0) {
                     let parametersCsv = "{" + parameters.join(", ") + "}";
-                    query = '{"dataSourceDetails": {"dataSourceName":"' + name + '", "parameters": ' + parametersCsv + ' } }';
+                    query = '{"dataSourceDetails": {"dataSourceName":"' + name + '", "parameters": ' + parametersCsv + " } }";
                 } else {
                     query = '{"dataSourceDetails": {"dataSourceName":"' + name + '"}}';
                 }
