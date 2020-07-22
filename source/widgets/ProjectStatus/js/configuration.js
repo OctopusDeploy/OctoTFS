@@ -41,6 +41,8 @@ function OctopusStatusWidgetConfiguration() {
                     parameters.push('"PartialNameFilter":"' + partialNameFilter + '"');
                 }
 
+                // TODO: Refactor - we should really include interfaces for these and JSON.stringify() instead of string concatenation like this.
+                // TODO: Refactor - we also want to switch to using the latest `azure-devops-extension-sdk` so we can take advantage of the new UI components.
                 let query;
                 if (parameters.length > 0) {
                     let parametersCsv = "{" + parameters.join(", ") + "}";
