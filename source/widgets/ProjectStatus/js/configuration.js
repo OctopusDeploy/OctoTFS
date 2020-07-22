@@ -4,17 +4,19 @@ function OctopusStatusWidgetConfiguration() {
         VSS.register("OctoProjectEnvironmentWidget.Configuration", function () {
             var $connectionDropdown = $("#octopus-connection");
             var $spaceDropdown = $("#octopus-space");
-            var $projectFilterInput = $("#octopus-project-filter");
+            var $projectGroupDropdown = $("#octopus-project-group");
             var $projectDropdown = $("#octopus-project");
             var $environmentDropdown = $("#octopus-environment");
 
-            var saveSettings = function (configurationContext, connectionId, spaceId, spaceName, projectId, projectName, environmentId, environmentName) {
-                console.debug("Saving settings - Connection: " + connectionId + ", Space: " + spaceId + ", Project: " + projectId + ", Environment: " + environmentId);
+            var saveSettings = function (configurationContext, connectionId, spaceId, spaceName, projectGroupId, projectGroupName, projectId, projectName, environmentId, environmentName) {
+                console.debug("Saving settings - Connection: " + connectionId + ", Space: " + spaceId + ", ProjectGroup: " + projectGroupId + ", Project: " + projectId + ", Environment: " + environmentId);
                 var customSettings = {
                     data: JSON.stringify({
                         connectionId: connectionId,
                         spaceId: spaceId,
                         spaceName: spaceName,
+                        projectGroupId: projectGroupId,
+                        projectGroupName: projectGroupName,
                         projectId: projectId,
                         projectName: projectName,
                         environmentId: environmentId,
@@ -30,15 +32,13 @@ function OctopusStatusWidgetConfiguration() {
                 return customSettings;
             };
 
-            var fetchDataSourceContent = function (queryUri, token, name, spaceId, partialNameFilter) {
+            var fetchDataSourceContent = function (queryUri, token, name, spaceId, projectGroupId) {
                 let parameters = [];
                 if (spaceId) {
                     parameters.push('"SpaceId":"' + spaceId + '"');
                 }
-
-                // We check explicitly for `null` in this case. There are cases where we need to pass an empty string through to our endpointUrl.
-                if (partialNameFilter != null) {
-                    parameters.push('"PartialNameFilter":"' + partialNameFilter + '"');
+                if (projectGroupId) {
+                    parameters.push('"ProjectGroupId":"' + projectGroupId + '"');
                 }
 
                 // TODO: Refactor - we should really include interfaces for these and JSON.stringify() instead of string concatenation like this.
@@ -107,56 +107,67 @@ function OctopusStatusWidgetConfiguration() {
                 return (prop("result")(data) || []).map(JSON.parse);
             };
 
-            var refreshSpacesProjectsAndEnvironmentsDropdowns = function (settings, queryUri, authToken) {
+            var refreshSpacesProjectGroupsAndEnvironmentsDropdowns = function (settings, queryUri, authToken) {
                 $spaceDropdown.empty();
                 $spaceDropdown.prop("disabled", true);
-                $projectFilterInput.empty();
+                $projectGroupDropdown.empty();
                 $projectDropdown.empty();
                 $environmentDropdown.empty();
 
                 const appendSpaceData = appendDropdownOptions($spaceDropdown, parseResult, selectId, selectName, settings ? settings.spaceId : null);
+                const appendProjectGroupData = appendDropdownOptions($projectGroupDropdown, parseResult, selectId, selectName, settings ? settings.projectGroupId : null);
                 const appendProjectData = appendDropdownOptions($projectDropdown, parseResult, selectId, selectName, settings ? settings.projectId : null);
                 const appendEnvironmentData = appendDropdownOptions($environmentDropdown, parseResult, selectId, selectName, settings ? settings.environmentId : null);
-
-                // TODO: Review - this results in undesired UX when editing an existing widget (you end up with two project names on top of each other).
-                // TODO: With all the onChange events going on here, how can we achieve this nicely using our new list endpoints? (consider projects that do _not_ exist in the first page of results).
-                if (settings && settings.projectName) {
-                    // Populate our project search with our project name.
-                    $projectFilterInput.val(settings.projectName);
-                }
 
                 fetchDataSourceContent(queryUri, authToken, "OctopusAllSpaces", null, null).done(function (data) {
                     const hasSpaces = !data.errorMessage;
                     if (hasSpaces) {
                         $spaceDropdown.prop("disabled", false);
                         appendSpaceData(data);
-
                         const selectedSpaceId = $spaceDropdown.val();
-                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInSpace", selectedSpaceId, $projectFilterInput.val()).done(appendProjectData);
+
+                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjectGroupsInSpace", selectedSpaceId, null).done(function (projectGroupData) {
+                            appendProjectGroupData(projectGroupData);
+                            const selectedProjectGroupId = $projectGroupDropdown.val();
+                            fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInProjectGroupInSpace", selectedSpaceId, selectedProjectGroupId).done(appendProjectData);
+                        });
+
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironmentsInSpace", selectedSpaceId, null).done(appendEnvironmentData);
                     } else {
-                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjects", null, $projectFilterInput.val()).done(appendProjectData);
+                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjectGroups", null, null).done(function (projectGroupData) {
+                            appendProjectGroupData(projectGroupData);
+                            const selectedProjectGroupId = $projectGroupDropdown.val();
+                            fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInProjectGroup", null, selectedProjectGroupId).done(appendProjectData);
+                        });
+
                         fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironments", null, null).done(appendEnvironmentData);
                     }
                 });
             };
 
-            var refreshProjectsAndEnvironmentsInSpaceDropdowns = function (settings, queryUri, authToken, spaceId, projectNameFilter) {
+            var refreshProjectGroupsAndEnvironmentsInSpaceDropdowns = function (settings, queryUri, authToken, spaceId) {
+                $projectGroupDropdown.empty();
                 $projectDropdown.empty();
                 $environmentDropdown.empty();
 
+                var appendProjectGroupData = appendDropdownOptions($projectGroupDropdown, parseResult, selectId, selectName, settings ? settings.projectGroupId : null);
                 var appendProjectData = appendDropdownOptions($projectDropdown, parseResult, selectId, selectName, settings ? settings.projectId : null);
-                fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInSpace", spaceId, projectNameFilter).done(appendProjectData);
+
+                fetchDataSourceContent(queryUri, authToken, "OctopusListProjectGroupsInSpace", selectedSpaceId, null).done(function (projectGroupData) {
+                    appendProjectGroupData(projectGroupData);
+                    const selectedProjectGroupId = $projectGroupDropdown.val();
+                    fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInProjectGroupInSpace", selectedSpaceId, selectedProjectGroupId).done(appendProjectData);
+                });
 
                 var appendEnvironmentData = appendDropdownOptions($environmentDropdown, parseResult, selectId, selectName, settings ? settings.environmentId : null);
                 fetchDataSourceContent(queryUri, authToken, "OctopusAllEnvironmentsInSpace", spaceId, null).done(appendEnvironmentData);
             };
 
-            var refreshProjectsInSpaceDropdowns = function (settings, queryUri, authToken, spaceId, projectNameFilter) {
+            var refreshProjectsInSpaceDropdowns = function (settings, queryUri, authToken, spaceId, projectGroupId) {
                 $projectDropdown.empty();
 
                 var appendProjectData = appendDropdownOptions($projectDropdown, parseResult, selectId, selectName, settings ? settings.projectId : null);
-                fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInSpace", spaceId, projectNameFilter).done(appendProjectData);
+                fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInProjectGroupInSpace", spaceId, projectGroupId).done(appendProjectData);
             };
 
             var getConnectionQueryUri = function (baseUri, $element) {
@@ -185,7 +196,7 @@ function OctopusStatusWidgetConfiguration() {
                             }).done(function (data) {
                                 appendDropdownOptions($connectionDropdown, prop("value"), selectId, selectName, settings ? settings.connectionId : null)(data);
                                 var queryUri = getConnectionQueryUri(baseUri, $connectionDropdown);
-                                refreshSpacesProjectsAndEnvironmentsDropdowns(settings, queryUri(), authToken);
+                                refreshSpacesProjectGroupsAndEnvironmentsDropdowns(settings, queryUri(), authToken);
 
                                 $connectionDropdown.on("change", function () {
                                     saveSettings(
@@ -193,12 +204,14 @@ function OctopusStatusWidgetConfiguration() {
                                         $connectionDropdown.val(),
                                         $spaceDropdown.val(),
                                         $(":selected", $spaceDropdown).text(),
+                                        $projectGroupDropdown.val(),
+                                        $(":selected", $projectGroupDropdown).text(),
                                         $projectDropdown.val(),
                                         $(":selected", $projectDropdown).text(),
                                         $environmentDropdown.val(),
                                         $(":selected", $environmentDropdown).text()
                                     );
-                                    refreshSpacesProjectsAndEnvironmentsDropdowns(settings, queryUri(), authToken);
+                                    refreshSpacesProjectGroupsAndEnvironmentsDropdowns(settings, queryUri(), authToken);
                                 });
 
                                 $spaceDropdown.on("change", function () {
@@ -207,26 +220,30 @@ function OctopusStatusWidgetConfiguration() {
                                         $connectionDropdown.val(),
                                         $spaceDropdown.val(),
                                         $(":selected", $spaceDropdown).text(),
+                                        $projectGroupDropdown.val(),
+                                        $(":selected", $projectGroupDropdown).text(),
                                         $projectDropdown.val(),
                                         $(":selected", $projectDropdown).text(),
                                         $environmentDropdown.val(),
                                         $(":selected", $environmentDropdown).text()
                                     );
-                                    refreshProjectsAndEnvironmentsInSpaceDropdowns(settings, queryUri(), authToken, $spaceDropdown.val(), $projectFilterInput.val());
+                                    refreshProjectGroupsAndEnvironmentsInSpaceDropdowns(settings, queryUri(), authToken, $spaceDropdown.val());
                                 });
 
-                                $projectFilterInput.on("change", function () {
+                                $projectGroupDropdown.on("change", function () {
                                     saveSettings(
                                         widgetConfigurationContext,
                                         $connectionDropdown.val(),
                                         $spaceDropdown.val(),
                                         $(":selected", $spaceDropdown).text(),
+                                        $projectGroupDropdown.val(),
+                                        $(":selected", $projectGroupDropdown).text(),
                                         $projectDropdown.val(),
                                         $(":selected", $projectDropdown).text(),
                                         $environmentDropdown.val(),
                                         $(":selected", $environmentDropdown).text()
                                     );
-                                    refreshProjectsInSpaceDropdowns(settings, queryUri(), authToken, $spaceDropdown.val(), $projectFilterInput.val());
+                                    refreshProjectsInSpaceDropdowns(settings, queryUri(), authToken, $spaceDropdown.val(), $projectGroupDropdown.val());
                                 });
 
                                 $projectDropdown.on("change", function () {
@@ -235,6 +252,8 @@ function OctopusStatusWidgetConfiguration() {
                                         $connectionDropdown.val(),
                                         $spaceDropdown.val(),
                                         $(":selected", $spaceDropdown).text(),
+                                        $projectGroupDropdown.val(),
+                                        $(":selected", $projectGroupDropdown).text(),
                                         $projectDropdown.val(),
                                         $(":selected", $projectDropdown).text(),
                                         $environmentDropdown.val(),
@@ -248,6 +267,8 @@ function OctopusStatusWidgetConfiguration() {
                                         $connectionDropdown.val(),
                                         $spaceDropdown.val(),
                                         $(":selected", $spaceDropdown).text(),
+                                        $projectGroupDropdown.val(),
+                                        $(":selected", $projectGroupDropdown).text(),
                                         $projectDropdown.val(),
                                         $(":selected", $projectDropdown).text(),
                                         $environmentDropdown.val(),
@@ -262,6 +283,8 @@ function OctopusStatusWidgetConfiguration() {
                                         $connectionDropdown.val(),
                                         $spaceDropdown.val(),
                                         $(":selected", $spaceDropdown).text(),
+                                        $projectGroupDropdown.val(),
+                                        $(":selected", $projectGroupDropdown).text(),
                                         $projectDropdown.val(),
                                         $(":selected", $projectDropdown).text(),
                                         $environmentDropdown.val(),
@@ -280,6 +303,8 @@ function OctopusStatusWidgetConfiguration() {
                         $connectionDropdown.val(),
                         $spaceDropdown.val(),
                         $(":selected", $spaceDropdown).text(),
+                        $projectGroupDropdown.val(),
+                        $(":selected", $projectGroupDropdown).text(),
                         $projectDropdown.val(),
                         $(":selected", $projectDropdown).text(),
                         $environmentDropdown.val(),

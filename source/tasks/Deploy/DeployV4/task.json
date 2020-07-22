@@ -50,12 +50,15 @@
             "helpMarkDown": "The space within Octopus."
         },
         {
-            "name": "ProjectFilter",
-            "type": "string",
-            "label": "Filter project by name",
+            "name": "ProjectGroup",
+            "type": "pickList",
+            "label": "Project Group",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "This helps you narrow the next Project dropdown with more specific results."
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "The project group within Octopus (this populates the next Project dropdown)."
         },
         {
             "name": "Project",
@@ -134,12 +137,21 @@
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },
         {
+            "target": "ProjectGroup",
+            "endpointId": "$(OctoConnectedServiceName)",
+            "dataSourceName": "OctopusAllProjectGroupsInSpace",
+            "parameters": {
+                "SpaceId": "$(Space)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
+        },
+        {
             "target": "Project",
             "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusListProjectsInSpace",
+            "dataSourceName": "OctopusListProjectsInProjectGroupInSpace",
             "parameters": {
                 "SpaceId": "$(Space)",
-                "PartialNameFilter": "$(ProjectFilter)"
+                "ProjectGroupId": "$(ProjectGroup)"
             },
             "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },

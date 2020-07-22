@@ -8,7 +8,7 @@
 OctoTFS.Tests.resources.tasks.CreateOctopusRelease.CreateOctopusReleaseV3.task.json
 	'OctoConnectedServiceName': connectedService:OctopusEndpoint
 	'Space': string
-	'ProjectFilter': string
+	'ProjectGroup': pickList
 	'ProjectName': pickList
 	'ReleaseNumber': string
 	'Channel': pickList
@@ -23,7 +23,7 @@ OctoTFS.Tests.resources.tasks.CreateOctopusRelease.CreateOctopusReleaseV3.task.j
 OctoTFS.Tests.resources.tasks.CreateOctopusRelease.CreateOctopusReleaseV4.task.json
 	'OctoConnectedServiceName': connectedService:OctopusEndpoint
 	'Space': pickList
-	'ProjectFilter': string
+	'ProjectGroup': pickList
 	'ProjectName': pickList
 	'ReleaseNumber': string
 	'Channel': pickList
@@ -38,7 +38,7 @@ OctoTFS.Tests.resources.tasks.CreateOctopusRelease.CreateOctopusReleaseV4.task.j
 OctoTFS.Tests.resources.tasks.Deploy.DeployV3.task.json
 	'OctoConnectedServiceName': connectedService:OctopusEndpoint
 	'Space': string
-	'ProjectFilter': string
+	'ProjectGroup': pickList
 	'Project': pickList
 	'ReleaseNumber': string
 	'Environments': pickList
@@ -49,7 +49,7 @@ OctoTFS.Tests.resources.tasks.Deploy.DeployV3.task.json
 OctoTFS.Tests.resources.tasks.Deploy.DeployV4.task.json
 	'OctoConnectedServiceName': connectedService:OctopusEndpoint
 	'Space': pickList
-	'ProjectFilter': string
+	'ProjectGroup': pickList
 	'Project': pickList
 	'ReleaseNumber': string
 	'Environments': pickList
@@ -82,7 +82,7 @@ OctoTFS.Tests.resources.tasks.Pack.task.json
 OctoTFS.Tests.resources.tasks.Promote.PromoteV3.task.json
 	'OctoConnectedServiceName': connectedService:OctopusEndpoint
 	'Space': string
-	'ProjectFilter': string
+	'ProjectGroup': pickList
 	'Project': pickList
 	'From': pickList
 	'To': pickList
@@ -93,7 +93,7 @@ OctoTFS.Tests.resources.tasks.Promote.PromoteV3.task.json
 OctoTFS.Tests.resources.tasks.Promote.PromoteV4.task.json
 	'OctoConnectedServiceName': connectedService:OctopusEndpoint
 	'Space': pickList
-	'ProjectFilter': string
+	'ProjectGroup': pickList
 	'Project': pickList
 	'From': pickList
 	'To': pickList

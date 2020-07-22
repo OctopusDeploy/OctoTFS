@@ -207,13 +207,23 @@
                         "resultSelector": "jsonpath:$.[*]"
                     },
                     {
-                        "name": "OctopusListProjects",
-                        "endpointUrl": "$(endpoint.url)/api/projects?partialName=$(PartialNameFilter)",
+                        "name": "OctopusAllProjectGroups",
+                        "endpointUrl": "$(endpoint.url)/api/projectgroups/all",
+                        "resultSelector": "jsonpath:$.[*]"
+                    },
+                    {
+                        "name": "OctopusAllProjectGroupsInSpace",
+                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projectgroups/all",
+                        "resultSelector": "jsonpath:$.[*]"
+                    },
+                    {
+                        "name": "OctopusListProjectsInProjectGroup",
+                        "endpointUrl": "$(endpoint.url)/api/projectgroups/$(ProjectGroupId)/projects?take=500",
                         "resultSelector": "jsonpath:$.Items[*]"
                     },
                     {
-                        "name": "OctopusListProjectsInSpace",
-                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projects?partialName=$(PartialNameFilter)",
+                        "name": "OctopusListProjectsInProjectGroupInSpace",
+                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projectgroups$(ProjectGroupId)/projects?take=500",
                         "resultSelector": "jsonpath:$.Items[*]"
                     },
                     {
