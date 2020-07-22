@@ -118,6 +118,8 @@ function OctopusStatusWidgetConfiguration() {
                 const appendProjectData = appendDropdownOptions($projectDropdown, parseResult, selectId, selectName, settings ? settings.projectId : null);
                 const appendEnvironmentData = appendDropdownOptions($environmentDropdown, parseResult, selectId, selectName, settings ? settings.environmentId : null);
 
+                // TODO: Review - this results in undesired UX when editing an existing widget (you end up with two project names on top of each other).
+                // TODO: With all the onChange events going on here, how can we achieve this nicely using our new list endpoints? (consider projects that do _not_ exist in the first page of results).
                 if (settings && settings.projectName) {
                     // Populate our project search with our project name.
                     $projectFilterInput.val(settings.projectName);
