@@ -223,7 +223,7 @@
                     },
                     {
                         "name": "OctopusListProjectsInProjectGroupInSpace",
-                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projectgroups$(ProjectGroupId)/projects?take=500",
+                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projectgroups/$(ProjectGroupId)/projects?take=500",
                         "resultSelector": "jsonpath:$.Items[*]"
                     },
                     {
