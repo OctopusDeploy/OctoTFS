@@ -126,7 +126,7 @@ function OctopusStatusWidgetConfiguration() {
                         appendSpaceData(data);
                         const selectedSpaceId = $spaceDropdown.val();
 
-                        fetchDataSourceContent(queryUri, authToken, "OctopusListProjectGroupsInSpace", selectedSpaceId, null).done(function (projectGroupData) {
+                        fetchDataSourceContent(queryUri, authToken, "OctopusAllProjectGroupsInSpace", selectedSpaceId, null).done(function (projectGroupData) {
                             appendProjectGroupData(projectGroupData);
                             const selectedProjectGroupId = $projectGroupDropdown.val();
                             fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInProjectGroupInSpace", selectedSpaceId, selectedProjectGroupId).done(appendProjectData);
@@ -153,7 +153,7 @@ function OctopusStatusWidgetConfiguration() {
                 var appendProjectGroupData = appendDropdownOptions($projectGroupDropdown, parseResult, selectId, selectName, settings ? settings.projectGroupId : null);
                 var appendProjectData = appendDropdownOptions($projectDropdown, parseResult, selectId, selectName, settings ? settings.projectId : null);
 
-                fetchDataSourceContent(queryUri, authToken, "OctopusListProjectGroupsInSpace", selectedSpaceId, null).done(function (projectGroupData) {
+                fetchDataSourceContent(queryUri, authToken, "OctopusAllProjectGroupsInSpace", selectedSpaceId, null).done(function (projectGroupData) {
                     appendProjectGroupData(projectGroupData);
                     const selectedProjectGroupId = $projectGroupDropdown.val();
                     fetchDataSourceContent(queryUri, authToken, "OctopusListProjectsInProjectGroupInSpace", selectedSpaceId, selectedProjectGroupId).done(appendProjectData);
