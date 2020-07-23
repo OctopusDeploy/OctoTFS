@@ -1,13 +1,6 @@
-import * as tasks from 'azure-pipelines-task-lib/task';
+import * as tasks from "azure-pipelines-task-lib/task";
 import * as utils from "../../Utils";
-import {
-    multiArgument,
-    connectionArguments,
-    includeArguments,
-    flag,
-    argumentEnquote,
-    argumentIfSet
-} from '../../Utils/tool';
+import { multiArgument, connectionArguments, includeArguments, flag, argumentEnquote, argumentIfSet } from "../../Utils/tool";
 
 async function run() {
     try {
@@ -20,8 +13,7 @@ async function run() {
         const deploymentForTenants = utils.getOptionalCsvInput("DeployForTenants");
         const deployForTenantTags = utils.getOptionalCsvInput("DeployForTenantTags");
         const additionalArguments = tasks.getInput("AdditionalArguments");
-        const project = await utils.resolveProjectName(connection, tasks.getInput("Project", true))
-            .then(x => x.value);
+        const project = await utils.resolveProjectName(connection, tasks.getInput("Project", true)).then((x) => x.value);
 
         const octo = await utils.getOrInstallOctoCommandRunner("deploy-release");
 
@@ -34,14 +26,17 @@ async function run() {
             multiArgument(argumentEnquote, "tenant", deploymentForTenants),
             multiArgument(argumentEnquote, "tenanttag", deployForTenantTags),
             flag("progress", showProgress),
-            includeArguments(additionalArguments)
+            includeArguments(additionalArguments),
         ];
 
-        const code:Number = await octo.map(x => x.launchOcto(configure))
-            .getOrElseL((x) => { throw new Error(x); });
+        const code: Number = await octo
+            .map((x) => x.launchOcto(configure))
+            .getOrElseL((x) => {
+                throw new Error(x);
+            });
 
         tasks.setResult(tasks.TaskResult.Succeeded, "Deploy succeeded with code " + code);
-    }catch(err){
+    } catch (err) {
         tasks.error(err);
         tasks.setResult(tasks.TaskResult.Failed, "Failed to deploy release " + err.message);
     }

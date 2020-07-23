@@ -18,7 +18,7 @@
     "demands": [],
     "minimumAgentVersion": "2.115.0",
     "groups": [
-         {
+        {
             "name": "tenant",
             "displayName": "Tenants",
             "isExpanded": false
@@ -48,6 +48,17 @@
                 "EditableOptions": "False"
             },
             "helpMarkDown": "Version 3 of this task has limited support for spaces. We recommend using version 4 of this task for a better experience."
+        },
+        {
+            "name": "ProjectGroup",
+            "type": "pickList",
+            "label": "Project Group",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "The project group within Octopus (this populates the next Project dropdown)."
         },
         {
             "name": "Project",
@@ -123,10 +134,19 @@
     ],
     "dataSourceBindings": [
         {
+            "target": "ProjectGroup",
+            "endpointId": "$(OctoConnectedServiceName)",
+            "dataSourceName": "OctopusAllProjectGroups",
+            "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
+        },
+        {
             "target": "Project",
             "endpointId": "$(OctoConnectedServiceName)",
-            "dataSourceName": "OctopusAllProjects",
-            "resultTemplate": "{\"Value\":\"{{{Name}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
+            "dataSourceName": "OctopusListProjectsInProjectGroup",
+            "parameters": {
+                "ProjectGroupId": "$(ProjectGroup)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{Id}}}\",\"DisplayValue\":\"{{{Name}}}\"}"
         },
         {
             "target": "From",

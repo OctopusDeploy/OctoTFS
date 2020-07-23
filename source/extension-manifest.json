@@ -207,14 +207,24 @@
                         "resultSelector": "jsonpath:$.[*]"
                     },
                     {
-                        "name": "OctopusAllProjects",
-                        "endpointUrl": "$(endpoint.url)/api/projects/all",
+                        "name": "OctopusAllProjectGroups",
+                        "endpointUrl": "$(endpoint.url)/api/projectgroups/all",
                         "resultSelector": "jsonpath:$.[*]"
                     },
                     {
-                        "name": "OctopusAllProjectsInSpace",
-                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projects/all",
+                        "name": "OctopusAllProjectGroupsInSpace",
+                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projectgroups/all",
                         "resultSelector": "jsonpath:$.[*]"
+                    },
+                    {
+                        "name": "OctopusListProjectsInProjectGroup",
+                        "endpointUrl": "$(endpoint.url)/api/projectgroups/$(ProjectGroupId)/projects?take=500",
+                        "resultSelector": "jsonpath:$.Items[*]"
+                    },
+                    {
+                        "name": "OctopusListProjectsInProjectGroupInSpace",
+                        "endpointUrl": "$(endpoint.url)/api/$(SpaceId)/projectgroups/$(ProjectGroupId)/projects?take=500",
+                        "resultSelector": "jsonpath:$.Items[*]"
                     },
                     {
                         "name": "OctopusAllEnvironments",

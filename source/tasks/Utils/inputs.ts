@@ -5,9 +5,9 @@ import { flatten } from "ramda";
 import { Promise } from "ts-promise";
 
 export enum ReplaceOverwriteMode {
-    false = 'FailIfExists',
-    true = 'OverwriteExisting',
-    IgnoreIfExists = 'IgnoreIfExists'
+    false = "FailIfExists",
+    true = "OverwriteExisting",
+    IgnoreIfExists = "IgnoreIfExists",
 }
 
 export function getOverwriteModeFromReplaceInput(replace: string): ReplaceOverwriteMode {
@@ -24,51 +24,50 @@ export const pGlobNoNull = (pattern: string): Promise<string[]> => {
                 return;
             }
             resolve(matches);
-        })
+        });
     });
-}
+};
 
-export function isNullOrWhitespace(value: string | null | undefined): value is null | undefined{
-    return (!value || !/\S/.test(value));
+export function isNullOrWhitespace(value: string | null | undefined): value is null | undefined {
+    return !value || !/\S/.test(value);
 }
 
 export function safeTrim(value: string | null | undefined): string | null | undefined {
     return value ? value.trim() : value;
 }
 
-export function removeTrailingSlashes(value: string | null | undefined): string  | null | undefined{
+export function removeTrailingSlashes(value: string | null | undefined): string | null | undefined {
     return value ? value.replace(/[\/\\]+(?=\s*)$/, "") : value;
 }
 
-export function getLineSeparatedItems(value: string): Array<string>{
-    return value ? value.split(/[\r\n]+/g).map(x => x.trim()) : [];
+export function getLineSeparatedItems(value: string): Array<string> {
+    return value ? value.split(/[\r\n]+/g).map((x) => x.trim()) : [];
 }
 
 const getRequiredInput = (name: string) => {
     return option.fromNullable(tasks.getInput(name, true));
-}
+};
 
-const splitComma = (x: string) => x.split(",").map(x => x.trim());
+const splitComma = (x: string) => x.split(",").map((x) => x.trim());
 
 const getOptionalInput = (name: string) => {
     return option.fromNullable(tasks.getInput(name, false));
-}
+};
 
 export const getOptionalCsvInput = (name: string) => {
     return getOptionalInput(name).map(splitComma).getOrElse([]);
-}
+};
 
 export const getRequiredCsvInput = (name: string) => {
     return getRequiredInput(name).map(splitComma).getOrElse([]);
-}
-
-export { getRequiredInput, getOptionalInput }
-
-export function getDefaultOctoConnectionInputValue() {
-    return getRequiredInput(DefaultOctoConnectionInputName)
 };
 
+export { getRequiredInput, getOptionalInput };
 
-export const resolveGlobs = (globs: string[]) : Promise<string[]> => {
-    return Promise.all(globs.map(pGlobNoNull)).then(x=> flatten<string>(x));
+export function getDefaultOctoConnectionInputValue() {
+    return getRequiredInput(DefaultOctoConnectionInputName);
+}
+
+export const resolveGlobs = (globs: string[]): Promise<string[]> => {
+    return Promise.all(globs.map(pGlobNoNull)).then((x) => flatten<string>(x));
 };
