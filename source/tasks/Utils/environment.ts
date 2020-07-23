@@ -216,19 +216,28 @@ export const getBuildChanges = async (client: vsts.WebApi) => {
     const changes = await api.getBuildChanges(environment.projectName, environment.buildId);
 
     if (environment.buildRepositoryProvider === "TfsGit") {
+        let errorGettingFullComment: { err: any, id: string } = { err: null, id: "" };
         let promises = changes.map(async x => {
             if (x.messageTruncated) {
                 const segments = x.location.split("/");
                 const repositoryId = segments[segments.length - 3];
 
-                const commit = await gitApi.getCommit(x.id, repositoryId);
-                x.message = commit.comment;
+                try {
+                    const commit = await gitApi.getCommit(x.id, repositoryId);
+                    x.message = commit.comment;
+                } catch (err) {
+                    errorGettingFullComment = { err, id: x.id };
+                }
             }
 
             return x;
         });
 
         await Promise.all(promises);
+
+        if (errorGettingFullComment.err) {
+            tasks.warning(`Unable to fetch full message for one or more commits. Last error while fetching ${errorGettingFullComment.id}: ${errorGettingFullComment.err}`);
+        }
     }
 
     return changes;
