@@ -71,7 +71,7 @@ if(!(Test-Path $destinationFolder)){
     New-Item -ItemType Directory -Path $destinationFolder | Out-Null
 }
 
-$downloadFolder = Join-Path $env:TEMP "octo"
+$downloadFolder = Join-Path ([System.IO.Path]::GetTempPath()) "octo"
 $downloadDestination = Join-Path $downloadFolder $name
 Write-Host "Downloading Octo $($option.version) from $($option.location) and saving to $($downloadDestination)"
 
