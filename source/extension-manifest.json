@@ -191,6 +191,16 @@
             }
         },
         {
+            "id": "octopus-cli",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "tasks/OctoCli"
+            }
+        },
+        {
             "id": "octopus-endpoint-type",
             "description": "Octopus Deploy Endpoint type for Octopus Build tasks",
             "type": "ms.vss-endpoint.service-endpoint-type",
