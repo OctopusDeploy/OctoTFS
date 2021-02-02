@@ -4,7 +4,7 @@
     "friendlyName": "Invoke Octopus CLI command",
     "description": "Invoke an Octopus CLI command",
     "helpMarkDown": "set-by-pack.ps1",
-    "category": "Package",
+    "category": "Tool",
     "visibility": [
         "Build",
         "Release"
