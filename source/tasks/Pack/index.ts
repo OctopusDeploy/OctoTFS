@@ -1,9 +1,8 @@
 import * as tasks from "azure-pipelines-task-lib/task";
 import * as fs from "fs";
 import * as utils from "../Utils";
-import { argument, argumentIfSet, flag, multiArgument, argumentEnquote } from "../Utils";
+import { argument, argumentIfSet, flag, multiArgument, argumentEnquote, includeAdditionalArguments } from "../Utils";
 import { ToolRunner } from "azure-pipelines-task-lib/toolrunner";
-import { includeArguments } from "../Utils";
 
 export interface PackageRequiredInputs {
     packageId: string;
@@ -40,7 +39,7 @@ export const configure = (inputs: PackageInputs) => {
         argumentIfSet(argumentEnquote, "description", inputs.nuGetDescription),
         argumentIfSet(argumentEnquote, "releaseNotes", inputs.nuGetReleaseNotes),
         argument("overwrite", inputs.overwrite.toString()),
-        includeArguments(inputs.additionalArguments),
+        includeAdditionalArguments(inputs.additionalArguments),
         (tool: ToolRunner) => {
             if (!utils.isNullOrWhitespace(inputs.nuGetReleaseNotesFile) && fs.existsSync(inputs.nuGetReleaseNotesFile) && fs.lstatSync(inputs.nuGetReleaseNotesFile).isFile()) {
                 console.log(`Release notes file: ${inputs.nuGetReleaseNotesFile}`);

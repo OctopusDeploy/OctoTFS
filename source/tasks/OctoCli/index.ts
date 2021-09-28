@@ -1,6 +1,6 @@
 import * as tasks from "azure-pipelines-task-lib/task";
 import * as utils from "../Utils";
-import { connectionArguments, includeArguments } from "../Utils/tool";
+import { connectionArguments, includeAdditionalArguments } from "../Utils/tool";
 
 async function run() {
     try {
@@ -9,7 +9,7 @@ async function run() {
         const command = tasks.getInput("command", true);
         const octo = await utils.getOrInstallOctoCommandRunner(command);
 
-        const configure = [connectionArguments(connection), includeArguments(args)];
+        const configure = [connectionArguments(connection), includeAdditionalArguments(args)];
 
         const code: Number = await octo
             .map((x) => x.launchOcto(configure))

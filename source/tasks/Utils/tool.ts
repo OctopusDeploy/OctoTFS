@@ -128,7 +128,32 @@ export const argumentEnquote = curry((name: string, value: string | null | undef
     return argument(name, `"${value}"`, tool);
 });
 
-export const includeArguments = curry((value: string, tool: ToolRunner) => {
+export const includeAdditionalArgumentsAndDefaults = curry((url: string, value: string, tool: ToolRunner) => {
+    const timeoutRegex = /-timeout=/;
+    const proxyRegex = /-proxy=/;
+
+    if (!timeoutRegex.test(value)){
+        argument("timeout", "86400", tool); // We increase the timeout to 24h so it does not use the default 10mins timeout
+    }
+
+    const proxyConfig = tasks.getHttpProxyConfiguration(url)
+
+    if(proxyConfig) {
+        if (!proxyRegex.test(value)){
+            argument("proxy", proxyConfig.proxyUrl, tool);
+            if(proxyConfig.proxyUsername) {
+                argument("proxyUser", proxyConfig.proxyUsername, tool);
+            }
+            if(proxyConfig.proxyPassword){
+                argument("proxyPass", proxyConfig.proxyPassword, tool);
+            }
+        }
+    }
+
+    return includeAdditionalArguments(value, tool);
+});
+
+export const includeAdditionalArguments = curry((value: string, tool: ToolRunner) => {
     return tool.line(value);
 });
 
