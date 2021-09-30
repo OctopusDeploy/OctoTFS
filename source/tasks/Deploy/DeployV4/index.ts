@@ -1,6 +1,6 @@
 import * as tasks from "azure-pipelines-task-lib/task";
 import * as utils from "../../Utils";
-import { multiArgument, connectionArguments, includeArguments, flag, argumentEnquote, argumentIfSet } from "../../Utils";
+import { multiArgument, connectionArguments, includeAdditionalArgumentsAndProxyConfig, flag, argumentEnquote, argumentIfSet } from "../../Utils";
 
 async function run() {
     try {
@@ -14,7 +14,6 @@ async function run() {
         const deployForTenantTags = utils.getOptionalCsvInput("DeployForTenantTags");
         const showProgress = tasks.getBoolInput("ShowProgress");
         const additionalArguments = tasks.getInput("AdditionalArguments");
-
         await utils.assertOctoVersionAcceptsIds();
         const octo = await utils.getOrInstallOctoCommandRunner("deploy-release");
 
@@ -27,7 +26,7 @@ async function run() {
             multiArgument(argumentEnquote, "tenant", deployForTenants),
             multiArgument(argumentEnquote, "tenanttag", deployForTenantTags),
             flag("progress", showProgress),
-            includeArguments(additionalArguments),
+            includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments),
         ];
 
         const code: Number = await octo

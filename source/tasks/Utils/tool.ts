@@ -128,7 +128,27 @@ export const argumentEnquote = curry((name: string, value: string | null | undef
     return argument(name, `"${value}"`, tool);
 });
 
-export const includeArguments = curry((value: string, tool: ToolRunner) => {
+export const includeAdditionalArgumentsAndProxyConfig = curry((url: string, value: string, tool: ToolRunner) => {
+    const proxyRegex = /-proxy=/;
+
+    const proxyConfig = tasks.getHttpProxyConfiguration(url)
+
+    if(proxyConfig) {
+        if (!proxyRegex.test(value)){
+            argument("proxy", proxyConfig.proxyUrl, tool);
+            if(proxyConfig.proxyUsername) {
+                argument("proxyUser", proxyConfig.proxyUsername, tool);
+            }
+            if(proxyConfig.proxyPassword){
+                argument("proxyPass", proxyConfig.proxyPassword, tool);
+            }
+        }
+    }
+
+    return includeAdditionalArguments(value, tool);
+});
+
+export const includeAdditionalArguments = curry((value: string, tool: ToolRunner) => {
     return tool.line(value);
 });
 

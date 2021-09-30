@@ -1,6 +1,6 @@
 import * as tasks from "azure-pipelines-task-lib/task";
 import * as utils from "../../Utils";
-import { multiArgument, connectionArguments, includeArguments, flag, argumentEnquote, argumentIfSet } from "../../Utils";
+import { multiArgument, connectionArguments, includeAdditionalArgumentsAndProxyConfig, flag, argumentEnquote, argumentIfSet } from "../../Utils";
 
 async function run() {
     try {
@@ -51,7 +51,7 @@ async function run() {
             configure.push(argumentEnquote("releaseNotesFile", releaseNotesFile));
         }
 
-        configure.push(includeArguments(additionalArguments));
+        configure.push(includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments));
 
         const code: Number = await octo
             .map((x) => x.launchOcto(configure))

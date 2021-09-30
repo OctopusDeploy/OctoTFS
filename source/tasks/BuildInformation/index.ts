@@ -3,7 +3,7 @@ import { ToolRunner } from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "../Utils";
 import * as path from "path";
 
-import { connectionArguments, includeArguments, argument, argumentEnquote, argumentIfSet, getOverwriteModeFromReplaceInput, multiArgument } from "../Utils";
+import { connectionArguments, includeAdditionalArgumentsAndProxyConfig, argument, argumentEnquote, argumentIfSet, getOverwriteModeFromReplaceInput, multiArgument } from "../Utils";
 
 export interface IOctopusBuildInformation {
     BuildEnvironment: string;
@@ -66,7 +66,7 @@ async function run() {
             argument("version", packageVersion),
             argumentEnquote("file", buildInformationFile),
             argument("overwrite-mode", overwriteMode),
-            includeArguments(additionalArguments),
+            includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments),
         ];
 
         const code: Number = await octo

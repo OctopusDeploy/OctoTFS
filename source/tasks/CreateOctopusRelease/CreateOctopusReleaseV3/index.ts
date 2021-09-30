@@ -1,6 +1,6 @@
 import * as tasks from "azure-pipelines-task-lib/task";
 import * as utils from "../../Utils";
-import { multiArgument, connectionArguments, includeArguments, flag, argumentEnquote, argumentIfSet } from "../../Utils/tool";
+import { multiArgument, connectionArguments, includeAdditionalArgumentsAndProxyConfig, flag, argumentEnquote, argumentIfSet } from "../../Utils/tool";
 
 async function run() {
     try {
@@ -28,7 +28,7 @@ async function run() {
             linkedReleaseNotes = await utils.getLinkedReleaseNotes(vstsConnection, changesetCommentReleaseNotes, workItemReleaseNotes);
         }
 
-        const realseNotesFile = utils.createReleaseNotesFile(() => {
+        const releaseNotesFile = utils.createReleaseNotesFile(() => {
             return utils.generateReleaseNotesContent(environmentVariables, linkedReleaseNotes, customReleaseNotes);
         }, environmentVariables.defaultWorkingDirectory);
 
@@ -43,8 +43,8 @@ async function run() {
             flag("progress", deployToEnvironments.length > 0 && deploymentProgress),
             multiArgument(argumentEnquote, "tenant", deployForTenants),
             multiArgument(argumentEnquote, "tenanttag", deployForTenantTags),
-            argumentEnquote("releaseNotesFile", realseNotesFile),
-            includeArguments(additionalArguments),
+            argumentEnquote("releaseNotesFile", releaseNotesFile),
+            includeAdditionalArgumentsAndProxyConfig(octoConnection.url, additionalArguments),
         ];
 
         const code: Number = await octo

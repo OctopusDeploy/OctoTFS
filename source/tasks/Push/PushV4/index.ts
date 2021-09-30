@@ -1,7 +1,7 @@
 import * as tasks from "azure-pipelines-task-lib/task";
 import * as utils from "../../Utils";
 
-import { multiArgument, connectionArguments, includeArguments, argument, argumentEnquote, argumentIfSet, getOverwriteModeFromReplaceInput } from "../../Utils";
+import { multiArgument, connectionArguments, includeAdditionalArgumentsAndProxyConfig, argument, argumentEnquote, argumentIfSet, getOverwriteModeFromReplaceInput } from "../../Utils";
 
 async function run() {
     try {
@@ -16,7 +16,7 @@ async function run() {
         const octo = await utils.getOrInstallOctoCommandRunner("push");
         const matchedPackages = await utils.resolveGlobs(packages);
 
-        const configure = [connectionArguments(connection), argumentIfSet(argumentEnquote, "space", space), multiArgument(argumentEnquote, "package", matchedPackages), argument("overwrite-mode", overwriteMode), includeArguments(additionalArguments)];
+        const configure = [connectionArguments(connection), argumentIfSet(argumentEnquote, "space", space), multiArgument(argumentEnquote, "package", matchedPackages), argument("overwrite-mode", overwriteMode), includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments)];
 
         const code: Number = await octo
             .map((x) => x.launchOcto(configure))

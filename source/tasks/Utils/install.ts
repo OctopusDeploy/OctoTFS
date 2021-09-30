@@ -5,6 +5,7 @@ import * as tools from "azure-pipelines-tool-lib/tool";
 import * as TypedRestClient from "typed-rest-client/RestClient";
 import { ToolName, ToolNameBeforeV7 } from "../Utils";
 import { head, filter } from "ramda";
+import { IProxyConfiguration } from "typed-rest-client/Interfaces";
 
 interface LatestResponse {
     latest: string;
@@ -28,8 +29,6 @@ interface Dictionary {
 
 const RestClient = TypedRestClient.RestClient;
 const OctopurlsUrl = "https://g.octopushq.com";
-
-var octopurls = new RestClient("OctoTFS/Tasks", OctopurlsUrl);
 
 const applyTemplate = (dictionary: Dictionary, template: string) => {
     return Object.keys(dictionary).reduce((result, key) => result.replace(new RegExp(`{\s*${key}\s*}`, "g"), dictionary[key] ? String(dictionary[key]) : ""), template);
@@ -96,13 +95,27 @@ async function resolvePublishedOctoVersion(version?: string): Promise<DownloadOp
     }
     console.log(`Attempting to contact ${OctopurlsUrl} to find Octopus CLI tool version ${version}`);
 
+    const proxyConfiguration = tasks.getHttpProxyConfiguration(OctopurlsUrl);
+    let proxySettings: IProxyConfiguration | undefined = undefined;
+
+    if(proxyConfiguration) {
+        proxySettings = {
+            proxyUrl: proxyConfiguration.proxyUrl,
+            proxyUsername: proxyConfiguration.proxyUsername,
+            proxyPassword: proxyConfiguration.proxyPassword,
+            proxyBypassHosts: proxyConfiguration.proxyBypassHosts,
+        }
+    }
+
+    const octopurls = new RestClient("OctoTFS/Tasks", OctopurlsUrl, undefined, { proxy: proxySettings });
+
     const response = await octopurls.get<LatestResponse>("LatestTools");
 
     if (response.result === null || response.result === undefined) {
         throw Error(`Failed to resolve Octopus CLI tool version ${version}. Endpoint returned status code ${response.statusCode})`);
     }
 
-    var option = filterPortableDownload(response.result.downloads);
+    const option = filterPortableDownload(response.result.downloads);
 
     if (option === null || option === undefined) {
         throw Error(`Failed to resolve the Octopus CLI tool portable download location. The result did not contain the download location.`);
@@ -113,7 +126,7 @@ async function resolvePublishedOctoVersion(version?: string): Promise<DownloadOp
     }
 
     //Adjust the version and location to point to the specified version
-    let result = { ...option, version };
+    const result = { ...option, version };
     result.location = applyTemplate(result, result.template);
 
     return result;
