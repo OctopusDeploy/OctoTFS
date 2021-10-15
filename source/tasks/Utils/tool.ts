@@ -135,6 +135,7 @@ export const includeAdditionalArgumentsAndProxyConfig = curry((url: string, valu
 
     if(proxyConfig) {
         if (!proxyRegex.test(value)){
+            console.log("Using agent configured proxy. If this command should not be sent via the agent's proxy, you might need to add or modify the agent's .proxybypass file. See https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/proxy#specify-proxy-bypass-urls.");
             argument("proxy", proxyConfig.proxyUrl, tool);
             if(proxyConfig.proxyUsername) {
                 argument("proxyUser", proxyConfig.proxyUsername, tool);
