@@ -2,20 +2,19 @@
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using ApprovalTests;
-using ApprovalTests.Reporters;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using VerifyNUnit;
 
 namespace OctoTFS.Tests
 {
     [TestFixture]
-    [UseReporter(typeof (DiffReporter))]
     public class ContractStabilityFixture
     {
         [Test]
         [Description("This test helps to make sure we don't accidentally change the name nor data type of inputs people have stored in VSTS - otherwise they will likely lose data.")]
-        public void EnsureInputNamesAndTypesHaveNotChanged()
+        public Task EnsureInputNamesAndTypesHaveNotChanged()
         {
             var taskJsonResourceNames = Assembly.GetAssembly(GetType())
                 .GetManifestResourceNames()
@@ -27,21 +26,19 @@ namespace OctoTFS.Tests
             {
                 builder.AppendIndentedLine(resourceName);
 
-                using (var resourceStream = Assembly.GetAssembly(GetType()).GetManifestResourceStream(resourceName))
-                using (var textReader = new StreamReader(resourceStream))
-                using (var jsonReader = new JsonTextReader(textReader))
+                using var resourceStream = Assembly.GetAssembly(GetType()).GetManifestResourceStream(resourceName);
+                using var textReader = new StreamReader(resourceStream);
+                using var jsonReader = new JsonTextReader(textReader);
+                dynamic task = JsonSerializer.CreateDefault().Deserialize(jsonReader);
+                foreach (dynamic input in task.inputs)
                 {
-                    dynamic task = JsonSerializer.CreateDefault().Deserialize(jsonReader);
-                    foreach (dynamic input in task.inputs)
-                    {
-                        builder.AppendIndentedLine($"'{input.name}': {input.type}", 1);
-                    }
+                    builder.AppendIndentedLine($"'{input.name}': {input.type}", 1);
                 }
 
                 return builder;
             }, builder => builder.ToString());
 
-            Approvals.Verify(toApprove);
+            return Verifier.Verify(toApprove);
         }
     }
 
