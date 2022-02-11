@@ -44,7 +44,7 @@ const extract = (archivePath: string) => {
     return tools.extractZip(archivePath);
 };
 
-function getExecutableExtention(): string {
+function getExecutableExtension(): string {
     return ".dll";
 }
 
@@ -54,7 +54,7 @@ function getLocalTool(version: string): string {
 }
 
 function findOcto(rootFolder: string) {
-    var octoPath = [path.join(rootFolder, "*" + ToolName + getExecutableExtention()), path.join(rootFolder, "*" + ToolNameBeforeV7 + getExecutableExtention())];
+    var octoPath = [path.join(rootFolder, "*" + ToolName + getExecutableExtension()), path.join(rootFolder, "*" + ToolNameBeforeV7 + getExecutableExtension())];
     console.log(`Looking for ${octoPath}`);
     var allPaths = tasks.find(rootFolder);
     var matches = tasks.match(allPaths, octoPath, rootFolder);
