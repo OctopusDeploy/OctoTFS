@@ -12,6 +12,9 @@
     "moduleResolution": "node",
     "baseUrl": "./source",
     "allowSyntheticDefaultImports": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "useUnknownInCatchVariables": false,
     "lib": [
       "es2015"
     ]

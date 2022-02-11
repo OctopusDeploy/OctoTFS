@@ -69,5 +69,6 @@ export function getDefaultOctoConnectionInputValue() {
 }
 
 export const resolveGlobs = (globs: string[]): Promise<string[]> => {
+    // @ts-ignore
     return Promise.all(globs.map(pGlobNoNull)).then((x) => flatten<string>(x));
 };

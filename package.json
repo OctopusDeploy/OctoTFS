@@ -6,12 +6,12 @@
     "clean": "rimraf packages/**/lib"
   },
   "devDependencies": {
-    "@types/glob": "5.0.35",
+    "@types/glob": "7.2.0",
     "@types/gulp": "4.0.5",
     "@types/jest": "24.0.15",
     "@types/node": "6.0.111",
-    "@types/ramda": "0.25.29",
-    "@types/uuid": "3.4.3",
+    "@types/ramda": "0.27.64",
+    "@types/uuid": "8.3.4",
     "@types/webpack": "4.4.35",
     "extend": "3.0.2",
     "gulp": "4.0.0",
@@ -27,23 +27,23 @@
     "ts-loader": "6.0.4",
     "ts-node": "8.3.0",
     "tsconfig-paths": "3.8.0",
-    "typescript": "3.5.3",
+    "typescript": "4.5.5",
     "webpack": "4.36.1",
     "webpack-command": "0.4.2",
     "webpack-node-externals": "1.7.2",
-    "yargs": "12.0.5"
+    "yargs": "17.3.1"
   },
   "dependencies": {
-    "azure-devops-node-api": "6.6.0",
-    "azure-pipelines-task-lib": "2.7.7",
-    "azure-pipelines-tool-lib": "0.11.0",
-    "fp-ts": "1.6.0",
-    "glob": "7.1.2",
-    "ramda": "0.25.0",
-    "ts-promise": "2.0.0",
-    "typed-rest-client": "1.0.7",
-    "uuid": "3.2.1",
-    "vss-web-extension-sdk": "5.140.0"
+    "azure-devops-node-api": "11.1.0",
+    "azure-pipelines-task-lib": "3.1.10",
+    "azure-pipelines-tool-lib": "0.13.3",
+    "fp-ts": "1.19.5",
+    "glob": "7.2.0",
+    "ramda": "0.28.0",
+    "ts-promise": "2.2.0",
+    "typed-rest-client": "1.8.6",
+    "uuid": "8.3.2",
+    "vss-web-extension-sdk": "5.141.0"
   },
   "jest": {
     "transform": {
