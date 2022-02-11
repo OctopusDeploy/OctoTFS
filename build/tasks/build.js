@@ -15,6 +15,7 @@ gulp.task("build:tasks", () => {
         shell: true,
         stdio: 'inherit',
         env: {
+            ...process.env,
             TS_NODE_PROJECT: "build/tsconfig-webpack.json",
             EXTENSION_VERSION: argv.extensionVersion
         }
