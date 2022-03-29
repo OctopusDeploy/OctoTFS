@@ -9,11 +9,26 @@ export interface OctoServerConnectionDetails {
 export const DefaultOctoConnectionInputName = "OctoConnectedServiceName";
 
 export function getDefaultOctopusConnectionDetailsOrThrow() {
-    const result = getOctopusConnectionDetails(tasks.getInput(DefaultOctoConnectionInputName, true) || "");
-    if (!result) {
-        throw new Error("Could not retrieve default Octo connection information");
+    const connection = tasks.getInput(DefaultOctoConnectionInputName, false);
+
+    if (connection) {
+        const result = getOctopusConnectionDetails(connection);
+        if (!result) {
+            throw new Error("Could not retrieve default Octo connection information");
+        }
+
+        return result;
     }
-    return result;
+
+    if (process.env.OCTOPUS_API_KEY && process.env.OCTOPUS_SERVER) {
+        return {
+            url: process.env.OCTOPUS_SERVER,
+            apiKey: process.env.OCTOPUS_API_KEY,
+            ignoreSslErrors: process.env.OCTOPUS_IGNORE_SSL ? process.env.OCTOPUS_IGNORE_SSL === "true" : false,
+        };
+    }
+
+    throw new Error("Could not retrieve default Octo connection information");
 }
 
 function getOctopusConnectionDetails(name: string): OctoServerConnectionDetails {
