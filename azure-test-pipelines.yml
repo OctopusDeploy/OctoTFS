@@ -1,0 +1,242 @@
+trigger: none
+name: 1.0.$(Build.BuildId)
+variables:
+  space: Default
+  sa_password: 'yourStrong45@Password'
+  server_url: 'http://localhost:8080'
+  admin_api_key: 'API-ZPJJ0PC4MFKXZPTITE151VRR3IMCJRW'
+resources:
+  containers:
+  - container: sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    env:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: ${{ variables.sa_password }}
+      MSSQL_PID: Developer
+    options: >-
+      --health-cmd "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$SA_PASSWORD\" -Q \"SELECT 1\" || exit 1"
+      --health-interval 10s
+      --health-timeout 3s
+      --health-retries 10
+      --health-start-period 10s
+  - container: octopusserver
+    image: octopusdeploy/octopusdeploy
+    env:
+      ACCEPT_EULA: Y
+      DB_CONNECTION_STRING: 'Server=sqlserver;Database=OctopusDeploy;User Id=sa;Password=${{ variables.sa_password }};'
+      ADMIN_API_KEY: ${{ variables.admin_api_key }}
+      ENABLE_USAGE: N
+    ports:
+    - 8080:8080
+
+jobs:
+- job: Version_5
+  timeoutInMinutes: 5
+  cancelTimeoutInMinutes: 2
+  services:
+    sqlserver: sqlserver
+    octopusserver: octopusserver
+  displayName: Version 5+ $(os)
+  strategy:
+    matrix:
+      windows:
+        image: windows-latest
+        os: win
+        cliVersion: '8.*'
+      linux:
+        image: ubuntu-latest
+        on: linux
+        cliVersion: '*'
+      mac:
+        image: macos-latest
+        os: mac
+        cliVersion: '7'
+  pool:
+    vmImage: $(image)
+  steps:
+  - checkout: self
+    fetchDepth: 1
+  - task: Bash@3
+    displayName: Add server url to CORS
+    inputs:
+      targetType: 'inline'
+      script: 'curl ''$(server_url)/api/configuration/webportal/values'' -X ''PUT'' -H ''Content-Type: application/json'' -H ''X-Octopus-ApiKey: $(admin_api_key)'' --data-binary ''{"Security":{"CorsWhitelist":"http://localhost,$(server_url)","ReferrerPolicy":"no-referrer","ContentSecurityPolicyEnabled":true,"HttpStrictTransportSecurityEnabled":false,"HttpStrictTransportSecurityMaxAge":31556926,"XOptions":{"XFrameOptionAllowFrom":null,"XFrameOptions":"None"}}}'' -o /dev/null -s -w "%{http_code}\n"'
+  - task: OctoInstaller@5
+    displayName: Install Octopus CLI tool
+    inputs:
+      version: $(cliVersion)
+  - task: ArchiveFiles@2
+    displayName: Package TestProject
+    inputs:
+      rootFolderOrFile: $(Build.Repository.LocalPath)
+      archiveFile: $(Build.ArtifactStagingDirectory)/TestProject.$(Build.BuildNumber)-v5-$(os).zip
+  - task: OctopusPush@5
+    displayName: Push Packages to Octopus
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      Package: $(Build.ArtifactStagingDirectory)/TestProject.$(Build.BuildNumber)-v5-$(os).zip
+      Replace: 'true'
+  - task: OctopusCreateRelease@5
+    displayName: Create Octopus Release
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      ProjectName: 'Test Project'
+      ReleaseNumber: $(Build.BuildNumber)-v5-$(os)
+      CustomReleaseNotes: Custom release notes!<br /><br />Now with multilines
+  - task: OctopusDeployRelease@5
+    displayName: Deploy Octopus Release
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      Project: 'Test Project'
+      ReleaseNumber: $(Build.BuildNumber)-v5-$(os)
+      Environments: 'Development'
+      ShowProgress: true
+  - task: OctopusPromote@5
+    displayName: Promote Project in Octopus
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      Project: 'Test Project'
+      From: 'Development'
+      To: 'Test'
+- job: Version_4
+  timeoutInMinutes: 5
+  cancelTimeoutInMinutes: 2
+  displayName: Version 4 $(os)
+  strategy:
+    matrix:
+      windows:
+        image: windows-latest
+        os: win
+        cliVersion: 'embedded'
+      linux:
+        image: ubuntu-latest
+        on: linux
+        cliVersion: '7.4.3663'
+      mac:
+        image: macos-latest
+        os: mac
+        cliVersion: '8.0.0'
+  pool:
+    vmImage: $(image)
+  steps:
+  - checkout: self
+    fetchDepth: 1
+  - task: OctoInstaller@4
+    displayName: Install octo
+    inputs:
+      version: $(cliVersion)
+  - task: OctopusPack@4
+    displayName: Package TestProject
+    inputs:
+      PackageId: TestProject
+      PackageVersion: $(Build.BuildNumber)-v4-$(os)
+      SourcePath: $(Build.Repository.LocalPath)
+      OutputPath: $(Build.ArtifactStagingDirectory)
+      ListFiles: true
+  - task: OctopusPush@4
+    displayName: Push Packages to Octopus
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      Package: $(Build.ArtifactStagingDirectory)/TestProject.$(Build.BuildNumber)-v4-$(os).nupkg
+      Replace: 'true'
+  - task: OctopusMetadata@4
+    displayName: Push Package Metadata to Octopus
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      PackageId: TestProject
+      PackageVersion: $(Build.BuildNumber)-v4-$(os)
+      Replace: 'true'
+      AdditionalArguments: --logLevel=verbose
+  - task: OctopusCreateRelease@4
+    displayName: 'Create Octopus Release: Test Project'
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      ProjectName: 'Test Project'
+      ReleaseNumber: $(Build.BuildNumber)-v4-$(os)
+  - task: OctopusDeployRelease@4
+    displayName: 'Deploy Octopus Release: Test Project to Development'
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      Project: 'Test Project'
+      ReleaseNumber: $(Build.BuildNumber)-v4-$(os)
+      Environments: 'Development'
+      ShowProgress: true
+  - task: OctopusPromote@4
+    displayName: Promote Test Project from Development to Test
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Space: $(space)
+      Project: 'Test Project'
+      From: 'Development'
+      To: 'Test'
+- job: Version_3
+  timeoutInMinutes: 5
+  cancelTimeoutInMinutes: 2
+  displayName: Version 3 $(os)
+  strategy:
+    matrix:
+      windows:
+        image: windows-latest
+        os: win
+        cliVersion: 'embedded'
+      linux:
+        image: ubuntu-latest
+        on: linux
+        cliVersion: '7.4.3663'
+      mac:
+        image: macos-latest
+        os: mac
+        cliVersion: '8.0.0'
+  pool:
+    vmImage: $(image)
+  steps:
+  - checkout: self
+    fetchDepth: 1
+  - task: OctoInstaller@3
+    displayName: Install octo
+    inputs:
+      version: $(cliVersion)
+  - task: OctopusPack@3
+    displayName: Package TestProject
+    inputs:
+      PackageId: TestProject
+      PackageVersion: $(Build.BuildNumber)-v3-$(os)
+      SourcePath: $(Build.Repository.LocalPath)
+      OutputPath: $(Build.ArtifactStagingDirectory)
+      ListFiles: true
+  - task: OctopusPush@3
+    displayName: Push Packages to Octopus
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Package: $(Build.ArtifactStagingDirectory)/TestProject.$(Build.BuildNumber)-v3-$(os).nupkg
+      Replace: true
+  - task: OctopusCreateRelease@3
+    displayName: 'Create Octopus Release: Test Project'
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      ProjectName: 'Test Project'
+      ReleaseNumber: $(Build.BuildNumber)-v3-$(os)
+      CustomReleaseNotes: Custom release notes!<br /><br />Now with multilines
+  - task: OctopusDeployRelease@3
+    displayName: 'Deploy Octopus Release: Test Project to Development'
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Project: Test Project
+      ReleaseNumber: $(Build.BuildNumber)-v3-$(os)
+      Environments: Development
+      ShowProgress: true
+  - task: OctopusPromote@3
+    displayName: Promote Test Project from Development to Test
+    inputs:
+      OctoConnectedServiceName: 'Our Prod Octopus'
+      Project: Test Project
+      From: Development
+      To: Test
