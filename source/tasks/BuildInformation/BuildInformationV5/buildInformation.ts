@@ -66,7 +66,7 @@ export class BuildInformation {
         const buildInformation: IOctopusBuildInformation = {
             BuildEnvironment: "Azure DevOps",
             BuildNumber: environment.buildNumber,
-            BuildUrl: environment.teamCollectionUri.replace(/\/$/, "") + "/" + environment.projectName + "/_build/results?buildId=" + environment.buildId,
+            BuildUrl: environment.teamCollectionUri.replace(/\/$/, "") + "/" + environment.projectName + "/_build/index?buildId=" + environment.buildId,
             Branch: branch,
             VcsType: this.getVcsTypeFromProvider(environment.buildRepositoryProvider),
             VcsRoot: environment.buildRepositoryUri,

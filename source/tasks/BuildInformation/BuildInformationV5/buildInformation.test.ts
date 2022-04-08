@@ -197,7 +197,7 @@ describe("Build Information", () => {
         expect(buildInformationPayload).toBe(`{
   "BuildEnvironment": "Azure DevOps",
   "BuildNumber": "1",
-  "BuildUrl": "${octopusUrl}/test/_build/results?buildId=1",
+  "BuildUrl": "${octopusUrl}/test/_build/index?buildId=1",
   "Branch": "refs/heads/master",
   "VcsType": "Git",
   "VcsRoot": "",

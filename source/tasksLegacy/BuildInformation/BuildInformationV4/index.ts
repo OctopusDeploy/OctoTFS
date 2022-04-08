@@ -44,7 +44,7 @@ async function run() {
         const buildInformation: IOctopusBuildInformation = {
             BuildEnvironment: "Azure DevOps",
             BuildNumber: environment.buildNumber,
-            BuildUrl: environment.teamCollectionUri.replace(/\/$/, "") + "/" + environment.projectName + "/_build/results?buildId=" + environment.buildId,
+            BuildUrl: environment.teamCollectionUri.replace(/\/$/, "") + "/" + environment.projectName + "/_build/index?buildId=" + environment.buildId,
             // @ts-expect-error
             Branch: branch,
             VcsType: getVcsTypeFromProvider(environment.buildRepositoryProvider),

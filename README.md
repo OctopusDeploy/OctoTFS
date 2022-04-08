@@ -67,6 +67,10 @@ It's highly recommended to set up two Virtual Machines running Windows Server. T
 
 To install locally, build and package the application as per the instructions above. Then install the extension by uploading it. Instructions to do this are available in Microsoft's [TFS/ADO docs](https://docs.microsoft.com/en-us/vsts/marketplace/get-tfs-extensions?view=tfs-2018#install-extensions-for-disconnected-tfs).
 
+### Local
+
+The SemVer major.minor for the package is currently controlled by the /.github/workflows/build.yml file. Update this file as part of your PR if making breaking/additive changes.
+
 #### Additional tips
 
 * TFS/ADO is accessible on port 8080 by default (this can be changed if desired) at something like the following: `http://<server name/ip>:8080/tfs/`
