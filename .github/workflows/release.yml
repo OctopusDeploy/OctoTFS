@@ -15,7 +15,6 @@ jobs:
     uses: ./.github/workflows/build.yml
   create-release:
     name: "Create Release"
-    needs: package
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Release Notes
