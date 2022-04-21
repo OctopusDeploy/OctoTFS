@@ -1,11 +1,7 @@
 name: Build
 
 on:
-  push:
-    branches: [ main ]
-    tags: [ '*' ]
-  pull_request:
-    branches: [ main ]
+  workflow_call:
 
 env:
   OCTOPUS_VERSION: 5.0.${{ github.run_number }}
@@ -92,7 +88,3 @@ jobs:
       - name: Push Package
         run: |
           docker run -e "OCTOPUS_CLI_SERVER=${{ secrets.OCTOPUS_URL }}" -e "OCTOPUS_CLI_API_KEY=${{ secrets.INTEGRATIONS_API_KEY }}" -v $(pwd):/src octopusdeploy/octo push --space "Integrations" --package OctoTFS.vsix.$OCTOPUS_VERSION.tar.gz --package OctoTFS.publish.$OCTOPUS_VERSION.tar.gz --overwrite-mode OverwriteExisting
-      - name: Create Release
-        run: |
-          docker run -e "OCTOPUS_CLI_SERVER=${{ secrets.OCTOPUS_URL }}" -e "OCTOPUS_CLI_API_KEY=${{ secrets.INTEGRATIONS_API_KEY }}" -v $(pwd):/src octopusdeploy/octo create-release --space "Integrations" --project "Azure DevOps Extension" --packageVersion $OCTOPUS_VERSION --releaseNumber $OCTOPUS_VERSION --gitRef "${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}" --gitCommit "${{ github.event.after || github.event.pull_request.head.sha }}"
-

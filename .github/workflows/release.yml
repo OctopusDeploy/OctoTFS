@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+  workflow_dispatch:
+    inputs:
+      release-tag:
+        description: "The tag of the release being replicated in Octopus Deploy"
+        required: true
+
+jobs:
+  build:
+    uses: build.yml
+  create-release:
+    name: "Create Release"
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Release Notes
+        id: fetch-release-notes
+        run: |
+          echo "::debug::${{github.event_name}}"
+          OUTPUT_FILE="release_notes.txt"
+          if [[ "${{github.event_name}}" = "release" ]]; then
+           jq --raw-output '.release.body' ${{ github.event_path }} | sed 's#\r#  #g' > $OUTPUT_FILE
+          else
+             RELEASE_URL=$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/tags/${{github.event.inputs.release-tag}}
+             echo $RELEASE_URL
+             echo "::debug::Fetching relesae from $RELEASE_URL"
+             curl -s -H "Accept: application/vnd.github.v3+json" $RELEASE_URL | jq --raw-output '.body' | sed 's#\r#  #g' > $OUTPUT_FILE
+          fi
+          echo "::set-output name=release-note-file::$OUTPUT_FILE"
+
+      - name: Create a release in Octopus Deploy 🐙
+        uses: OctopusDeploy/create-release-action@v1.1.1
+        with:
+          api_key: ${{ secrets.INTEGRATIONS_API_KEY }}
+          server: ${{ secrets.OCTOPUS_URL }}
+          space: "Integrations"
+          project: "Azure DevOps Extension"
+          package_version: ${{ OCTOPUS_VERSION }}
+          channel: "Release"
+          release_notes_file: ${{ steps.fetch-release-notes.outputs.release-note-file }}
+          gitRef: ${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}
+          gitCommit: ${{ github.event.after || github.event.pull_request.head.sha }}
+
