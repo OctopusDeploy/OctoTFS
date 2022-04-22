@@ -19,7 +19,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     secrets:
       OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
-      OCTOPUS_CLI_API_KEY: ${{ secrets.OCTOPUS_CLI_API_KEY }}
+      OCTOPUS_CLI_API_KEY: ${{ secrets.INTEGRATIONS_API_KEY }}
 
   create-release:
     name: "Create Release"
@@ -40,6 +40,9 @@ jobs:
              curl -s -H "Accept: application/vnd.github.v3+json" $RELEASE_URL | jq --raw-output '.body' | sed 's#\r#  #g' > $OUTPUT_FILE
           fi
           echo "::set-output name=release-note-file::$OUTPUT_FILE"
+
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1.1.7
 
       - name: Create a release in Octopus Deploy 🐙
         uses: OctopusDeploy/create-release-action@v1.1.1

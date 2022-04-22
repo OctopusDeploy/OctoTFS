@@ -103,7 +103,10 @@ jobs:
           tar -czf OctoTFS.vsix.$PACKAGE_VERSION.tar.gz ./dist/Artifacts/**/*.vsix
           tar -czf OctoTFS.publish.$PACKAGE_VERSION.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
 
-      - name: Push Package
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1.1.7
+
+      - name: Push Package 🐙
         uses: OctopusDeploy/push-package-action@v1.1.2
         with:
             space: "Integrations"
