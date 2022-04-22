@@ -10,9 +10,17 @@ on:
         description: "The tag of the release being replicated in Octopus Deploy"
         required: true
 
+env:
+  OCTOPUS_CLI_SERVER: ${{ secrets.OCTOPUS_URL }}
+  OCTOPUS_CLI_API_KEY: ${{ secrets.OCTOPUS_CLI_API_KEY }}
+
 jobs:
   build:
     uses: ./.github/workflows/build.yml
+    secrets:
+      OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
+      OCTOPUS_CLI_API_KEY: ${{ secrets.OCTOPUS_CLI_API_KEY }}
+
   create-release:
     name: "Create Release"
     needs: build
@@ -36,11 +44,9 @@ jobs:
       - name: Create a release in Octopus Deploy 🐙
         uses: OctopusDeploy/create-release-action@v1.1.1
         with:
-          api_key: ${{ secrets.INTEGRATIONS_API_KEY }}
-          server: ${{ secrets.OCTOPUS_URL }}
           space: "Integrations"
           project: "Azure DevOps Extension"
-          package_version: ${{ OCTOPUS_VERSION }}
+          package_version: ${{ needs.build.outputs.PACKAGE_VERSION }}
           channel: "Release"
           release_notes_file: ${{ steps.fetch-release-notes.outputs.release-note-file }}
           gitRef: ${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}

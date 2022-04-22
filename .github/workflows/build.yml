@@ -2,9 +2,19 @@ name: Build
 
 on:
   workflow_call:
-
+    secrets:
+      OCTOPUS_URL:
+        required: true
+      OCTOPUS_CLI_API_KEY:
+        required: true
+    outputs:
+      PACKAGE_VERSION:
+        description: "The package version being built"
+        value: $Env:PACKAGE_VERSION
 env:
-  OCTOPUS_VERSION: 5.0.${{ github.run_number }}
+  PACKAGE_VERSION: 5.2.${{ github.run_number }}
+  OCTOPUS_CLI_SERVER: ${{ secrets.OCTOPUS_URL }}
+  OCTOPUS_CLI_API_KEY: ${{ secrets.OCTOPUS_CLI_API_KEY }}
 
 jobs:
   build:
@@ -20,11 +30,12 @@ jobs:
       - name: Build
         run: |
           npm install
-          npm run build -- --extensionVersion $OCTOPUS_VERSION
+          npm run build -- --extensionVersion $PACKAGE_VERSION
       - uses: actions/upload-artifact@v2
         with:
           name: dist
           path: dist/
+  
   test:
     name: Run test matrix
     needs: build
@@ -54,6 +65,7 @@ jobs:
           name: Tests report
           path: 'reports/jest-*.xml'
           reporter: jest-junit
+  
   package:
     name: Package and Push artifacts to Octopus
     needs: test
@@ -64,27 +76,35 @@ jobs:
         with:
           name: dist
           path: dist
+
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '16'
           cache: 'npm'
+
       - name: Install Go
         uses: actions/setup-go@v2
         with:
           go-version: '^1.17.7'
+
       - name: Embed octo portable
         run: |
           pwsh ./embed-octo.ps1
+
       - name: Replace versions in tasks and create vsix
         run: |
-          ./pack.ps1 -environment Production -version $Env:OCTOPUS_VERSION -setupTaskDependencies
-          ./pack.ps1 -environment Test -version $Env:OCTOPUS_VERSION
+          ./pack.ps1 -environment Production -version $Env:PACKAGE_VERSION -setupTaskDependencies
+          ./pack.ps1 -environment Test -version $Env:PACKAGE_VERSION
         shell: pwsh
+
       - name: Create Packages
         run: |
-          tar -czf OctoTFS.vsix.$OCTOPUS_VERSION.tar.gz ./dist/Artifacts/**/*.vsix
-          tar -czf OctoTFS.publish.$OCTOPUS_VERSION.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
+          tar -czf OctoTFS.vsix.$PACKAGE_VERSION.tar.gz ./dist/Artifacts/**/*.vsix
+          tar -czf OctoTFS.publish.$PACKAGE_VERSION.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
+
       - name: Push Package
-        run: |
-          docker run -e "OCTOPUS_CLI_SERVER=${{ secrets.OCTOPUS_URL }}" -e "OCTOPUS_CLI_API_KEY=${{ secrets.INTEGRATIONS_API_KEY }}" -v $(pwd):/src octopusdeploy/octo push --space "Integrations" --package OctoTFS.vsix.$OCTOPUS_VERSION.tar.gz --package OctoTFS.publish.$OCTOPUS_VERSION.tar.gz --overwrite-mode OverwriteExisting
+        uses: OctopusDeploy/push-package-action@v1.1.2
+        with:
+            space: "Integrations"
+            packages: "OctoTFS.vsix.$PACKAGE_VERSION.tar.gz,OctoTFS.publish.$PACKAGE_VERSION.tar.gz"

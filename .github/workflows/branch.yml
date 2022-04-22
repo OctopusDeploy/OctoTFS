@@ -2,19 +2,29 @@ name: Branch build
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+
+env:
+  OCTOPUS_CLI_SERVER: ${{ secrets.OCTOPUS_URL }}
+  OCTOPUS_CLI_API_KEY: ${{ secrets.OCTOPUS_CLI_API_KEY }}
 
 jobs:
   build:
     uses: ./.github/workflows/build.yml
+    secrets:
+      OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
+      OCTOPUS_CLI_API_KEY: ${{ secrets.OCTOPUS_CLI_API_KEY }}
+
   create-release:
     name: "Create Release"
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Create a release in Octopus Deploy 🐙
-        run: |
-          docker run -e "OCTOPUS_CLI_SERVER=${{ secrets.OCTOPUS_URL }}" -e "OCTOPUS_CLI_API_KEY=${{ secrets.INTEGRATIONS_API_KEY }}" -v $(pwd):/src octopusdeploy/octo create-release --space "Integrations" --project "Azure DevOps Extension" --packageVersion $OCTOPUS_VERSION --releaseNumber $OCTOPUS_VERSION --gitRef "${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}" --gitCommit "${{ github.event.after || github.event.pull_request.head.sha }}"
-
+        uses: OctopusDeploy/create-release-action@v1.1.1
+        with:
+          space: "Integrations"
+          project: "Azure DevOps Extension"
+          package_version: ${{ needs.build.outputs.PACKAGE_VERSION }}
+          gitRef: ${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}
+          gitCommit: ${{ github.event.after || github.event.pull_request.head.sha }}
