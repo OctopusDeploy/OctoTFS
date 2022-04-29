@@ -102,6 +102,8 @@ jobs:
         run: |
           tar -czf OctoTFS.vsix.$PACKAGE_VERSION.tar.gz ./dist/Artifacts/**/*.vsix
           tar -czf OctoTFS.publish.$PACKAGE_VERSION.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
+          pwd
+          ls
 
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1.1.7
