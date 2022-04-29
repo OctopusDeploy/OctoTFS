@@ -112,4 +112,4 @@ jobs:
         uses: OctopusDeploy/push-package-action@v1.1.2
         with:
             space: "Integrations"
-            packages: "OctoTFS.vsix.$PACKAGE_VERSION.tar.gz,OctoTFS.publish.$PACKAGE_VERSION.tar.gz"
+            packages: "OctoTFS.vsix.${{PACKAGE_VERSION}}.tar.gz,OctoTFS.publish.${{PACKAGE_VERSION}}.tar.gz"
