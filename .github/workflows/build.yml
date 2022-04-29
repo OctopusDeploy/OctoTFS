@@ -103,7 +103,7 @@ jobs:
         run: |
           tar -czf OctoTFS.vsix.$PACKAGE_VERSION.tar.gz ./dist/Artifacts/**/*.vsix
           tar -czf OctoTFS.publish.$PACKAGE_VERSION.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
-          echo "::set-output name=packages_to_push=OctoTFS.vsix.$PACKAGE_VERSION.tar.gz,OctoTFS.publish.$PACKAGE_VERSION.tar.gz"
+          echo "::set-output name=packages_to_push::OctoTFS.vsix.$PACKAGE_VERSION.tar.gz,OctoTFS.publish.$PACKAGE_VERSION.tar.gz"
 
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1.1.7
