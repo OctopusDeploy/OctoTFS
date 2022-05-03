@@ -8,9 +8,9 @@ on:
       OCTOPUS_CLI_API_KEY:
         required: true
     outputs:
-      PACKAGE_VERSION:
+      package_version:
         description: "The package version being built"
-        value: ${{ env.PACKAGE_VERSION }}
+        value: ${{ jobs.build.outputs.package_version }}
 env:
   PACKAGE_VERSION: 5.2.${{ github.run_number }}
   OCTOPUS_CLI_SERVER: ${{ secrets.OCTOPUS_URL }}
@@ -20,6 +20,8 @@ jobs:
   build:
     name: Build code
     runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.build.outputs.package_version }}
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
@@ -28,9 +30,11 @@ jobs:
           node-version: '16'
           cache: 'npm'
       - name: Build
+        id: build
         run: |
           npm install
           npm run build -- --extensionVersion $PACKAGE_VERSION
+          echo "::set-output name=package_version::$PACKAGE_VERSION"
       - uses: actions/upload-artifact@v2
         with:
           name: dist

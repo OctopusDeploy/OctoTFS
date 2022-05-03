@@ -49,7 +49,7 @@ jobs:
         with:
           space: "Integrations"
           project: "Azure DevOps Extension"
-          package_version: ${{ needs.build.outputs.PACKAGE_VERSION }}
+          package_version: ${{ needs.build.outputs.package_version }}
           channel: "Release"
           release_notes_file: ${{ steps.fetch-release-notes.outputs.release-note-file }}
           git_ref: ${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}
