@@ -103,15 +103,15 @@ jobs:
 
       - name: Replace versions in tasks and create vsix
         run: |
-          ./pack.ps1 -environment Production -version ${{ jobs.build.outputs.package_version }} -setupTaskDependencies
-          ./pack.ps1 -environment Test -version ${{ jobs.build.outputs.package_version }}
+          ./pack.ps1 -environment Production -version ${{ job.build.outputs.package_version }} -setupTaskDependencies
+          ./pack.ps1 -environment Test -version ${{ job.build.outputs.package_version }}
         shell: pwsh
 
       - name: Create Packages
         id: create-packages
         run: |
-          tar -czf OctoTFS.vsix.${{ jobs.build.outputs.package_version }}.tar.gz ./dist/Artifacts/**/*.vsix
-          tar -czf OctoTFS.publish.${{ jobs.build.outputs.package_version }}.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
+          tar -czf OctoTFS.vsix.${{ job.build.outputs.package_version }}.tar.gz ./dist/Artifacts/**/*.vsix
+          tar -czf OctoTFS.publish.${{ job.build.outputs.package_version }}.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
 
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1.1.7
@@ -120,7 +120,7 @@ jobs:
         uses: OctopusDeploy/push-package-action@v1.1.2
         with:
             space: "Integrations"
-            packages: "OctoTFS.vsix.${{ jobs.build.outputs.package_version }}.tar.gz,OctoTFS.publish.${{ jobs.build.outputs.package_version }}.tar.gz"
+            packages: "OctoTFS.vsix.${{ job.build.outputs.package_version }}.tar.gz,OctoTFS.publish.${{ job.build.outputs.package_version }}.tar.gz"
 
       - name: Fetch Release Notes
         id: fetch-release-notes
@@ -139,7 +139,7 @@ jobs:
         with:
           space: "Integrations"
           project: "Azure DevOps Extension"
-          package_version: ${{ jobs.build.outputs.package_version }}
+          package_version: ${{ job.build.outputs.package_version }}
           channel: ${{ (github.event_name = "release" && "Release") || "" }}
           release_notes_file: ${{ (github.event_name = "release" && steps.fetch-release-notes.outputs.release-note-file) || ""}}
           git_ref: ${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}
