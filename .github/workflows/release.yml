@@ -52,6 +52,6 @@ jobs:
           package_version: ${{ needs.build.outputs.PACKAGE_VERSION }}
           channel: "Release"
           release_notes_file: ${{ steps.fetch-release-notes.outputs.release-note-file }}
-          gitRef: ${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}
-          gitCommit: ${{ github.event.after || github.event.pull_request.head.sha }}
+          git_ref: ${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}
+          git_commit: ${{ github.event.after || github.event.pull_request.head.sha }}
 
