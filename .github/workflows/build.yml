@@ -124,7 +124,7 @@ jobs:
 
       - name: Fetch Release Notes
         id: fetch-release-notes
-        if: ${{ github.event_name == "release" }}
+        if: github.event_name == "release"
         run: |
           echo "::debug::${{github.event_name}}"
           OUTPUT_FILE="release_notes.txt"
