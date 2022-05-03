@@ -2,19 +2,24 @@ name: Build
 
 on:
   workflow_call:
-    secrets:
-      OCTOPUS_URL:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  release:
+    types: [created]
+
+  workflow_dispatch:
+    inputs:
+      release-tag:
+        description: "The tag of the release being replicated in Octopus Deploy"
         required: true
-      OCTOPUS_CLI_API_KEY:
-        required: true
-    outputs:
-      package_version:
-        description: "The package version being built"
-        value: ${{ jobs.build.outputs.package_version }}
+
 env:
   PACKAGE_VERSION: 5.2.${{ github.run_number }}
   OCTOPUS_CLI_SERVER: ${{ secrets.OCTOPUS_URL }}
-  OCTOPUS_CLI_API_KEY: ${{ secrets.OCTOPUS_CLI_API_KEY }}
+  OCTOPUS_CLI_API_KEY: ${{ secrets.INTEGRATIONS_API_KEY }}
 
 jobs:
   build:
@@ -98,15 +103,15 @@ jobs:
 
       - name: Replace versions in tasks and create vsix
         run: |
-          ./pack.ps1 -environment Production -version $Env:PACKAGE_VERSION -setupTaskDependencies
-          ./pack.ps1 -environment Test -version $Env:PACKAGE_VERSION
+          ./pack.ps1 -environment Production -version ${{ jobs.build.outputs.package_version }} -setupTaskDependencies
+          ./pack.ps1 -environment Test -version ${{ jobs.build.outputs.package_version }}
         shell: pwsh
 
       - name: Create Packages
         id: create-packages
         run: |
-          tar -czf OctoTFS.vsix.$PACKAGE_VERSION.tar.gz ./dist/Artifacts/**/*.vsix
-          tar -czf OctoTFS.publish.$PACKAGE_VERSION.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
+          tar -czf OctoTFS.vsix.${{ jobs.build.outputs.package_version }}.tar.gz ./dist/Artifacts/**/*.vsix
+          tar -czf OctoTFS.publish.${{ jobs.build.outputs.package_version }}.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
 
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1.1.7
@@ -115,4 +120,27 @@ jobs:
         uses: OctopusDeploy/push-package-action@v1.1.2
         with:
             space: "Integrations"
-            packages: "OctoTFS.vsix.${{ env.PACKAGE_VERSION }}.tar.gz,OctoTFS.publish.${{ env.PACKAGE_VERSION }}.tar.gz"
+            packages: "OctoTFS.vsix.${{ jobs.build.outputs.package_version }}.tar.gz,OctoTFS.publish.${{ jobs.build.outputs.package_version }}.tar.gz"
+
+      - name: Fetch Release Notes
+        id: fetch-release-notes
+        if: ${{ github.event_name = "release" }}
+        run: |
+          echo "::debug::${{github.event_name}}"
+          OUTPUT_FILE="release_notes.txt"
+          jq --raw-output '.release.body' ${{ github.event_path }} | sed 's#\r#  #g' > $OUTPUT_FILE
+          echo "::set-output name=release-note-file::$OUTPUT_FILE"
+
+      - name: Install Octopus CLI 🐙
+        uses: OctopusDeploy/install-octopus-cli-action@v1.1.7
+
+      - name: Create a release in Octopus Deploy 🐙
+        uses: OctopusDeploy/create-release-action@v1.1.1
+        with:
+          space: "Integrations"
+          project: "Azure DevOps Extension"
+          package_version: ${{ jobs.build.outputs.package_version }}
+          channel: ${{ (github.event_name = "release" && "Release") || "" }}
+          release_notes_file: ${{ (github.event_name = "release" && steps.fetch-release-notes.outputs.release-note-file) || ""}}
+          git_ref: ${{ (github.ref_type == 'tag' && 'main' ) || (github.head_ref || github.ref) }}
+          git_commit: ${{ github.event.after || github.event.pull_request.head.sha }}
