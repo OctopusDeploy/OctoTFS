@@ -114,7 +114,9 @@ jobs:
           tar -czf OctoTFS.publish.${{ needs.build.outputs.package_version }}.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
 
       - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1.1.7
+        uses: OctopusDeploy/install-octopus-cli-action@v1.2.0
+        with:
+          version: '*'
 
       - name: Push Package 🐙
         uses: OctopusDeploy/push-package-action@v1.1.2
