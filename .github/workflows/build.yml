@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
+      
       - name: Build
         id: build
         run: |
@@ -63,6 +64,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
+
       - name: Test
         run: |
           npm install
@@ -92,6 +94,11 @@ jobs:
           node-version: '16'
           cache: 'npm'
 
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.17.7'
+          
       - name: Embed octo portable
         run: |
           pwsh ./embed-octo.ps1
