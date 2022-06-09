@@ -3,5 +3,13 @@
     "printWidth": 250,
     "tabWidth": 4,
     "trailingComma": "es5",
-    "endOfLine": "auto"
+    "endOfLine": "auto",
+    "overrides": [
+        {
+            "files": "*.yml",
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
 }

@@ -54,6 +54,14 @@ In order to package and test the extension on a local TFS instance, without publ
 
 `./pack.ps1 -environment localtest -version "x.x.x"`
 
+### Releasing
+
+To create a new release:
+
+-   Merge your changes PR to main
+-   Check the `PACKAGE_VERSION` variable value in the build.yml. Bump the major/minor as appropriate for the changes being released (this will require another branch/PR because of RBAC). :warning: DO NOT bump these numbers prior to the release going out, branch builds can impact each other if they do this because the marketplace enforces forward only on version numbers and it is imperative that all currently active branches use the same major.minor values.
+-   Work out what the next run number in GitHub is going to be. Create a release and tag with the version based on `PACKAGE_VERSION` and the run number, remembering to prefix the release with a `v`. The pipeline will automate things from once the GitHub release is created.
+
 ### How to test the extension
 
 If you're doing updates, enhancements, or bug fixes, the fastest development flow is to code locally, build, package and deploy locally. Once your changes are stable, it's a good idea to deploy to Test for further testing, and finally Production.

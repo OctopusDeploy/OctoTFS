@@ -3,9 +3,13 @@ name: Build
 on:
   workflow_call:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+  schedule:
+    # Daily 5am australian/brisbane time (7pm UTC)
+    - cron: "0 19 * * *"
 
   release:
     types: [created]
@@ -32,9 +36,9 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-          cache: 'npm'
-      
+          node-version: "16"
+          cache: "npm"
+
       - name: Build
         id: build
         run: |
@@ -45,7 +49,7 @@ jobs:
         with:
           name: dist
           path: dist/
-  
+
   test:
     name: Run test matrix
     needs: build
@@ -56,14 +60,14 @@ jobs:
       checks: write
     strategy:
       matrix:
-        os: [ windows-2022, ubuntu-20.04, macos-11 ]
+        os: [windows-2022, ubuntu-20.04, macos-11]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-          cache: 'npm'
+          node-version: "16"
+          cache: "npm"
 
       - name: Test
         run: |
@@ -74,13 +78,14 @@ jobs:
         name: Tests report
         with:
           name: Tests report
-          path: 'reports/jest-*.xml'
+          path: "reports/jest-*.xml"
           reporter: jest-junit
-  
+
   package:
     name: Package and Push artifacts to Octopus
     needs: [build, test]
     runs-on: ubuntu-latest
+    if: github.event_name == 'release' || (github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]')
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v2
@@ -91,14 +96,14 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-          cache: 'npm'
+          node-version: "16"
+          cache: "npm"
 
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: '^1.17.7'
-          
+          go-version: "^1.17.7"
+
       - name: Embed octo portable
         run: |
           pwsh ./embed-octo.ps1
@@ -118,15 +123,15 @@ jobs:
       - name: Install Octopus CLI 🐙
         uses: OctopusDeploy/install-octopus-cli-action@v1.2.0
         with:
-          version: '*'
+          version: "*"
 
       - name: Push Package 🐙
         uses: OctopusDeploy/push-package-action@v1.1.2
         with:
-            space: "Integrations"
-            packages: |
-              OctoTFS.vsix.${{ needs.build.outputs.package_version }}.tar.gz
-              OctoTFS.publish.${{ needs.build.outputs.package_version }}.tar.gz
+          space: "Integrations"
+          packages: |
+            OctoTFS.vsix.${{ needs.build.outputs.package_version }}.tar.gz
+            OctoTFS.publish.${{ needs.build.outputs.package_version }}.tar.gz
 
       - name: Fetch Release Notes
         id: fetch-release-notes
