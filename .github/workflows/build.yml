@@ -32,7 +32,7 @@ jobs:
     outputs:
       package_version: ${{ steps.build.outputs.package_version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
@@ -62,7 +62,7 @@ jobs:
       matrix:
         os: [windows-2022, ubuntu-20.04, macos-11]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
