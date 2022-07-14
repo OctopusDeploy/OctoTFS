@@ -42,7 +42,7 @@ jobs:
       - name: Build
         id: build
         run: |
-          npm install
+          npm ci
           npm run build -- --extensionVersion $PACKAGE_VERSION
           echo "::set-output name=package_version::$PACKAGE_VERSION"
       - uses: actions/upload-artifact@v2
@@ -71,7 +71,7 @@ jobs:
 
       - name: Test
         run: |
-          npm install
+          npm ci
           npm run test
       - uses: dorny/test-reporter@v1
         if: success() || failure()
