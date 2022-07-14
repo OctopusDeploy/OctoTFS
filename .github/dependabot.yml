@@ -16,3 +16,6 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
+    ignore:
+      - dependency-name: "github-linguist"
+        update-types: ["version-update:semver-major"]
