@@ -17,5 +17,7 @@ updates:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
     ignore:
-      - dependency-name: "github-linguist"
+      - dependency-name: "glob"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "fp-ts"
         update-types: ["version-update:semver-major"]
