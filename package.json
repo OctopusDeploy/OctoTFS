@@ -22,7 +22,7 @@
     "archiver": "^5.3.1",
     "esbuild": "^0.14.49",
     "esbuild-copy-static-files": "^0.1.0",
-    "eslint": "^8.19.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "express": "^4.18.1",
