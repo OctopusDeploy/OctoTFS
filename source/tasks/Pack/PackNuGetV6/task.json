@@ -7,6 +7,11 @@
     "category": "Package",
     "visibility": ["Build", "Release"],
     "author": "Octopus Deploy",
+    "version": {
+        "Major": 6,
+        "Minor": 0,
+        "Patch": 0
+    },
     "demands": [],
     "minimumAgentVersion": "2.144.0",
     "groups": [
