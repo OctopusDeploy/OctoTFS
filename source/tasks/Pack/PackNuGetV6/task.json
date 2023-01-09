@@ -1,0 +1,116 @@
+{
+    "id": "72e7a1b6-19bc-48e6-8d20-a81f201d65a3",
+    "name": "OctopusPackNuGet",
+    "friendlyName": "Package Application for Octopus - NuGet",
+    "description": "Package your application into a NuGet file.",
+    "helpMarkDown": "set-by-pack.ps1",
+    "category": "Package",
+    "visibility": ["Build", "Release"],
+    "author": "Octopus Deploy",
+    "demands": [],
+    "minimumAgentVersion": "2.144.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "PackageId",
+            "type": "string",
+            "label": "Package ID",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The ID of the package. e.g. MyCompany.App"
+        },
+        {
+            "name": "PackageVersion",
+            "type": "string",
+            "label": "Package Version",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The version of the package; must be a valid [SemVer](http://semver.org/) version."
+        },
+        {
+            "name": "SourcePath",
+            "type": "filePath",
+            "label": "Source Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The folder containing the files and folders to package. Defaults to working directory."
+        },
+        {
+            "name": "OutputPath",
+            "type": "filePath",
+            "label": "Output Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The directory into which the generated package will be written. Defaults to working directory."
+        },
+        {
+            "name": "Include",
+            "type": "multiLine",
+            "label": "Include",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "File patterns to include, relative to the root path. e.g. /bin/*.dll. Defaults to '**' if not specified."
+        },
+        {
+            "name": "NuGetDescription",
+            "type": "string",
+            "label": "Description",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Add a description to the NuGet package metadata."
+        },
+        {
+            "name": "NuGetAuthors",
+            "type": "multiLine",
+            "label": "Authors",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Add authors to the NuGet package metadata."
+        },
+        {
+            "name": "NuGetTitle",
+            "type": "string",
+            "label": "Title",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Add a title to the NuGet package metadata."
+        },
+        {
+            "name": "NuGetReleaseNotes",
+            "type": "string",
+            "label": "Release Notes",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Add release notes to the NuGet package metadata."
+        },
+        {
+            "name": "NuGetReleaseNotesFile",
+            "type": "filePath",
+            "label": "Release Notes File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "A file containing release notes to be added to the NuGet package metadata."
+        },
+        {
+            "name": "DebugLogging",
+            "type": "boolean",
+            "label": "Debug level output",
+            "defaultValue": "false",
+            "required": "false",
+            "helpMarkDown": "Whether to use debug level diagnostic logging. E.g. if set to true a list of all files added to Zip will be logged.",
+            "groupName": "advanced"
+        }
+    ],
+    "instanceNameFormat": "Package Zip $(PackageId)",
+    "execution": {
+        "Node10": {
+            "target": "index.js"
+        }
+    }
+}
