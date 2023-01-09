@@ -108,11 +108,11 @@
             "label": "Debug level output",
             "defaultValue": "false",
             "required": "false",
-            "helpMarkDown": "Whether to use debug level diagnostic logging. E.g. if set to true a list of all files added to Zip will be logged.",
+            "helpMarkDown": "Whether to use debug level diagnostic logging. E.g. if set to true a list of all files added to NuGet will be logged.",
             "groupName": "advanced"
         }
     ],
-    "instanceNameFormat": "Package Zip $(PackageId)",
+    "instanceNameFormat": "Package NuGet $(PackageId)",
     "execution": {
         "Node10": {
             "target": "index.js"
