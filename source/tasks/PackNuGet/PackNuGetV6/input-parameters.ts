@@ -14,7 +14,6 @@ export interface InputParameters {
     nuGetReleaseNotes?: string;
     nuGetReleaseNotesFile?: string;
     overwrite?: boolean;
-    debugLogging?: boolean;
 }
 
 export const getInputs = (): InputParameters => {
@@ -30,6 +29,5 @@ export const getInputs = (): InputParameters => {
         nuGetReleaseNotes: tasks.getInput("NuGetReleaseNotes"),
         nuGetReleaseNotesFile: tasks.getInput("NuGetReleaseNotesFile", false),
         overwrite: tasks.getBoolInput("Overwrite"),
-        debugLogging: tasks.getBoolInput("DebugLogging"),
     };
 };

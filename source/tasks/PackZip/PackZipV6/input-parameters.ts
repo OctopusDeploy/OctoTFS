@@ -9,7 +9,6 @@ export interface InputParameters {
     sourcePath: string;
     include: string[];
     overwrite?: boolean;
-    debugLogging?: boolean;
 }
 
 export const getInputs = (): InputParameters => {
@@ -20,6 +19,5 @@ export const getInputs = (): InputParameters => {
         sourcePath: removeTrailingSlashes(safeTrim(tasks.getPathInput("SourcePath"))) || ".",
         include: getLineSeparatedItems(tasks.getInput("Include") || "") || ["**"],
         overwrite: tasks.getBoolInput("Overwrite"),
-        debugLogging: tasks.getBoolInput("DebugLogging"),
     };
 };

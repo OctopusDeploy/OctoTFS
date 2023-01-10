@@ -73,7 +73,6 @@ Use this task to package your built application into a Zip file that is compatib
 | `SourcePath`     | The base path for the input files. Defaults to the working directory.                                                                        |
 | `Include`        | Multi-line list of files to include in the package, relative to the base path. Supports globbing. Defaults to `**`                           |
 | `Overwrite`      | Allow an existing package of the same ID and version to be overwritten.                                                                      |
-| `DebugLogging`   | Whether to use debug level diagnostic logging. E.g. if set to true a list of all files added to NuGet will be logged.                        |
 
 ## 📤 Outputs
 
@@ -101,7 +100,6 @@ Use this task to package your built application into a NuGet package that is com
 | `NuGetReleaseNotes`     | Release notes to add to the NuGet package metadata.                                                                                          |
 | `NuGetReleaseNotesFile` | A file containing release notes to add to the NuGet package metadata. Overrides `NuGetReleaseNotes`.                                         |
 | `Overwrite`             | Allow an existing package of the same ID and version to be overwritten.                                                                      |
-| `DebugLogging`          | Whether to use debug level diagnostic logging. E.g. if set to true a list of all files added to NuGet will be logged.                        |
 
 ## 📤 Outputs
 

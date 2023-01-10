@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as tasks from "azure-pipelines-task-lib/task";
-import * as tl from "azure-pipelines-task-lib";
 import { Logger } from "@octopusdeploy/api-client";
 import { getInputs } from "./input-parameters";
 import os from "os";
@@ -12,17 +11,15 @@ async function run() {
 
         const logger: Logger = {
             debug: (message) => {
-                if (parameters.debugLogging == true) {
-                    tl.debug(message);
-                }
+                tasks.debug(message);
             },
-            info: (message) => tl.debug(message),
-            warn: (message) => tl.warning(message),
+            info: (message) => console.log(message),
+            warn: (message) => tasks.warning(message),
             error: (message, err) => {
                 if (err !== undefined) {
-                    tl.error(err.message);
+                    tasks.error(err.message);
                 } else {
-                    tl.error(message);
+                    tasks.error(message);
                 }
             },
         };
@@ -36,6 +33,8 @@ async function run() {
     } catch (error: unknown) {
         if (error instanceof Error) {
             tasks.setResult(tasks.TaskResult.Failed, `"Failed to execute pack. ${error.message}${os.EOL}${error.stack}`, true);
+        } else {
+            tasks.setResult(tasks.TaskResult.Failed, `"Failed to execute pack. ${error}`, true);
         }
     }
 }
