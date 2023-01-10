@@ -70,15 +70,6 @@
             "required": false,
             "helpMarkDown": "Allow an existing package of the same ID and version to be overwritten.",
             "groupName": "advanced"
-        },
-        {
-            "name": "DebugLogging",
-            "type": "boolean",
-            "label": "Debug level output",
-            "defaultValue": "false",
-            "required": "false",
-            "helpMarkDown": "Whether to use debug level diagnostic logging. E.g. if set to true a list of all files added to Zip will be logged.",
-            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Package Zip $(PackageId)",
