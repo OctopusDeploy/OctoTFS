@@ -13,6 +13,7 @@ export interface InputParameters {
     nuGetTitle?: string;
     nuGetReleaseNotes?: string;
     nuGetReleaseNotesFile?: string;
+    overwrite?: boolean;
     debugLogging?: boolean;
 }
 
@@ -28,6 +29,7 @@ export const getInputs = (): InputParameters => {
         nuGetTitle: tasks.getInput("NuGetTitle"),
         nuGetReleaseNotes: tasks.getInput("NuGetReleaseNotes"),
         nuGetReleaseNotesFile: tasks.getInput("NuGetReleaseNotesFile", false),
+        overwrite: tasks.getBoolInput("Overwrite"),
         debugLogging: tasks.getBoolInput("DebugLogging"),
     };
 };

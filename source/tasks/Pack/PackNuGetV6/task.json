@@ -103,6 +103,15 @@
             "helpMarkDown": "A file containing release notes to add to the NuGet package metadata. Overrides `NuGetReleaseNotes`."
         },
         {
+            "name": "Overwrite",
+            "type": "boolean",
+            "label": "Overwrite",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Allow an existing package of the same ID and version to be overwritten.",
+            "groupName": "advanced"
+        },
+        {
             "name": "DebugLogging",
             "type": "boolean",
             "label": "Debug level output",

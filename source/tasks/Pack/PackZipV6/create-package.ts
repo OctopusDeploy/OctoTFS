@@ -15,7 +15,7 @@ export async function createPackageFromInputs(parameters: InputParameters, logge
         outputFolder: parameters.outputPath,
         basePath: parameters.sourcePath,
         inputFilePatterns: parameters.include,
-        overwrite: true,
+        overwrite: parameters.overwrite,
         logger,
     });
 

@@ -63,6 +63,15 @@
             "helpMarkDown": "File patterns to include, relative to the root path. e.g. /bin/*.dll"
         },
         {
+            "name": "Overwrite",
+            "type": "boolean",
+            "label": "Overwrite",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Allow an existing package of the same ID and version to be overwritten.",
+            "groupName": "advanced"
+        },
+        {
             "name": "DebugLogging",
             "type": "boolean",
             "label": "Debug level output",
