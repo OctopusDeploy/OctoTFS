@@ -34,6 +34,8 @@ For example, if your build needs to create a Release for Project A, the user who
 This extension adds the following tasks:
 
 - Octopus CLI Installer
+- [Package Application - Zip](#pack-zip)
+- [Package Application - NuGet](#pack-nuget)
 - Push Package(s) to Octopus
 - Push Package Build Information to Octopus
 - Create Octopus Release
@@ -56,7 +58,59 @@ Alternatively, you can supply the tool using the system `PATH` environment varia
  Options include:
 
  * **Octopus CLI Version**: Specific a version number like `8.0.0`, that version will be downloaded and supplied to the other tasks.
- 
+
+## <a name="pack-zip"></a>![Installer Icon](img/octopus_installer.png) Package Application - Zip
+
+Use this task to package your built application into a Zip file that is compatible with Octopus Deploy.
+
+## 📥 Inputs
+
+| Name             | Description                                                  |
+| :--------------- | :----------------------------------------------------------- |
+| `PackageId`      | **Required.** Package id.                                    |
+| `PackageVersion` | **Required.** Package version.                               |
+| `OutputPath`     | The folder to put the resulting package in, relative to the current working directory, not the base_path. Defaults to the working directory. |
+| `SourcePath`     | The base path for the input files. Defaults to the working directory. |
+| `Include`        | Multi-line list of files to include in the package, relative to the base path. Supports globbing. Defaults to `**` |
+
+## 📤 Outputs
+
+| Name                | Description                                                  |
+| :------------------ | :----------------------------------------------------------- |
+| `PACKAGE_FILE_PATH` | The full path to the package file that was created.          |
+| `PACKAGE_FILENAME`  | The filename, without the path, of the file that was created. |
+
+
+
+## <a name="pack-nuget"></a>![Installer Icon](img/octopus_installer.png) Package Application - NuGet
+
+Use this task to package your built application into a NuGet package that is compatible with Octopus Deploy.
+
+## 📥 Inputs
+
+| Name             | Description                                                  |
+| :--------------- | :----------------------------------------------------------- |
+| `PackageId`      | **Required.** Package id.                                    |
+| `PackageVersion` | **Required.** Package version.                               |
+| `OutputPath`     | The folder to put the resulting package in, relative to the current working directory, not the base_path. Defaults to the working directory. |
+| `SourcePath`     | The base path for the input files. Defaults to the working directory. |
+| `Include`        | Multi-line list of files to include in the package, relative to the base path. Supports globbing. Defaults to `**` |
+| `NuGetDescription`        | **Required.** A description to add to the NuGet package metadata. |
+| `NuGetAuthors`        | **Required.** Authors to add to the NuGet package metadata. |
+| `NuGetTitle`        | A title to add to the NuGet package metadata. |
+| `NuGetReleaseNotes`        | Release notes to add to the NuGet package metadata. |
+| `NuGetReleaseNotesFile`        | A file containing release notes to add to the NuGet package metadata. Overrides `NuGetReleaseNotes`. |
+
+## 📤 Outputs
+
+| Name                | Description                                                  |
+| :------------------ | :----------------------------------------------------------- |
+| `PACKAGE_FILE_PATH` | The full path to the package file that was created.          |
+| `PACKAGE_FILENAME`  | The filename, without the path, of the file that was created. |
+
+
+
+
 ## <a name="push-packages-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Packages to Octopus
 
  ![Configure Push Application Step](img/push-packages-options.png)

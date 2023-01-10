@@ -68,7 +68,7 @@
             "label": "Description",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Add a description to the NuGet package metadata."
+            "helpMarkDown": "A description to add to the NuGet package metadata."
         },
         {
             "name": "NuGetAuthors",
@@ -76,7 +76,7 @@
             "label": "Authors",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Add authors to the NuGet package metadata."
+            "helpMarkDown": "Authors to add to the NuGet package metadata."
         },
         {
             "name": "NuGetTitle",
@@ -84,7 +84,7 @@
             "label": "Title",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Add a title to the NuGet package metadata."
+            "helpMarkDown": "A title to add to the NuGet package metadata."
         },
         {
             "name": "NuGetReleaseNotes",
@@ -92,7 +92,7 @@
             "label": "Release Notes",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Add release notes to the NuGet package metadata."
+            "helpMarkDown": "Release notes to add to the NuGet package metadata."
         },
         {
             "name": "NuGetReleaseNotesFile",
@@ -100,7 +100,7 @@
             "label": "Release Notes File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "A file containing release notes to be added to the NuGet package metadata."
+            "helpMarkDown": "A file containing release notes to add to the NuGet package metadata. Overrides `NuGetReleaseNotes`."
         },
         {
             "name": "DebugLogging",
