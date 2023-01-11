@@ -21,6 +21,7 @@ export async function createPackageFromInputs(parameters: InputParameters, logge
     };
 
     inputs.nuspecArgs = {
+        title: parameters.nuGetTitle,
         description: parameters.nuGetDescription,
         authors: parameters.nuGetAuthors,
         releaseNotes: parameters.nuGetReleaseNotes,

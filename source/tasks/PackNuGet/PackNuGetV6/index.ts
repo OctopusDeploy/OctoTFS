@@ -26,8 +26,8 @@ async function run() {
 
         const result = await createPackageFromInputs(parameters, logger);
 
-        tasks.setVariable("PACKAGE_FILE_PATH", result.filePath);
-        tasks.setVariable("PACKAGE_FILENAME", result.filename);
+        tasks.setVariable("package_file_path", result.filePath);
+        tasks.setVariable("package_filename", result.filename);
 
         tasks.setResult(tasks.TaskResult.Succeeded, "Pack succeeded");
     } catch (error: unknown) {

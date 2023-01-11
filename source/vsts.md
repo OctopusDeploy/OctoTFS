@@ -78,8 +78,8 @@ Use this task to package your built application into a Zip file that is compatib
 
 | Name                | Description                                                   |
 | :------------------ | :------------------------------------------------------------ |
-| `PACKAGE_FILE_PATH` | The full path to the package file that was created.           |
-| `PACKAGE_FILENAME`  | The filename, without the path, of the file that was created. |
+| `package_file_path` | The full path to the package file that was created.           |
+| `package_filename`  | The filename, without the path, of the file that was created. |
 
 ## <a name="pack-nuget"></a>![Installer Icon](img/octopus_installer.png) Package Application - NuGet
 
@@ -105,8 +105,8 @@ Use this task to package your built application into a NuGet package that is com
 
 | Name                | Description                                                   |
 | :------------------ | :------------------------------------------------------------ |
-| `PACKAGE_FILE_PATH` | The full path to the package file that was created.           |
-| `PACKAGE_FILENAME`  | The filename, without the path, of the file that was created. |
+| `package_file_path` | The full path to the package file that was created.           |
+| `package_filename`  | The filename, without the path, of the file that was created. |
 
 ## <a name="push-packages-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Packages to Octopus
 
