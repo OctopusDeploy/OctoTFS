@@ -9,11 +9,24 @@ The [Azure Devops guides](https://g.octopushq.com/GuidesAzureDevops) provide ste
 
 ## Requirements
 
+## Step versions >=6.0.0
+
+The v6+ steps no longer depend on the Octopus CLI, so neither it nor the .NET Core SDK are a hard requirement for these versions.
+
+### Octopus CLI installer
+
+As noted above the CLI is no longer are hard dependency for our out-of-the-box steps, but the installer step is still available should you wish to use the CLI in your own script steps.
+
+<div style="border:1px solid #888;background-color: #ffc;color:#444;padding:5px;">Note: The Octopus CLI installer step is still available, however v6 introduces a breaking change. v6 of the step will install the [Go CLI](https://github.com/OctopusDeploy/cli), not the [C# CLI](https://github.com/OctopusDeploy/OctopusCLI).
+</div>
+
+## Step versions <6.0.0
+
 You will need a minimum build agent version of `2.115.0` with .NET Core SDK `2.0` or later. When targeting build agents without the SDK, you can use the **.NET Core SDK Installer** task to install it. Generally the Hosted Linux, Mac and Hosted VS2017 agent queues already provide it, however please refer to Microsoft documentation regarding what capabilities are provided by which hosted agent pools.
 
-## Add Octopus CLI tool
+### Add Octopus CLI tool
 
-The Octopus tasks require the Octopus CLI tool, which can be supplied any of the following ways:
+The Octopus tasks **prior to v6** require the Octopus CLI tool, which can be supplied any of the following ways:
 
 -   Add the **Octopus CLI installer** task to the build pipeline, before other Octopus tasks. Specific a version number like `8.0.0`, that version will be downloaded and supplied to the other tasks.
 -   Update the system `PATH` environment variable to include a folder containing the Octopus CLI, on all systems running VSTS agents. You will need to restart the `VSTS Agent` service (or the whole system) for the change to take effect.
@@ -36,7 +49,7 @@ This extension adds the following tasks:
 -   Octopus CLI Installer
 -   [Package Application - Zip](#pack-zip)
 -   [Package Application - NuGet](#pack-nuget)
--   Push Package(s) to Octopus
+-   [Push Package(s) to Octopus](#push-packages-to-octopus)
 -   Push Package Build Information to Octopus
 -   Create Octopus Release
 -   Deploy Octopus Release
@@ -46,6 +59,9 @@ This extension adds the following tasks:
 And the following widget:
 
 -   Octopus Deploy Status
+
+<div style="border:1px solid #888;background-color: #ffc;color:#444;padding:5px;">Note: In the remaining sections of this documentation, the `inputs` shown represent the valid YAML configuration values. The names used match the underlying names used to store the data, many of which have existed since this plugin was originally created. The names do not necessarily always exactly match the labels you will see on the fields if you're using the older UI interface for the steps.
+</div>
 
 <hr />
 
@@ -110,15 +126,20 @@ Use this task to package your built application into a NuGet package that is com
 
 ## <a name="push-packages-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Packages to Octopus
 
-![Configure Push Application Step](img/push-packages-options.png)
+Use this task to push your NuGet or Zip package to your Octopus Deploy Server. **v6 of this step requires Octopus 2022.3+**
 
-Options include:
+## 📥 Inputs
 
--   **Octopus Deploy Server**: The Octopus Server (click **New** to [add a service connection](#Add-a-service-connection-to-Octopus-Deploy)).
--   **Space**: The Octopus space to push a package to.
--   **Package**: Package file to push. To push multiple packages, enter multiple lines.
--   **Replace Existing**: If the package already exists in the repository, the default behavior is to reject the new package being pushed. Set this flag to **True** to overwrite the existing package.
--   **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliPush) to include.
+| Name                       | Description                                                                                                                                                              |
+| :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** The name of the Octopus Deploy [service connection](#Add-a-service-connection-to-Octopus-Deploy)                                                           |
+| `Space`                    | **Required.** The space name within Octopus.                                                                                                                             |
+| `Package`                  | **Required.** Multi-line list of packages to push to Octopus                                                                                                             |
+| `Replace`                  | Whether to replace the existing package(s). Valid options are true, false (default), IgnoreIfExists. If false is set the upload will fail if the package already exists. |
+
+## 📤 Outputs
+
+None.
 
 ## <a name="push-package-build-information-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Package Build Information to Octopus
 
