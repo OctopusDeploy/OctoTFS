@@ -22,7 +22,7 @@ export const getInputs = (): InputParameters => {
         packageVersion: tasks.getInput("PackageVersion", true) || "",
         outputPath: removeTrailingSlashes(safeTrim(tasks.getPathInput("OutputPath"))) || ".",
         sourcePath: removeTrailingSlashes(safeTrim(tasks.getPathInput("SourcePath"))) || ".",
-        include: getLineSeparatedItems(tasks.getInput("Include") || "") || ["**"],
+        include: getLineSeparatedItems(tasks.getInput("Include") || "**"),
         nuGetDescription: tasks.getInput("NuGetDescription", true) || "",
         nuGetAuthors: getLineSeparatedItems(tasks.getInput("NuGetAuthor", true) || ""),
         nuGetTitle: tasks.getInput("NuGetTitle"),
