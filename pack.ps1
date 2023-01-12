@@ -1,9 +1,9 @@
 param (
-    [Parameter(Mandatory=$true,HelpMessage="LocalTest, Test or Production")]
+    [Parameter(Mandatory = $true, HelpMessage = "LocalTest, Test or Production")]
     [ValidateSet("LocalTest", "Test", "Production")]
     [string]
     $environment,
-    [Parameter(Mandatory=$true,HelpMessage="The three number version for this release")]
+    [Parameter(Mandatory = $true, HelpMessage = "The three number version for this release")]
     [string]
     $version,
     [switch]
@@ -81,8 +81,7 @@ function Get-TaskId($envName, $taskName) {
     $taskIds = ConvertFrom-Json -InputObject (Get-Content "$basePath/task-ids.json" -Raw)
     $result = $taskIds.$envName.$taskName
 
-    if([String]::IsNullOrEmpty($result))
-    {
+    if ([String]::IsNullOrEmpty($result)) {
         throw "Could not find task $taskName ID for environment $envName. Failing as this is required and will prevent the extension from installing otherwise."
     }
     return $result
@@ -127,11 +126,12 @@ function Pack($envName, $environment, $workingDirectory) {
 
     & ./node_modules/.bin/tfx extension create --root $workingDirectory --manifest-globs extension-manifest.json --overridesFile $overridesFile --outputPath "$buildArtifactsPath/$environment" --no-prompt
 
-    if (-not $?) {throw "Failed to create extension. Exit Code $LASTEXITCODE"}
+    & npm uninstall tfx-cli
+    if (-not $?) { throw "Failed to create extension. Exit Code $LASTEXITCODE" }
+
 }
 
-if ($setupTaskDependencies -eq $true)
-{
+if ($setupTaskDependencies -eq $true) {
     SetupTaskDependencies $buildDirectoryPath
 }
 Pack "VSTSExtensions" $environment $buildDirectoryPath
