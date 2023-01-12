@@ -5,6 +5,7 @@ export interface TaskWrapper {
     getBoolean(name: string, required?: boolean): boolean | undefined;
     setSuccess(message: string, done?: boolean): void;
     setFailure(message: string, done?: boolean): void;
+    setOutputVariable(name: string, value: string): void;
 }
 
 export class ConcreteTaskWrapper implements TaskWrapper {
@@ -22,5 +23,9 @@ export class ConcreteTaskWrapper implements TaskWrapper {
 
     public setFailure(message: string, done?: boolean) {
         tasks.setResult(tasks.TaskResult.Failed, message, done);
+    }
+
+    public setOutputVariable(name: string, value: string) {
+        tasks.setVariable(name, value, false, true);
     }
 }

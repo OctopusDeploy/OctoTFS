@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Logger } from "@octopusdeploy/api-client";
-import { TaskResult } from "azure-pipelines-task-lib";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getInputParameters } from "./input-parameters";
+import * as tasks from "azure-pipelines-task-lib/task";
 
-class mockTaskWrapper implements TaskWrapper {
-    lastResult?: TaskResult | undefined = undefined;
+export class MockTaskWrapper implements TaskWrapper {
+    lastResult?: tasks.TaskResult | undefined = undefined;
     lastResultMessage: string | undefined = undefined;
     lastResultDone: boolean | undefined = undefined;
 
     stringValues: Map<string, string> = new Map<string, string>();
     boolValues: Map<string, boolean> = new Map<string, boolean>();
+    outputVariables: Map<string, string> = new Map<string, string>();
 
     addVariableString(name: string, value: string) {
         this.stringValues.set(name, value);
@@ -29,19 +29,29 @@ class mockTaskWrapper implements TaskWrapper {
     }
 
     setSuccess(message: string, done?: boolean | undefined): void {
-        this.lastResult = TaskResult.Succeeded;
+        this.lastResult = tasks.TaskResult.Succeeded;
         this.lastResultMessage = message;
         this.lastResultDone = done;
     }
     setFailure(message: string, done?: boolean | undefined): void {
-        this.lastResult = TaskResult.Failed;
+        this.lastResult = tasks.TaskResult.Failed;
         this.lastResultMessage = message;
         this.lastResultDone = done;
     }
+
+    setOutputVariable(name: string, value: string): void {
+        this.outputVariables.set(name, value);
+    }
 }
+
 describe("getInputParameters", () => {
-    const task = new mockTaskWrapper();
-    const logger: Logger = {};
+    let logger: Logger;
+    let task: MockTaskWrapper;
+    beforeEach(() => {
+        logger = {};
+        task = new MockTaskWrapper();
+    });
+
     test("all regular fields supplied", () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("Variables", "var1: value1\nvar2: value2");
@@ -71,12 +81,24 @@ describe("getInputParameters", () => {
     });
 
     test("missing space", () => {
-        try {
+        const t = () => {
             getInputParameters(logger, task);
-            // eslint-disable-next-line no-empty
-        } catch {}
-        expect(task.lastResult).toBe(TaskResult.Failed);
-        expect(task.lastResultMessage).toContain("Failed to successfully build parameters. The Octopus space name is required.");
-        expect(task.lastResultDone).toBeTruthy();
+        };
+        expect(t).toThrowError("Failed to successfully build parameters: space name is required.");
+    });
+
+    test("duplicate variable name, variables field takes precedence", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Variables", "var1: value1\nvar2: value2");
+        task.addVariableString("AdditionalArguments", "-v var1=value3");
+        const inputParameters = getInputParameters(logger, task);
+        expect(inputParameters.variables).toStrictEqual({ var1: "value1", var2: "value2" });
+    });
+
+    test("multiline environments", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Environments", "dev, test\nprod");
+        const inputParameters = getInputParameters(logger, task);
+        expect(inputParameters.environments).toStrictEqual(["dev", "test", "prod"]);
     });
 });

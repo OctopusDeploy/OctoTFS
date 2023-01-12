@@ -10,24 +10,14 @@ export interface DeploymentResult {
 
 export async function createDeploymentFromInputs(client: Client, parameters: InputParameters, task: TaskWrapper, logger: Logger): Promise<DeploymentResult[]> {
     logger.info?.("🐙 Deploying a release in Octopus Deploy...");
-    let command: CreateDeploymentUntenantedCommandV1;
-    try {
-        command = {
-            spaceName: parameters.space,
-            ProjectName: parameters.project,
-            ReleaseVersion: parameters.releaseNumber,
-            EnvironmentNames: parameters.environments,
-            UseGuidedFailure: parameters.useGuidedFailure,
-            Variables: parameters.variables,
-        };
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            task.setFailure(`"Failed to create command. ${error.message}${os.EOL}${error.stack}`, true);
-        } else {
-            task.setFailure(`"Failed to create command. ${error}`, true);
-        }
-        throw error;
-    }
+    const command: CreateDeploymentUntenantedCommandV1 = {
+        spaceName: parameters.space,
+        ProjectName: parameters.project,
+        ReleaseVersion: parameters.releaseNumber,
+        EnvironmentNames: parameters.environments,
+        UseGuidedFailure: parameters.useGuidedFailure,
+        Variables: parameters.variables,
+    };
 
     try {
         const deploymentRepository = new DeploymentRepository(client, parameters.space);
@@ -56,6 +46,8 @@ export async function createDeploymentFromInputs(client: Client, parameters: Inp
                 environmentName: environments.Items.filter((e) => e.Id === deployments.Items.filter((d) => d.TaskId === x.ServerTaskId)[0].EnvironmentId)[0].Name,
             };
         });
+
+        task.setOutputVariable("server_tasks", JSON.stringify(results));
 
         return results;
     } catch (error: unknown) {

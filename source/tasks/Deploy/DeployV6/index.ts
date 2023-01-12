@@ -1,18 +1,26 @@
-//import * as tasks from "azure-pipelines-task-lib/task";
 import { getDefaultOctopusConnectionDetailsOrThrow } from "../../Utils/connection";
-//import { getDelimitedInput, getRequiredInput } from "../../Utils/inputs";
 import { Deploy } from "./deploy";
-//import { getOctopusCliTool } from "../../Utils/tool";
-
-// const space = getRequiredInput("Space");
-// const project = getRequiredInput("Project");
-// const releaseNumber = getRequiredInput("ReleaseNumber");
-// const deployToEnvironments = getDelimitedInput("Environments");
-// const deployForTenants = getDelimitedInput("DeployForTenants");
-// const deployForTenantTags = getDelimitedInput("DeployForTenantTags");
-// const deploymentProgress = tasks.getBoolInput("ShowProgress");
-// const additionalArguments = tasks.getInput("AdditionalArguments");
+import { ConcreteTaskWrapper, TaskWrapper } from "tasks/Utils/taskInput";
+import { Logger } from "@octopusdeploy/api-client";
+import * as tasks from "azure-pipelines-task-lib/task";
 
 const connection = getDefaultOctopusConnectionDetailsOrThrow();
 
-new Deploy(connection).run();
+const logger: Logger = {
+    debug: (message) => {
+        tasks.debug(message);
+    },
+    info: (message) => console.log(message),
+    warn: (message) => tasks.warning(message),
+    error: (message, err) => {
+        if (err !== undefined) {
+            tasks.error(err.message);
+        } else {
+            tasks.error(message);
+        }
+    },
+};
+
+const task: TaskWrapper = new ConcreteTaskWrapper();
+
+new Deploy(connection, task, logger).run();
