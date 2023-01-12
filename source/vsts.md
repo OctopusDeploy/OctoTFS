@@ -59,7 +59,7 @@ Options include:
 
 -   **Octopus CLI Version**: Specific a version number like `8.0.0`, that version will be downloaded and supplied to the other tasks.
 
-## <a name="pack-zip"></a>![Installer Icon](img/octopus_installer.png) Package Application - Zip
+## <a name="pack-zip"></a>![Package Icon](img/octopus_package-03.png) Package Application - Zip
 
 Use this task to package your built application into a Zip file that is compatible with Octopus Deploy.
 
@@ -81,7 +81,7 @@ Use this task to package your built application into a Zip file that is compatib
 | `package_file_path` | The full path to the package file that was created.           |
 | `package_filename`  | The filename, without the path, of the file that was created. |
 
-## <a name="pack-nuget"></a>![Installer Icon](img/octopus_installer.png) Package Application - NuGet
+## <a name="pack-nuget"></a>![Package Icon](img/octopus_package-03.png) Package Application - NuGet
 
 Use this task to package your built application into a NuGet package that is compatible with Octopus Deploy.
 
