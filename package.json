@@ -48,7 +48,6 @@
     "ramda": "0.28.0",
     "semver": "^7.3.7",
     "shlex": "^2.1.2",
-    "tfx-cli": "^0.12.0",
     "typed-rest-client": "1.8.9",
     "uuid": "8.3.2",
     "vss-web-extension-sdk": "5.141.0"
