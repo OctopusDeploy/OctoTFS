@@ -1,0 +1,121 @@
+{
+    "id": "72e7a1b6-19bc-48e6-8d20-a81f201d65a3",
+    "name": "OctopusPackNuGet",
+    "friendlyName": "Package Application for Octopus - NuGet",
+    "description": "Package your application into a NuGet file.",
+    "helpMarkDown": "set-by-pack.ps1",
+    "category": "Package",
+    "visibility": ["Build", "Release"],
+    "author": "Octopus Deploy",
+    "version": {
+        "Major": 6,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.144.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "PackageId",
+            "type": "string",
+            "label": "Package ID",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The ID of the package. e.g. MyCompany.App"
+        },
+        {
+            "name": "PackageVersion",
+            "type": "string",
+            "label": "Package Version",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The version of the package; must be a valid [SemVer](http://semver.org/) version."
+        },
+        {
+            "name": "SourcePath",
+            "type": "filePath",
+            "label": "Source Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The folder containing the files and folders to package. Defaults to working directory."
+        },
+        {
+            "name": "OutputPath",
+            "type": "filePath",
+            "label": "Output Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The directory into which the generated package will be written. Defaults to working directory."
+        },
+        {
+            "name": "Include",
+            "type": "multiLine",
+            "label": "Include",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "File patterns to include, relative to the root path. e.g. /bin/*.dll. Defaults to '**' if not specified."
+        },
+        {
+            "name": "NuGetDescription",
+            "type": "string",
+            "label": "Description",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "A description to add to the NuGet package metadata."
+        },
+        {
+            "name": "NuGetAuthors",
+            "type": "multiLine",
+            "label": "Authors",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Authors to add to the NuGet package metadata."
+        },
+        {
+            "name": "NuGetTitle",
+            "type": "string",
+            "label": "Title",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "A title to add to the NuGet package metadata."
+        },
+        {
+            "name": "NuGetReleaseNotes",
+            "type": "string",
+            "label": "Release Notes",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Release notes to add to the NuGet package metadata."
+        },
+        {
+            "name": "NuGetReleaseNotesFile",
+            "type": "filePath",
+            "label": "Release Notes File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "A file containing release notes to add to the NuGet package metadata. Overrides `NuGetReleaseNotes`."
+        },
+        {
+            "name": "Overwrite",
+            "type": "boolean",
+            "label": "Overwrite",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Allow an existing package of the same ID and version to be overwritten.",
+            "groupName": "advanced"
+        }
+    ],
+    "instanceNameFormat": "Package NuGet $(PackageId)",
+    "execution": {
+        "Node10": {
+            "target": "index.js"
+        }
+    }
+}
