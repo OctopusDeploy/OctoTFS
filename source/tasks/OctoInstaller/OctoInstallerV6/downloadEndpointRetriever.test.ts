@@ -15,23 +15,18 @@ describe("OctopusInstaller", () => {
     const msgs: string[] = [];
     const logger: Logger = {
         debug: (message) => {
-            console.log(`DEBUG: ${message}`);
             msgs.push(message);
         },
         info: (message) => {
-            console.log(`INFO: ${message}`);
             msgs.push(message);
         },
         warn: (message) => {
-            console.log(`WARN: ${message}`);
             msgs.push(message);
         },
         error: (message, err) => {
             if (err !== undefined) {
-                console.log(`ERROR: ${err.message}`);
                 msgs.push(err.message);
             } else {
-                console.log(`ERROR: ${message}`);
                 msgs.push(message);
             }
         },
