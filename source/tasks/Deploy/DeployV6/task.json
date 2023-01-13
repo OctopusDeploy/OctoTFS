@@ -72,7 +72,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "List of environments to deploy to, one environment per line"
+            "helpMarkDown": "List of environments to deploy to, one environment per line. (Note: multiple on a line, separated by commas, is supported to ease migration from earlier versions of the step but this format should be considered deprecated)"
         },
         {
             "name": "Variables",
