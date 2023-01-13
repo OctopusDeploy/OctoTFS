@@ -99,7 +99,7 @@
             "label": "Additional Arguments (deprecated)",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments are no longer supported, move these values to the appropriate fields",
+            "helpMarkDown": "Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields.",
             "groupName": "advanced"
         }
     ],
