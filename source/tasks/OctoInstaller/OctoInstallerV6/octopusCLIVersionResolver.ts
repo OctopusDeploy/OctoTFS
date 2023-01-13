@@ -1,6 +1,6 @@
 import { maxSatisfying, valid } from "semver";
 
-export class OctopusCLIVersionFetcher {
+export class OctopusCLIVersionResolver {
     constructor(readonly versions: string[]) {}
 
     getVersion(versionSpec: string): string {
