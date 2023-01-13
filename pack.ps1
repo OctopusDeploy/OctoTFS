@@ -15,7 +15,7 @@ param (
 $ErrorActionPreference = "Stop"
 
 $buildDirectoryPath = "$basePath/dist"
-$buildArtifactsPath = "$buildDirectoryPath/Artifacts"
+$buildArtifactsPath = "$basePath/Artifacts"
 
 function UpdateExtensionManifestOverrideFile($workingDirectory, $environment, $version) {
     Write-Host "Finding environment-specific manifest overrides..."
