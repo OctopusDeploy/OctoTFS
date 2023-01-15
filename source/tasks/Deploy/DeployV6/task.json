@@ -39,9 +39,6 @@
             "label": "Space",
             "defaultValue": "",
             "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
             "helpMarkDown": "The space within Octopus. This must be the name of the space, not the id."
         },
         {
@@ -50,9 +47,6 @@
             "label": "Project",
             "defaultValue": "",
             "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
             "helpMarkDown": "The project within Octopus. This must be the name of the project, not the id."
         },
         {
@@ -69,9 +63,6 @@
             "label": "Deploy to Environments",
             "defaultValue": "",
             "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
             "helpMarkDown": "List of environments to deploy to, one environment per line. (Note: multiple on a line, separated by commas, is supported to ease migration from earlier versions of the step but this format should be considered deprecated)"
         },
         {
