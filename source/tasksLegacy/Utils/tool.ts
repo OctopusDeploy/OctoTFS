@@ -90,7 +90,7 @@ export function getPortableOctoCommandRunner(command: string): Option<ToolRunner
 export const assertOctoVersionAcceptsIds = async function (): Promise<void> {
     const octo = await getOrInstallOctoCommandRunner("version");
     const result = octo
-        .map((x) => x.launchOctoSync([]))
+        .map((x) => x.launchOctoSync([], "version"))
         .getOrElseL((x) => {
             throw new Error(x);
         });
