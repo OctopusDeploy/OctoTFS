@@ -37,8 +37,13 @@ async function run() {
             includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments),
         ];
 
+        let stepIdentifier = "deploy-release";
+        if (deploymentForTenants.length > 0 || deployForTenantTags.length > 0) {
+            stepIdentifier = "deploy-release-tenanted";
+        }
+
         const code: number = await octo
-            .map((x) => x.launchOcto(configure))
+            .map((x) => x.launchOcto(configure, stepIdentifier))
             .getOrElseL((x) => {
                 throw new Error(x);
             });

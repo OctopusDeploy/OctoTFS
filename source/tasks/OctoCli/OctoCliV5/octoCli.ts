@@ -7,6 +7,6 @@ export class OctoCli {
 
     public async run(args: string | undefined) {
         this.tool.arg(this.command);
-        await executeTask(this.tool, this.connection, "Succeeded executing octo command.", "Failed to execute octo command.", args);
+        await executeTask(this.tool, "run-cli", this.connection, "Succeeded executing octo command.", "Failed to execute octo command.", args);
     }
 }

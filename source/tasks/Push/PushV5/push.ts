@@ -18,7 +18,7 @@ export class Push {
             this.tool.arg(["--package", item]);
         }
 
-        await executeTask(this.tool, this.connection, "Package(s) pushed.", "Failed to push package(s).", additionalArguments);
+        await executeTask(this.tool, "push-package", this.connection, "Package(s) pushed.", "Failed to push package(s).", additionalArguments);
     }
 
     private resolveGlobs = async (globs: string[]): Promise<string[]> => {
