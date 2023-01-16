@@ -194,6 +194,10 @@ Options include:
     -   **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
 -   **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliDeployRelease) to include.
 
+### Version 6 of Deploy Release step
+
+From version 6, the deploy release step is split into two seperate functions for normal deployments and tenanted deployments
+
 ### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release (v6 or later)
 
 | Name                       | Description                                                                                                                                                                               |
@@ -205,6 +209,20 @@ Options include:
 | `Environments`             | **Required.** List of environments to deploy to, one environment per line. A comma-separated list of environments is also supported to ease migration from earlier versions for the step. |
 | `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                                                              |
 | `AdditionalArguments`      | Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields.      |
+
+### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release for Tenants(v6 or later)
+
+| Name                       | Description                                                                                                                                                                          |
+| :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                                                                                                                                 |
+| `Space`                    | **Required.** The Octopus space the release is in.                                                                                                                                   |
+| `Project`                  | **Required.** The Octopus project to deploy.                                                                                                                                         |
+| `ReleaseNumber`            | **Required.** Release number for the new release.                                                                                                                                    |
+| `Environment`              | **Required.** Environment to deploy to. For a tenanted deployment only one environment is supported.                                                                                 |
+| `DeployForTenants`         | List of tenant names to deploy for. One tenant name per line.                                                                                                                        |
+| `DeployForTenantTags`      | List of tenant tag names to deploy for. One tenant tag per line in the format `tag set name/tag name`.                                                                               |
+| `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                                                         |
+| `AdditionalArguments`      | Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields. |
 
 ### <a name="promote-octopus-release"></a>![Promote Release Image](img/octopus_promote-05.png) Promote Octopus Release
 

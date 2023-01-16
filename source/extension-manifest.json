@@ -151,6 +151,16 @@
             }
         },
         {
+            "id": "octopus-deploy-tenanted",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "tasks/DeployTenant"
+            }
+        },
+        {
             "id": "octopus-pack",
             "type": "ms.vss-distributed-task.task",
             "targets": [
@@ -163,7 +173,9 @@
         {
             "id": "octopus-pack-zip",
             "type": "ms.vss-distributed-task.task",
-            "targets": ["ms.vss-distributed-task.tasks"],
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
             "properties": {
                 "name": "tasks/PackZip"
             }
@@ -171,7 +183,9 @@
         {
             "id": "octopus-pack-nuget",
             "type": "ms.vss-distributed-task.task",
-            "targets": ["ms.vss-distributed-task.tasks"],
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
             "properties": {
                 "name": "tasks/PackNuGet"
             }
@@ -202,7 +216,7 @@
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
-            "properties":{
+            "properties": {
                 "name": "tasks/OctoInstaller"
             }
         },
