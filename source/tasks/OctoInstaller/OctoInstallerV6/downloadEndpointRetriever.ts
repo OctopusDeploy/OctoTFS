@@ -73,6 +73,8 @@ export class DownloadEndpointRetriever {
                 break;
         }
 
+        this.logger.debug?.(`Attempting download for platform '${platform}' and architecture ${this.osArch}`);
+
         let downloadUrl: string | undefined;
 
         for (const download of versionsResponse.downloads) {
@@ -85,8 +87,10 @@ export class DownloadEndpointRetriever {
             throw Error(`Failed to resolve endpoint URL to download: ${downloadUrl}`);
         }
 
+        this.logger.debug?.(`Checking status of download url '${downloadUrl}'`);
+
         const http = this.restClient();
-        const statusCode = (await http.client.options(downloadUrl)).message.statusCode;
+        const statusCode = (await http.client.head(downloadUrl)).message.statusCode;
         if (statusCode !== 200) {
             throw Error(`Octopus CLI version not found: ${version}`);
         }

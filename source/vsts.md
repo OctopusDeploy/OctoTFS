@@ -49,7 +49,7 @@ For example, if your build needs to create a Release for Project A, the user who
 
 This extension adds the following tasks:
 
--   Octopus CLI Installer
+-   [Octopus CLI Installer](#tools-installer)
 -   [Package Application - Zip](#pack-zip)
 -   [Package Application - NuGet](#pack-nuget)
 -   [Push Package(s) to Octopus](#push-packages-to-octopus)
@@ -76,7 +76,7 @@ Alternatively, you can supply the tool using the system `PATH` environment varia
 
 Options include:
 
--   **Octopus CLI Version**: Specific a version number like `8.0.0`, that version will be downloaded and supplied to the other tasks.
+-   **Octopus CLI Version**: Specific a version number like `1.0.0`, that version will be downloaded and supplied to the other tasks.
 
 ## <a name="pack-zip"></a>![Package Icon](img/octopus_package-03.png) Package Application - Zip
 
