@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "a847e2d1-5435-4d52-a774-6d300953e85f",
     "name": "OctopusDeployReleaseTenanted",
     "friendlyName": "Deploy Octopus Release to Tenants",
@@ -39,9 +39,6 @@
             "label": "Space",
             "defaultValue": "",
             "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
             "helpMarkDown": "The space within Octopus. This must be the name of the space, not the id."
         },
         {
