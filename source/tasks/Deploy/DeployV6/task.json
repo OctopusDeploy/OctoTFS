@@ -71,9 +71,6 @@
             "label": "Values for prompted variables",
             "defaultValue": "",
             "required": false,
-            "properties": {
-                "EditableOptions": "True"
-            },
             "helpMarkDown": "Variable values to pass to the the deployment, use syntax `variable: value`"
         },
         {
