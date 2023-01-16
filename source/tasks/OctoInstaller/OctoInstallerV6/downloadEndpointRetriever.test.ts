@@ -48,7 +48,7 @@ describe("OctopusInstaller", () => {
                     "assets": [
                         {
                             "name": "octopus_7.4.1_windows_amd64.zip",
-                            "browser_download_url": "https://github.com/OctopusDeploy/cli/releases/download/v7.4.1/octopus_7.4.1_windows_amd64.zip"
+                            "browser_download_url": "http://localhost:${address.port}/OctopusDeploy/cli/releases/download/v7.4.1/octopus_7.4.1_windows_amd64.zip"
                         }
                     ]
                 },
@@ -57,7 +57,7 @@ describe("OctopusInstaller", () => {
                     "assets": [
                         {
                             "name": "octopus_8.0.0_windows_amd64.zip",
-                            "browser_download_url": "https://github.com/OctopusDeploy/cli/releases/download/v8.0.0/octopus_8.0.0_windows_amd64.zip"
+                            "browser_download_url": "http://localhost:${address.port}/OctopusDeploy/cli/releases/download/v8.0.0/octopus_8.0.0_windows_amd64.zip"
                         }
                     ]
                 },
@@ -66,13 +66,25 @@ describe("OctopusInstaller", () => {
                     "assets": [
                         {
                             "name": "octopus_8.2.0_windows_amd64.zip",
-                            "browser_download_url": "https://github.com/OctopusDeploy/cli/releases/download/v8.2.0/octopus_8.2.0_windows_amd64.zip"
+                            "browser_download_url": "http://localhost:${address.port}/OctopusDeploy/cli/releases/download/v8.2.0/octopus_8.2.0_windows_amd64.zip"
                         }
                     ]
                 }
                 ]`;
 
             res.send(latestToolsPayload);
+        });
+
+        app.get("/OctopusDeploy/cli/releases/download/v7.4.1/octopus_7.4.1_windows_amd64.zip", (_, res) => {
+            res.statusCode = 200;
+        });
+
+        app.get("/OctopusDeploy/cli/releases/download/v8.0.0/octopus_8.0.0_windows_amd64.zip", (_, res) => {
+            res.statusCode = 200;
+        });
+
+        app.get("/OctopusDeploy/cli/releases/download/v8.2.0/octopus_8.2.0_windows_amd64.zip", (_, res) => {
+            res.statusCode = 200;
         });
 
         server = await new Promise<Server>((resolve) => {
