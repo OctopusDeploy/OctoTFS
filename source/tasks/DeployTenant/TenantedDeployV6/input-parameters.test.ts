@@ -79,6 +79,7 @@ describe("getInputParameters", () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("Variables", "var1: value1\nvar2: value2");
         task.addVariableString("AdditionalArguments", "-v var3=value3 --variable var4=value4");
+        task.addVariableString("DeployForTenants", "Tenant 1");
 
         const inputParameters = getInputParameters(logger, task);
         expect(inputParameters.variables).toStrictEqual({ var1: "value1", var2: "value2", var3: "value3", var4: "value4" });
@@ -95,7 +96,18 @@ describe("getInputParameters", () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("Variables", "var1: value1\nvar2: value2");
         task.addVariableString("AdditionalArguments", "-v var1=value3");
+        task.addVariableString("DeployForTenants", "Tenant 1");
         const inputParameters = getInputParameters(logger, task);
         expect(inputParameters.variables).toStrictEqual({ var1: "value1", var2: "value2" });
+    });
+
+    test("validate tenants and tags", () => {
+        task.addVariableString("Space", "Default");
+
+        const t = () => {
+            getInputParameters(logger, task);
+        };
+
+        expect(t).toThrowError("Failed to successfully build parameters.\nMust provide at least one tenant or tenant tag.");
     });
 });

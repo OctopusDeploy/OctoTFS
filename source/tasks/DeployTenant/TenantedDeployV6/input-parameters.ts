@@ -74,6 +74,10 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         errors.push("The Octopus space name is required.");
     }
 
+    if (parameters.tenantTags.length === 0 && parameters.tenants.length === 0) {
+        errors.push("Must provide at least one tenant or tenant tag.");
+    }
+
     if (errors.length > 0) {
         throw new Error("Failed to successfully build parameters.\n" + errors.join("\n"));
     }
