@@ -206,6 +206,20 @@ Options include:
 | `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                                                              |
 | `AdditionalArguments`      | Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields.      |
 
+### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release for Tenants(v6 or later)
+
+| Name                       | Description                                                                                                                                                                          |
+| :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                                                                                                                                 |
+| `Space`                    | **Required.** The Octopus space the release is in.                                                                                                                                   |
+| `Project`                  | **Required.** The Octopus project to deploy.                                                                                                                                         |
+| `ReleaseNumber`            | **Required.** Release number for the new release.                                                                                                                                    |
+| `Environment`              | **Required.** Environment to deploy to. For a tenanted deployment only one environment is supported.                                                                                 |
+| `DeployForTenants`         | List of tenant names to deploy for. One tenant name per line.                                                                                                                        |
+| `DeployForTenantTags`      | List of tenant tag names to deploy for. One tenant tag per line in the format `tag set name/tag name`.                                                                               |
+| `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                                                         |
+| `AdditionalArguments`      | Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields. |
+
 ### <a name="promote-octopus-release"></a>![Promote Release Image](img/octopus_promote-05.png) Promote Octopus Release
 
 ![Configure Promote Release Step](img/promote-release-options.png)
