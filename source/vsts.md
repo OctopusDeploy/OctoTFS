@@ -194,6 +194,10 @@ Options include:
     -   **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
 -   **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliDeployRelease) to include.
 
+### Version 6 of Deploy Release step
+
+From version 6, the deploy release step is split into two seperate functions for normal deployments and tenanted deployments
+
 ### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release (v6 or later)
 
 | Name                       | Description                                                                                                                                                                               |
