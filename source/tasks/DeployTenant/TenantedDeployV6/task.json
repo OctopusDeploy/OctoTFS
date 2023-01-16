@@ -1,4 +1,4 @@
-﻿{
+{
     "id": "a847e2d1-5435-4d52-a774-6d300953e85f",
     "name": "OctopusDeployReleaseTenanted",
     "friendlyName": "Deploy Octopus Release to Tenants",
@@ -18,11 +18,6 @@
     "demands": [],
     "minimumAgentVersion": "2.144.0",
     "groups": [
-        {
-            "name": "tenant",
-            "displayName": "Tenants",
-            "isExpanded": true
-        },
         {
             "name": "advanced",
             "displayName": "Advanced Options",
@@ -79,8 +74,7 @@
             "label": "Tenant(s)",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Deploy the release for this list of tenants. Wildcard '*' will deploy to all tenants currently able to deploy to the above provided environment.",
-            "groupName": "tenant"
+            "helpMarkDown": "Deploy the release for this list of tenants. Wildcard '*' will deploy to all tenants currently able to deploy to the above provided environment."
         },
         {
             "name": "DeployForTenantTags",
@@ -88,8 +82,7 @@
             "label": "Tenant tag(s)",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Deploy the release for tenants who match these tags and are ready to deploy to the provided environment.",
-            "groupName": "tenant"
+            "helpMarkDown": "Deploy the release for tenants who match these tags and are ready to deploy to the provided environment."
         },
         {
             "name": "Variables",
