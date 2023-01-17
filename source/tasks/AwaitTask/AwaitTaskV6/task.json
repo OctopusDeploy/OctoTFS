@@ -40,7 +40,7 @@
             "label": "Step",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the step to monitor execution tasks"
+            "helpMarkDown": "The name of the step that queued the deployment/runbook run."
         },
         {
             "name": "PollingInterval",
