@@ -81,7 +81,7 @@ async function run() {
         ];
 
         const code: number = await octo
-            .map((x) => x.launchOcto(configure, "(build-information:push:v4)"))
+            .map((x) => x.launchOcto(configure, "(build-information;push;v4)"))
             .getOrElseL((x) => {
                 throw new Error(x);
             });
