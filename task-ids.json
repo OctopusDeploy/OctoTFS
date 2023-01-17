@@ -1,5 +1,6 @@
 {
     "localtest": {
+        "OctopusAwaitTask": "885046af-620f-4ac8-961d-e7aaaf8d24ea",
         "OctopusCreateRelease": "69084338-2108-493c-98b0-c4410f3e8b7a",
         "OctopusDeployRelease": "947a9649-a21f-4402-9a4d-f0267fa69c9c",
         "OctopusDeployReleaseTenanted": "091ac6f1-da1b-47d1-acf9-d2b93c4f2d67",
@@ -13,6 +14,7 @@
         "OctoCli": "92d8efb7-1c1f-4803-865e-54baac6ba644"
     },
     "test": {
+        "OctopusAwaitTask": "38df691d-23eb-48d4-8638-61764f48bacb",
         "OctopusCreateRelease": "4E131B60-5532-4362-95B6-7C67D9841B4F",
         "OctopusDeployRelease": "8ca1d96a-151d-44b7-bc4f-9251e2ea6971",
         "OctopusDeployReleaseTenanted": "a847e2d1-5435-4d52-a774-6d300953e85f",
@@ -26,6 +28,7 @@
         "OctoCli": "ca025f3d-d8b6-4ca2-aa94-7785e784581f"
     },
     "production": {
+        "OctopusAwaitTask": "38df691d-23eb-48d4-8638-61764f48bacb",
         "OctopusCreateRelease": "4E131B60-5532-4362-95B6-7C67D9841B4F",
         "OctopusDeployRelease": "8ca1d96a-151d-44b7-bc4f-9251e2ea6971",
         "OctopusDeployReleaseTenanted": "a847e2d1-5435-4d52-a774-6d300953e85f",

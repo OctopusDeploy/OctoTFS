@@ -42,6 +42,10 @@ export class MockTaskWrapper implements TaskWrapper {
     setOutputVariable(name: string, value: string): void {
         this.outputVariables.set(name, value);
     }
+
+    getVariable(name: string): string | undefined {
+        return this.outputVariables.get(name);
+    }
 }
 
 describe("getInputParameters", () => {
