@@ -22,6 +22,6 @@ export class Promote {
             this.tool.arg(["--tenantTag", item]);
         }
 
-        await executeTask(this.tool, "promote-release", this.connection, "Promote release succeeded.", "Failed to promote release.", additionalArguments);
+        await executeTask(this.tool, "(release:promote:v5)", this.connection, "Promote release succeeded.", "Failed to promote release.", additionalArguments);
     }
 }

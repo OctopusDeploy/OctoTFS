@@ -37,9 +37,9 @@ async function run() {
             includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments),
         ];
 
-        let stepIdentifier = "deploy-release";
+        let stepIdentifier = "(release:deploy:v4)";
         if (deployForTenants.length > 0 || deployForTenantTags.length > 0) {
-            stepIdentifier = "deploy-release-tenanted";
+            stepIdentifier = "(release:deploy-tenanted:v4)";
         }
 
         const code: number = await octo

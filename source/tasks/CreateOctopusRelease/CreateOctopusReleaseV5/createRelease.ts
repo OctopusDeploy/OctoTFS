@@ -39,6 +39,6 @@ export class CreateRelease {
             this.tool.arg(["--tenantTag", item]);
         }
 
-        await executeTask(this.tool, "create-release", this.connection, "Create release succeeded.", "Failed to create release.", additionalArguments);
+        await executeTask(this.tool, "(release:create:v5)", this.connection, "Create release succeeded.", "Failed to create release.", additionalArguments);
     }
 }
