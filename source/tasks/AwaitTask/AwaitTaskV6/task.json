@@ -40,7 +40,7 @@
             "label": "Step",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the step to monitor execution tasks"
+            "helpMarkDown": "The name of the step to monitor execution tasks. You will need to set a output variable reference name on the source step and use that name here."
         },
         {
             "name": "PollingInterval",
