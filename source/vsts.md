@@ -54,7 +54,9 @@ This extension adds the following tasks:
 -   [Push Package(s) to Octopus](#push-packages-to-octopus)
 -   Push Package Build Information to Octopus
 -   Create Octopus Release
--   Deploy Octopus Release
+-   [Deploy Octopus Release](#deploy-octopus-release)
+-   [Deploy Octopus Release - Tenanted](#deploy-octopus-release-tenanted)
+-   [Run Runbook](#run-runbook)
 -   Promote Octopus Release
 -   Invoke Octopus CLI command
 
@@ -177,7 +179,7 @@ Options include:
     -   **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
 -   **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctoExeCreateRelease) to include.
 
-## <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release
+## <a name="deploy-octopus-release-legacy"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release
 
 ![Configure Deploy Release Step](img/deploy-release-options.png)
 
@@ -218,7 +220,7 @@ From version 6, the deploy release step is split into two seperate functions for
 | :------------- | :----------------------------------------------------------------------------- |
 | `server_tasks` | A list of server task Ids and Environment names for each deployment triggered. |
 
-### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release for Tenants(v6 or later)
+### <a name="deploy-octopus-release-tenanted"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release for Tenants(v6 or later)
 
 #### 📥 Inputs
 
@@ -239,6 +241,28 @@ From version 6, the deploy release step is split into two seperate functions for
 | Name           | Description                                                               |
 | :------------- | :------------------------------------------------------------------------ |
 | `server_tasks` | A list of server task Ids and Tenant names for each deployment triggered. |
+
+### <a name="run-runbook"></a>![Deploy Release Image](img/octopus_deploy-02.png) Run an Octopus Runbook
+
+#### 📥 Inputs
+
+| Name                       | Description                                                  |
+| :------------------------- | :----------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.         |
+| `Space`                    | **Required.** The Octopus space name the release is in.      |
+| `Project`                  | **Required.** The Octopus project name to deploy.            |
+| `Runbook`                  | **Required.** Runbook name to run.                           |
+| `Environments`             | **Required.** The environment names to run the runbook for. One tenant name per line. |
+| `Tenants`                  | The tenant names to run the runbook for. One tenant name per line. |
+| `TenantTags`               | Run for all tenants with the given tag(s). One tenant tag per line in the format `tag set name/tag name`. |
+| `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value` |
+| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the run. |
+
+#### 📤 Outputs
+
+| Name           | Description                                                  |
+| :------------- | :----------------------------------------------------------- |
+| `server_tasks` | A list of objects, containing `ServerTaskId`, `EnvironmentName` and `TenantName`, for each queued run. |
 
 ### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Await Task
 

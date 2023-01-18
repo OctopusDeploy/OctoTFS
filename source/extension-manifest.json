@@ -161,6 +161,14 @@
             }
         },
         {
+            "id": "octopus-run-runbook",
+            "type": "ms.vss-distributed-task.task",
+            "targets": ["ms.vss-distributed-task.tasks"],
+            "properties": {
+                "name": "tasks/RunRunbook"
+            }
+        },
+        {
             "id": "octopus-pack",
             "type": "ms.vss-distributed-task.task",
             "targets": [
