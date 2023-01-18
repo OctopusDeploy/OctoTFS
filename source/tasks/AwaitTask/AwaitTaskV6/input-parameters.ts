@@ -21,7 +21,7 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         throw new Error("Failed to successfully build parameters: step name is required.");
     }
 
-    const tasks = task.getVariable(`${step}.server_tasks`);
+    const tasks = task.getOutputVariable(step, "server_tasks");
     if (tasks === undefined) {
         throw new Error(`Failed to successfully build parameters: cannot find '${step}.server_tasks' variable from execution step`);
     }

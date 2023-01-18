@@ -7,6 +7,7 @@ export interface TaskWrapper {
     setFailure(message: string, done?: boolean): void;
     setOutputVariable(name: string, value: string): void;
     getVariable(name: string): string | undefined;
+    getOutputVariable(step: string, name: string): string | undefined;
 }
 
 export class ConcreteTaskWrapper implements TaskWrapper {
@@ -32,5 +33,9 @@ export class ConcreteTaskWrapper implements TaskWrapper {
 
     public getVariable(name: string): string | undefined {
         return tasks.getVariable(name);
+    }
+
+    public getOutputVariable(step: string, name: string): string | undefined {
+        return tasks.getVariable(`${step}.${name}`);
     }
 }
