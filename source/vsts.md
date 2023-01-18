@@ -53,7 +53,7 @@ This extension adds the following tasks:
 -   [Package Application - NuGet](#pack-nuget)
 -   [Push Package(s) to Octopus](#push-packages-to-octopus)
 -   Push Package Build Information to Octopus
--   Create Octopus Release
+-   [Create Octopus Release](#create-octopus-release)
 -   [Deploy Octopus Release](#deploy-octopus-release)
 -   [Deploy Octopus Release - Tenanted](#deploy-octopus-release-tenanted)
 -   [Run Runbook](#run-runbook)
@@ -161,23 +161,29 @@ Options include:
 
 ## <a name="create-octopus-release"></a>![Create Release Icon](img/octopus_create-release-04.png) Create Octopus Release
 
-![Configure Create Release Step](img/create-release-options.png)
+## 📥 Inputs
 
-Options include:
+|
+|
 
--   **Octopus Deploy Server**: The Octopus Server (click **New** to [add a service connection](#Add-a-service-connection-to-Octopus-Deploy)).
--   **Space**: The Octopus space to create a release in.
--   **Project**: The Octopus project to create a release for.
--   **Release Number**: Release number for the new release (leave blank to let Octopus decide).
--   **Channel**: Channel to use for the new release.
--   **Release Notes**: Any static release notes to be included in the Octopus release.
--   **Deployment** section:
-    -   **To Environment**: Optional environment to deploy to after release creation.
-    -   **Show Deployment Progress**: Whether to wait for the operation to finish, recording output in the log. When enabled, the task only succeeds if the operation finished successfully.
--   **Tenants** section:
-    -   **Tenant(s)**: Comma-separated list of tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
-    -   **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
--   **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctoExeCreateRelease) to include.
+| Name                       | Description                                                  |
+| :------------------------- | :----------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.         |
+| `Space`                    | **Required.** The Octopus space the release is in. This must be the name of the space, not the id. |
+| `ProjectName`              | **Required.** The Octopus project to deploy. This must be the name of the project, not the id. (Yes, this is inconsistent with other steps, for historical/backward compatibility reasons) |
+| `ReleaseNumber`            | The number to use for this release. You can leave this blank if the release number is calculated by Octopus. |
+| `Channel`                  | The [channel](https://g.octopushq.com/Channels) to use for the release. This must be the name of the channel, not the id. |
+| `DefaultPackageVersion`    | Set this to provide a default package version to use for all packages on all steps. Can be used in conjunction with the Packages field, which can be used to override versions for specific packages. |
+| `Packages`                 | A multi-line list of version numbers to use for a package in the release. Format: `StepName:Version` or `PackageID:Version` or `StepName:PackageName:Version`. StepName, PackageID, and PackageName can be replaced with an asterisk ('*'). An asterisk will be assumed for StepName, PackageID, or PackageName if they are omitted. |
+| `CustomReleaseNotes`       | Octopus Release notes. This field supports markdown. To include newlines, you can use HTML linebreaks. |
+| `GitRef`                   | Git branch reference to use when creating the release for version controlled Projects. |
+| `GitCommit`                | Git commit to use when creating the release for version controlled Projects. Use in conjunction with the gitRef parameter to select any previous commit. |
+
+## 📤 Outputs
+
+| Name             | Description                                                |
+| :--------------- | :--------------------------------------------------------- |
+| `release_number` | The Octopus Deploy release number assigned to the Release. |
 
 ## <a name="deploy-octopus-release-legacy"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release
 

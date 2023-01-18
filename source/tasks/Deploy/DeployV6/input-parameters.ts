@@ -56,9 +56,9 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
     logger.debug?.("Environments:" + environmentsField);
 
     const parameters: InputParameters = {
-        space: task.getInput("Space", true),
-        project: task.getInput("Project", true),
-        releaseNumber: task.getInput("ReleaseNumber", true),
+        space: task.getInput("Space", true) || "",
+        project: task.getInput("Project", true) || "",
+        releaseNumber: task.getInput("ReleaseNumber", true) || "",
         environments: environments,
         useGuidedFailure: task.getBoolean("UseGuidedFailure") || undefined,
         variables: variablesMap || undefined,
