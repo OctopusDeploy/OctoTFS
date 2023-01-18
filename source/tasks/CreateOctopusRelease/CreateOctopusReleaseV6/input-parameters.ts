@@ -70,7 +70,7 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         channel: task.getInput("Channel"),
         defaultPackageVersion: defaultPackageVersion,
         packages: packages.length > 0 ? packages : undefined,
-        releaseNotes: task.getInput("CustomReleaseNotes"),
+        releaseNotes: task.getInput("ReleaseNotes"),
         gitRef: task.getInput("GitRef"),
         gitCommit: task.getInput("GitCommit"),
     };
