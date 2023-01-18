@@ -5,9 +5,8 @@ import { Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
 export interface InputParameters {
-    // Optional: You should prefer the OCTOPUS_SPACE environment variable
-    space: string;
     // Required
+    space: string;
     project: string;
     releaseNumber: string;
     environments: string[];
@@ -18,11 +17,6 @@ export interface InputParameters {
 }
 
 export function getInputParameters(logger: Logger, task: TaskWrapper): InputParameters {
-    const space = task.getInput("Space");
-    if (!space) {
-        throw new Error("Failed to successfully build parameters: space name is required.");
-    }
-
     const variablesMap: PromptedVariableValues | undefined = {};
 
     const additionalArguments = task.getInput("AdditionalArguments");
@@ -50,7 +44,7 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         }
     }
 
-    const environmentsField = task.getInput("Environments");
+    const environmentsField = task.getInput("Environments", true);
     let environments: string[] = [];
 
     if (environmentsField) {
@@ -62,9 +56,9 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
     logger.debug?.("Environments:" + environmentsField);
 
     const parameters: InputParameters = {
-        space: task.getInput("Space") || "",
-        project: task.getInput("Project", true) || "",
-        releaseNumber: task.getInput("ReleaseNumber", true) || "",
+        space: task.getInput("Space", true),
+        project: task.getInput("Project", true),
+        releaseNumber: task.getInput("ReleaseNumber", true),
         environments: environments,
         useGuidedFailure: task.getBoolean("UseGuidedFailure") || undefined,
         variables: variablesMap || undefined,
