@@ -54,7 +54,7 @@ describe("getInputParameters", () => {
 
     test("all regular fields supplied", () => {
         task.addVariableString("Space", "Default");
-        task.addVariableString("ProjectName", "Awesome project");
+        task.addVariableString("Project", "Awesome project");
         task.addVariableString("Channel", "Beta");
         task.addVariableString("ReleaseNumber", "1.0.0");
         task.addVariableString("DefaultPackageVersion", "1.0.1");
@@ -77,7 +77,7 @@ describe("getInputParameters", () => {
 
     test("packages in additional fields", () => {
         task.addVariableString("Space", "Default");
-        task.addVariableString("ProjectName", "Awesome project");
+        task.addVariableString("Project", "Awesome project");
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("AdditionalArguments", "--package Baz:2.5.0");
 
@@ -87,7 +87,7 @@ describe("getInputParameters", () => {
 
     test("duplicate variable name, variables field takes precedence", () => {
         task.addVariableString("Space", "Default");
-        task.addVariableString("ProjectName", "Awesome project");
+        task.addVariableString("Project", "Awesome project");
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("AdditionalArguments", "--package Bar:2.0.0");
 

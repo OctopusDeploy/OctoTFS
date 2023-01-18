@@ -47,7 +47,7 @@
             "helpMarkDown": "The space within Octopus. This must be the name of the space, not the id."
         },
         {
-            "name": "ProjectName",
+            "name": "Project",
             "type": "string",
             "label": "Project",
             "defaultValue": "",

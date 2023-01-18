@@ -65,7 +65,7 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
 
     const parameters: InputParameters = {
         space: task.getInput("Space", true) || "",
-        project: task.getInput("ProjectName", true) || "",
+        project: task.getInput("Project", true) || "",
         releaseNumber: task.getInput("ReleaseNumber"),
         channel: task.getInput("Channel"),
         defaultPackageVersion: defaultPackageVersion,
