@@ -107,6 +107,12 @@
             "groupName": "advanced"
         }
     ],
+    "OutputVariables": [
+        {
+            "name": "server_tasks",
+            "description": "List of server tasks representing the deployment server tasks."
+        }
+    ],
     "instanceNameFormat": "Deploy Octopus Release Tenants",
     "execution": {
         "Node16": {

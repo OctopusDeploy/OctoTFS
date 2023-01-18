@@ -1,48 +1,6 @@
 import { Logger } from "@octopusdeploy/api-client";
-import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getInputParameters } from "./input-parameters";
-import * as tasks from "azure-pipelines-task-lib/task";
-
-export class MockTaskWrapper implements TaskWrapper {
-    lastResult?: tasks.TaskResult | undefined = undefined;
-    lastResultMessage: string | undefined = undefined;
-    lastResultDone: boolean | undefined = undefined;
-
-    stringValues: Map<string, string> = new Map<string, string>();
-    boolValues: Map<string, boolean> = new Map<string, boolean>();
-    outputVariables: Map<string, string> = new Map<string, string>();
-
-    addVariableString(name: string, value: string) {
-        this.stringValues.set(name, value);
-    }
-
-    addVariableBoolean(name: string, value: boolean) {
-        this.boolValues.set(name, value);
-    }
-
-    getInput(name: string, _required?: boolean | undefined): string | undefined {
-        return this.stringValues.get(name);
-    }
-
-    getBoolean(name: string, _required?: boolean | undefined): boolean | undefined {
-        return this.boolValues.get(name);
-    }
-
-    setSuccess(message: string, done?: boolean | undefined): void {
-        this.lastResult = tasks.TaskResult.Succeeded;
-        this.lastResultMessage = message;
-        this.lastResultDone = done;
-    }
-    setFailure(message: string, done?: boolean | undefined): void {
-        this.lastResult = tasks.TaskResult.Failed;
-        this.lastResultMessage = message;
-        this.lastResultDone = done;
-    }
-
-    setOutputVariable(name: string, value: string): void {
-        this.outputVariables.set(name, value);
-    }
-}
+import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
 
 describe("getInputParameters", () => {
     let logger: Logger;
