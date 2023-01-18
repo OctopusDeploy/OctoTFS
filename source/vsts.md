@@ -103,7 +103,7 @@ Use this task to package your built application into a Zip file that is compatib
 
 Use this task to package your built application into a NuGet package that is compatible with Octopus Deploy.
 
-## 📥 Inputs
+### 📥 Inputs
 
 | Name                    | Description                                                                                                                                  |
 | :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -119,7 +119,7 @@ Use this task to package your built application into a NuGet package that is com
 | `NuGetReleaseNotesFile` | A file containing release notes to add to the NuGet package metadata. Overrides `NuGetReleaseNotes`.                                         |
 | `Overwrite`             | Allow an existing package of the same ID and version to be overwritten.                                                                      |
 
-## 📤 Outputs
+### 📤 Outputs
 
 | Name                | Description                                                   |
 | :------------------ | :------------------------------------------------------------ |
@@ -130,7 +130,7 @@ Use this task to package your built application into a NuGet package that is com
 
 Use this task to push your NuGet or Zip package to your Octopus Deploy Server. **v6 of this step requires Octopus 2022.3+**
 
-## 📥 Inputs
+### 📥 Inputs
 
 | Name                       | Description                                                                                                                                                              |
 | :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -139,7 +139,7 @@ Use this task to push your NuGet or Zip package to your Octopus Deploy Server. *
 | `Package`                  | **Required.** Multi-line list of packages to push to Octopus                                                                                                             |
 | `Replace`                  | Whether to replace the existing package(s). Valid options are true, false (default), IgnoreIfExists. If false is set the upload will fail if the package already exists. |
 
-## 📤 Outputs
+### 📤 Outputs
 
 None.
 
@@ -177,7 +177,7 @@ Options include:
     -   **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
 -   **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctoExeCreateRelease) to include.
 
-### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release
+## <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release
 
 ![Configure Deploy Release Step](img/deploy-release-options.png)
 
@@ -194,11 +194,13 @@ Options include:
     -   **Tenant tag(s)**: Comma-separated list of tenant tags matching tenants to deploy to. Note that if completed, this will be treated as a [Tenanted Deployment](https://g.octopushq.com/MultiTenantDeployments) by Octopus.
 -   **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliDeployRelease) to include.
 
-### Version 6 of Deploy Release step
+## Version 6 of Deploy Release step
 
 From version 6, the deploy release step is split into two seperate functions for normal deployments and tenanted deployments
 
 ### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release (v6 or later)
+
+#### 📥 Inputs
 
 | Name                       | Description                                                                                                                                                                               |
 | :------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -210,7 +212,15 @@ From version 6, the deploy release step is split into two seperate functions for
 | `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                                                              |
 | `AdditionalArguments`      | Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields.      |
 
+#### 📤 Outputs
+
+| Name           | Description                                                                    |
+| :------------- | :----------------------------------------------------------------------------- |
+| `server_tasks` | A list of server task Ids and Environment names for each deployment triggered. |
+
 ### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release for Tenants(v6 or later)
+
+#### 📥 Inputs
 
 | Name                       | Description                                                                                                                                                                          |
 | :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -223,6 +233,30 @@ From version 6, the deploy release step is split into two seperate functions for
 | `DeployForTenantTags`      | List of tenant tag names to deploy for. One tenant tag per line in the format `tag set name/tag name`.                                                                               |
 | `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                                                         |
 | `AdditionalArguments`      | Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields. |
+
+#### 📤 Outputs
+
+| Name           | Description                                                               |
+| :------------- | :------------------------------------------------------------------------ |
+| `server_tasks` | A list of server task Ids and Tenant names for each deployment triggered. |
+
+### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Await Task
+
+#### 📥 Inputs
+
+| Name                       | Description                                                                      |
+| :------------------------- | :------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                             |
+| `Space`                    | **Required.** The Octopus space the release is in.                               |
+| `Step`                     | **Required** The name of the step that queued the deployment/runbook run.        |
+| `PollingInterval`          | How frequently, in seconds, to check the status. (Default: 10s)                  |
+| `TimeoutAfter`             | Duration, in seconds, to allow for completion before timing out. (Default: 600s) |
+
+The `Step` input parameter needs to be set to the `name` of the deployment step that generated the server tasks to be waited. In the classic-pipeline mode, you need to set the reference name on the `server_tasks` output variable and use that value for `Step`.
+
+#### 📤 Outputs
+
+None.
 
 ### <a name="promote-octopus-release"></a>![Promote Release Image](img/octopus_promote-05.png) Promote Octopus Release
 
