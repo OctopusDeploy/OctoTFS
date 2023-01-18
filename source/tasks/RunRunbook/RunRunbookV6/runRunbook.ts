@@ -23,10 +23,12 @@ export async function createRunbookRunFromInputs(client: Client, command: Create
         const runs = await repository.list({ ids: runbookRunIds, take: runbookRunIds.length });
 
         const envIds = runs.Items.map((d) => d.EnvironmentId || "");
+        logger.debug?.(`Environment Ids: ${envIds.join(", ")}`);
         const envRepository = new EnvironmentRepository(client, command.spaceName);
         const envs = await envRepository.list({ ids: envIds, take: envIds.length });
 
         const tenantIds = runs.Items.map((d) => d.TenantId || "");
+        logger.debug?.(`Tenant Ids: ${tenantIds.join(", ")}`);
         const tenantRepository = new TenantRepository(client, command.spaceName);
         const tenants = await tenantRepository.list({ ids: tenantIds, take: tenantIds.length });
 
@@ -38,7 +40,9 @@ export async function createRunbookRunFromInputs(client: Client, command: Create
             };
         });
 
-        task.setOutputVariable("server_tasks", JSON.stringify(results));
+        const tasksJson = JSON.stringify(results);
+        logger.debug?.(`server_tasks: ${tasksJson}`);
+        task.setOutputVariable("server_tasks", tasksJson);
 
         return results;
     } catch (error: unknown) {

@@ -1,8 +1,8 @@
 import { getDefaultOctopusConnectionDetailsOrThrow } from "../../Utils/connection";
-import { Deploy } from "./deploy";
 import { ConcreteTaskWrapper, TaskWrapper } from "tasks/Utils/taskInput";
 import { Logger } from "@octopusdeploy/api-client";
 import * as tasks from "azure-pipelines-task-lib/task";
+import { RunbookRun } from "./runbookRun";
 
 const connection = getDefaultOctopusConnectionDetailsOrThrow();
 
