@@ -2,14 +2,20 @@ import { Client, CreateRunbookRunCommandV1, RunbookRunRepository, Logger, Tenant
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
-export async function createRunbookRunFromInputs(client: Client, command: CreateRunbookRunCommandV1, task: TaskWrapper, logger: Logger): Promise<DeploymentResult[]> {
+export interface RunbookRunResult {
+    serverTaskId: string;
+    environmentName: string;
+    tenantName: string | null;
+}
+
+export async function createRunbookRunFromInputs(client: Client, command: CreateRunbookRunCommandV1, task: TaskWrapper, logger: Logger): Promise<RunbookRunResult[]> {
     logger.info?.("🐙 Running a Runbook in Octopus Deploy...");
 
     try {
         const repository = new RunbookRunRepository(client, command.spaceName);
         const response = await repository.create(command);
 
-        client.info(`🎉 ${response.RunbookRunServerTasks.length} Run${response.RunbookRunServerTasks.length > 1 ? "s" : ""} queued successfully!`);
+        logger.info?.(`🎉 ${response.RunbookRunServerTasks.length} Run${response.RunbookRunServerTasks.length > 1 ? "s" : ""} queued successfully!`);
 
         if (response.RunbookRunServerTasks.length === 0) {
             throw new Error("Expected at least one run to be queued.");
@@ -33,10 +39,12 @@ export async function createRunbookRunFromInputs(client: Client, command: Create
         const tenants = await tenantRepository.list({ ids: tenantIds, take: tenantIds.length });
 
         const results = response.RunbookRunServerTasks.map((x) => {
+            const filteredTenants = tenants.Items.filter((e) => e.Id === runs.Items.filter((d) => d.TaskId === x.ServerTaskId)[0].TenantId);
+            const tenantName = filteredTenants.length > 0 ? filteredTenants[0].Name : null;
             return {
                 serverTaskId: x.ServerTaskId,
                 environmentName: envs.Items.filter((e) => e.Id === runs.Items.filter((d) => d.TaskId === x.ServerTaskId)[0].EnvironmentId)[0].Name,
-                tenantName: tenants.Items.filter((e) => e.Id === runs.Items.filter((d) => d.TaskId === x.ServerTaskId)[0].TenantId)[0].Name,
+                tenantName: tenantName,
             };
         });
 
