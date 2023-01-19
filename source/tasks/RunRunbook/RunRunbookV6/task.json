@@ -1,0 +1,103 @@
+﻿{
+    "id": "5a2273e0-aa4f-4502-bcba-6817835e2bbd",
+    "name": "OctopusRunRunbook",
+    "friendlyName": "Run Octopus Runbook",
+    "description": "Run an Octopus Deploy Runbook",
+    "helpMarkDown": "set-by-pack.ps1",
+    "category": "Deploy",
+    "visibility": ["Build", "Release"],
+    "author": "Octopus Deploy",
+    "version": {
+        "Major": 6,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.144.0",
+    "inputs": [
+        {
+            "name": "OctoConnectedServiceName",
+            "type": "connectedService:OctopusEndpoint",
+            "label": "Octopus Deploy Server",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Octopus Deploy server connection"
+        },
+        {
+            "name": "Space",
+            "type": "string",
+            "label": "Space",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The space within Octopus. This must be the name of the space, not the id."
+        },
+        {
+            "name": "Project",
+            "type": "string",
+            "label": "Project",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The project within Octopus. This must be the name of the project, not the id."
+        },
+        {
+            "name": "Runbook",
+            "type": "string",
+            "label": "Runbook",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of the runbook to run."
+        },
+        {
+            "name": "Environments",
+            "type": "multiLine",
+            "label": "Environment(s)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The environment names to run the runbook for."
+        },
+        {
+            "name": "Tenants",
+            "type": "multiLine",
+            "label": "Tenant(s)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The tenant names to run the runbook for."
+        },
+        {
+            "name": "TenantTags",
+            "type": "multiLine",
+            "label": "Tenant tag(s)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Run for all tenants with the given tag(s)."
+        },
+        {
+            "name": "Variables",
+            "type": "multiLine",
+            "label": "Values for prompted variables",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Variable values to pass to the run, use syntax `variable: value`."
+        },
+        {
+            "name": "UseGuidedFailure",
+            "type": "boolean",
+            "label": "Use guided failure",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Whether to use guided failure mode if errors occur during the run."
+        }
+    ],
+    "OutputVariables": [
+        {
+            "name": "server_tasks",
+            "description": "A list of objects, containing `ServerTaskId`, `EnvironmentName` and `TenantName`, for each queued run."
+        }
+    ],
+    "instanceNameFormat": "Run Octopus Runbook",
+    "execution": {
+        "Node16": {
+            "target": "index.js"
+        }
+    }
+}
