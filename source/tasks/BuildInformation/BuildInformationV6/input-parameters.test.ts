@@ -1,11 +1,10 @@
 import { Logger } from "@octopusdeploy/api-client";
-import { TaskWrapper } from "tasks/Utils/taskInput";
 import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
 import { getInputCommand } from "./inputParameters";
 import { VstsParameters, IVstsHelper } from "./vsts";
 
 class MockVsts implements IVstsHelper {
-    getVsts(_logger: Logger, _task: TaskWrapper): Promise<VstsParameters> {
+    getVsts(_logger: Logger): Promise<VstsParameters> {
         const vsts: VstsParameters = {
             branch: "/refs/head/main",
             environment: {

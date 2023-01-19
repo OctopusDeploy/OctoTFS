@@ -4,7 +4,7 @@ import { TaskWrapper } from "tasks/Utils/taskInput";
 import { IVstsHelper } from "./vsts";
 
 export async function getInputCommand(logger: Logger, task: TaskWrapper, vstsHelper: IVstsHelper): Promise<CreateOctopusBuildInformationCommand> {
-    const vsts = await vstsHelper.getVsts(logger, task);
+    const vsts = await vstsHelper.getVsts(logger);
     const inputPackages = getLineSeparatedItems(task.getInput("PackageId") || "") || [];
     logger.debug?.(`PackageId: ${inputPackages}`);
     const packages: PackageIdentity[] = [];

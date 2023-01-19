@@ -3,7 +3,7 @@ import { getDefaultOctopusConnectionDetailsOrThrow } from "tasks/Utils/connectio
 import * as tasks from "azure-pipelines-task-lib/task";
 import { ConcreteTaskWrapper, TaskWrapper } from "tasks/Utils/taskInput";
 import { BuildInformation } from "./buildInformation";
-import { IVstsHelper } from "./vsts";
+import { IVstsHelper, VstsHelper } from "./vsts";
 
 const connection = getDefaultOctopusConnectionDetailsOrThrow();
 
@@ -23,6 +23,6 @@ const logger: Logger = {
 };
 
 const task: TaskWrapper = new ConcreteTaskWrapper();
-const vsts: IVstsHelper = new IVstsHelper(logger, task);
+const vsts: IVstsHelper = new VstsHelper(logger);
 
 new BuildInformation(connection, logger, task, vsts).run();

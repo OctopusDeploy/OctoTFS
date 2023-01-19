@@ -1,6 +1,6 @@
 import { IOctopusBuildInformationCommit, Logger } from "@octopusdeploy/api-client";
 import * as vsts from "azure-devops-node-api";
-import { TaskWrapper } from "tasks/Utils/taskInput";
+import * as tasks from "azure-pipelines-task-lib/task";
 import os from "os";
 
 export interface VstsParameters {
@@ -11,7 +11,7 @@ export interface VstsParameters {
 }
 
 export interface IVstsHelper {
-    getVsts(logger: Logger, task: TaskWrapper): Promise<VstsParameters>;
+    getVsts(logger: Logger): Promise<VstsParameters>;
 }
 
 export interface ReleaseEnvironmentVariables {
@@ -44,10 +44,10 @@ export interface SystemEnvironmentVariables {
 export type VstsEnvironmentVariables = ReleaseEnvironmentVariables & BuildEnvironmentVariables & AgentEnvironmentVariables & SystemEnvironmentVariables;
 
 export class VstsHelper implements IVstsHelper {
-    constructor(readonly logger: Logger, readonly task: TaskWrapper) {}
+    constructor(readonly logger: Logger) {}
     async getVsts(): Promise<VstsParameters> {
         const environment = this.getVstsEnvironmentVariables();
-        const vstsConnection = this.createVstsConnection(environment, this.task);
+        const vstsConnection = this.createVstsConnection(environment);
         const branch = await this.getBuildBranch(vstsConnection, environment);
         const commits = await this.getBuildChanges(vstsConnection, environment, this.logger);
 
@@ -93,8 +93,8 @@ export class VstsHelper implements IVstsHelper {
         }
     }
 
-    private createVstsConnection(environment: SystemEnvironmentVariables, task: TaskWrapper): vsts.WebApi {
-        const vstsAuthorization = task.getEndpointAuthorization("SystemVssConnection", true);
+    private createVstsConnection(environment: SystemEnvironmentVariables): vsts.WebApi {
+        const vstsAuthorization = tasks.getEndpointAuthorization("SystemVssConnection", true);
         const token = vstsAuthorization?.parameters["AccessToken"] || "";
         const authHandler = vsts.getPersonalAccessTokenHandler(token);
         return new vsts.WebApi(environment.teamCollectionUri, authHandler);
