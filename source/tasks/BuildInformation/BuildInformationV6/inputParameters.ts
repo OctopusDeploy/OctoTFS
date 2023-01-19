@@ -1,73 +1,49 @@
-import { Logger, OverwriteMode } from "@octopusdeploy/api-client";
-import { getLineSeparatedItems, ReplaceOverwriteMode } from "../../Utils/inputs";
+import { CreateOctopusBuildInformationCommand, Logger, PackageIdentity } from "@octopusdeploy/api-client";
+import { getLineSeparatedItems } from "../../Utils/inputs";
 import { TaskWrapper } from "tasks/Utils/taskInput";
+import { IVstsHelper } from "./vsts";
 
-export interface InputParameters {
-    space: string;
-    packages: string[];
-    version?: string;
-    branch?: string;
-    overwriteMode: OverwriteMode;
-}
-
-export function getInputParameters(isRetry: boolean, logger: Logger, task: TaskWrapper): InputParameters {
-    const overwriteMode = getOverwriteMode(isRetry, logger, task);
-    const packagesField = task.getInput("PackageId");
-    let packages: string[] = [];
-
-    if (packagesField) {
-        packages = getLineSeparatedItems(packagesField);
+export async function getInputCommand(logger: Logger, task: TaskWrapper, vstsHelper: IVstsHelper): Promise<CreateOctopusBuildInformationCommand> {
+    const vsts = await vstsHelper.getVsts(logger, task);
+    const inputPackages = getLineSeparatedItems(task.getInput("PackageId") || "") || [];
+    logger.debug?.(`PackageId: ${inputPackages}`);
+    const packages: PackageIdentity[] = [];
+    for (const packageId of inputPackages) {
+        packages.push({
+            Id: packageId,
+            Version: task.getInput("PackageVersion") || "",
+        });
     }
-    logger.debug?.(`PackageId: ${packagesField}`);
 
-    const parameters: InputParameters = {
-        space: task.getInput("Space") || "",
-        packages: packages,
-        version: task.getInput("PackageVersion") || undefined,
-        branch: task.getInput("branch") || undefined,
-        overwriteMode: overwriteMode,
+    const command: CreateOctopusBuildInformationCommand = {
+        SpaceName: task.getInput("Space") || "",
+        BuildEnvironment: "Azure DevOps",
+        BuildNumber: vsts.environment.buildNumber,
+        BuildUrl: vsts.environment.teamCollectionUri.replace(/\/$/, "") + "/" + vsts.environment.projectName + "/_build/results?buildId=" + vsts.environment.buildId,
+        Branch: vsts.branch || "",
+        VcsType: vsts.vcsType,
+        VcsRoot: vsts.environment.buildRepositoryUri,
+        VcsCommitNumber: vsts.environment.buildSourceVersion,
+        Commits: vsts.commits,
+        Packages: packages,
     };
 
     const errors: string[] = [];
-    if (!parameters.space) {
+    if (!command.SpaceName) {
         errors.push("space name is required");
     }
 
-    if (!parameters.packages || parameters.packages.length === 0) {
+    if (!command.Packages || command.Packages.length === 0) {
         errors.push("must specify at least one package name");
-    }
-
-    if (!parameters.version) {
-        errors.push("must specify a package version number, in SemVer format");
+    } else {
+        if (!command.Packages[0].Version || command.Packages[0].Version === "") {
+            errors.push("must specify a package version number, in SemVer format");
+        }
     }
 
     if (errors.length > 0) {
         throw new Error(`Failed to successfully build parameters:\n${errors.join("\n")}`);
     }
 
-    return parameters;
-}
-
-function getOverwriteMode(isRetry: boolean, logger: Logger, task: TaskWrapper): OverwriteMode {
-    const overwriteMode: ReplaceOverwriteMode =
-        (ReplaceOverwriteMode as any)[task.getInput("Replace", false) || ""] || // eslint-disable-line @typescript-eslint/no-explicit-any
-        (isRetry ? ReplaceOverwriteMode.IgnoreIfExists : ReplaceOverwriteMode.false);
-
-    let apiOverwriteMode: OverwriteMode;
-    switch (overwriteMode) {
-        case ReplaceOverwriteMode.true:
-            apiOverwriteMode = OverwriteMode.OverwriteExisting;
-            break;
-        case ReplaceOverwriteMode.IgnoreIfExists:
-            apiOverwriteMode = OverwriteMode.IgnoreIfExists;
-            break;
-        case ReplaceOverwriteMode.false:
-            apiOverwriteMode = OverwriteMode.FailIfExists;
-            break;
-        default:
-            apiOverwriteMode = OverwriteMode.FailIfExists;
-            break;
-    }
-    logger.debug?.(`Overwrite mode: ${apiOverwriteMode}`);
-    return apiOverwriteMode;
+    return command;
 }

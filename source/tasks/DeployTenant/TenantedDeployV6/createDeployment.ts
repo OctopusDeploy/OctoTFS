@@ -11,7 +11,7 @@ export interface DeploymentResult {
 export async function createDeploymentFromInputs(client: Client, parameters: InputParameters, task: TaskWrapper, logger: Logger): Promise<DeploymentResult[]> {
     logger.info?.("🐙 Deploying a release in Octopus Deploy...");
     const command: CreateDeploymentTenantedCommandV1 = {
-        spaceName: parameters.space,
+        SpaceName: parameters.space,
         ProjectName: parameters.project,
         ReleaseVersion: parameters.releaseNumber,
         EnvironmentName: parameters.environment,
