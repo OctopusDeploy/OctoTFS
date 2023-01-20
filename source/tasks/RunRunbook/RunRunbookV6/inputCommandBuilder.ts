@@ -2,7 +2,7 @@ import { getLineSeparatedItems } from "../../Utils/inputs";
 import { CreateRunbookRunCommandV1, Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
-export function getInputParameters(logger: Logger, task: TaskWrapper): CreateRunbookRunCommandV1 {
+export function getInputCommand(logger: Logger, task: TaskWrapper): CreateRunbookRunCommandV1 {
     const variablesMap: PromptedVariableValues | undefined = {};
 
     const variablesField = task.getInput("Variables");

@@ -1,25 +1,13 @@
 import os from "os";
 import { Client, CreateReleaseCommandV1, Logger, ReleaseRepository } from "@octopusdeploy/api-client";
-import { InputParameters } from "./input-parameters";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
 // Returns the release number that was actually created in Octopus
-export async function createReleaseFromInputs(client: Client, parameters: InputParameters, task: TaskWrapper, logger: Logger): Promise<string> {
+export async function createReleaseFromInputs(client: Client, command: CreateReleaseCommandV1, task: TaskWrapper, logger: Logger): Promise<string> {
     logger.info?.("🐙 Creating a release in Octopus Deploy...");
-    const command: CreateReleaseCommandV1 = {
-        spaceName: parameters.space,
-        ProjectName: parameters.project,
-        ReleaseVersion: parameters.releaseNumber,
-        ChannelName: parameters.channel,
-        PackageVersion: parameters.defaultPackageVersion,
-        Packages: parameters.packages,
-        ReleaseNotes: parameters.releaseNotes,
-        GitRef: parameters.gitRef,
-        GitCommit: parameters.gitCommit,
-    };
 
     try {
-        const repository = new ReleaseRepository(client, parameters.space);
+        const repository = new ReleaseRepository(client, command.spaceName);
         const response = await repository.create(command);
 
         client.info(`🎉 Release ${response.ReleaseVersion} created successfully!`);

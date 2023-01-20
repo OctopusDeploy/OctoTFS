@@ -1,5 +1,5 @@
 import { OctoServerConnectionDetails } from "../../Utils/connection";
-import { getInputCommand } from "./inputParameters";
+import { getInputCommand } from "./inputCommandBuilder";
 import { BuildInformationRepository, Client, ClientConfiguration, Logger } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getOverwriteMode } from "./overwriteMode";

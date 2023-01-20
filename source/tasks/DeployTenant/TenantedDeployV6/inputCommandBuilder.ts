@@ -1,25 +1,10 @@
 import commandLineArgs from "command-line-args";
 import shlex from "shlex";
 import { getLineSeparatedItems } from "../../Utils/inputs";
-import { Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
+import { CreateDeploymentTenantedCommandV1, Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
-export interface InputParameters {
-    // Optional: You should prefer the OCTOPUS_SPACE environment variable
-    space: string;
-    // Required
-    project: string;
-    releaseNumber: string;
-    environment: string;
-    tenants: string[];
-    tenantTags: string[];
-
-    // Optional
-    useGuidedFailure?: boolean;
-    variables?: PromptedVariableValues;
-}
-
-export function getInputParameters(logger: Logger, task: TaskWrapper): InputParameters {
+export function getInputCommand(logger: Logger, task: TaskWrapper): CreateDeploymentTenantedCommandV1 {
     const space = task.getInput("Space");
     if (!space) {
         throw new Error("Failed to successfully build parameters: space name is required.");
@@ -58,23 +43,23 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
     logger.debug?.("Tenant Tags: " + tagsField);
     const tags = getLineSeparatedItems(tagsField || "")?.map((t: string) => t.trim()) || [];
 
-    const parameters: InputParameters = {
-        space: task.getInput("Space") || "",
-        project: task.getInput("Project", true) || "",
-        releaseNumber: task.getInput("ReleaseNumber", true) || "",
-        environment: task.getInput("Environment", true) || "",
-        useGuidedFailure: task.getBoolean("UseGuidedFailure") || undefined,
-        variables: variablesMap || undefined,
-        tenants: getLineSeparatedItems(tenantsField || "")?.map((t: string) => t.trim()) || [],
-        tenantTags: tags,
+    const command: CreateDeploymentTenantedCommandV1 = {
+        spaceName: task.getInput("Space") || "",
+        ProjectName: task.getInput("Project", true) || "",
+        ReleaseVersion: task.getInput("ReleaseNumber", true) || "",
+        EnvironmentName: task.getInput("Environment", true) || "",
+        Tenants: getLineSeparatedItems(tenantsField || "")?.map((t: string) => t.trim()) || [],
+        TenantTags: tags,
+        UseGuidedFailure: task.getBoolean("UseGuidedFailure") || undefined,
+        Variables: variablesMap || undefined,
     };
 
     const errors: string[] = [];
-    if (parameters.space === "") {
+    if (command.spaceName === "") {
         errors.push("The Octopus space name is required.");
     }
 
-    if (parameters.tenantTags.length === 0 && parameters.tenants.length === 0) {
+    if (command.TenantTags.length === 0 && command.Tenants.length === 0) {
         errors.push("Must provide at least one tenant or tenant tag.");
     }
 
@@ -82,7 +67,7 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         throw new Error("Failed to successfully build parameters.\n" + errors.join("\n"));
     }
 
-    logger.debug?.(JSON.stringify(parameters));
+    logger.debug?.(JSON.stringify(command));
 
-    return parameters;
+    return command;
 }

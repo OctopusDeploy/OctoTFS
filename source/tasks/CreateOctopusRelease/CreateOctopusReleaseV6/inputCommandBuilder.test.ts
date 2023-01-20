@@ -1,8 +1,8 @@
 import { Logger } from "@octopusdeploy/api-client";
-import { getInputParameters } from "./input-parameters";
+import { getInputCommand } from "./inputCommandBuilder";
 import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
 
-describe("getInputParameters", () => {
+describe("getInputCommand", () => {
     let logger: Logger;
     let task: MockTaskWrapper;
     beforeEach(() => {
@@ -19,14 +19,14 @@ describe("getInputParameters", () => {
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("GitRef", "main");
 
-        const inputParameters = getInputParameters(logger, task);
-        expect(inputParameters.space).toBe("Default");
-        expect(inputParameters.project).toBe("Awesome project");
-        expect(inputParameters.channel).toBe("Beta");
-        expect(inputParameters.releaseNumber).toBe("1.0.0");
-        expect(inputParameters.defaultPackageVersion).toBe("1.0.1");
-        expect(inputParameters.packages).toStrictEqual(["Step1:Foo:1.0.0", "Bar:2.0.0"]);
-        expect(inputParameters.gitRef).toBe("main");
+        const command = getInputCommand(logger, task);
+        expect(command.spaceName).toBe("Default");
+        expect(command.ProjectName).toBe("Awesome project");
+        expect(command.ChannelName).toBe("Beta");
+        expect(command.ReleaseVersion).toBe("1.0.0");
+        expect(command.PackageVersion).toBe("1.0.1");
+        expect(command.Packages).toStrictEqual(["Step1:Foo:1.0.0", "Bar:2.0.0"]);
+        expect(command.GitRef).toBe("main");
 
         expect(task.lastResult).toBeUndefined();
         expect(task.lastResultMessage).toBeUndefined();
@@ -39,8 +39,8 @@ describe("getInputParameters", () => {
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("AdditionalArguments", "--package Baz:2.5.0");
 
-        const inputParameters = getInputParameters(logger, task);
-        expect(inputParameters.packages).toStrictEqual(["Baz:2.5.0", "Step1:Foo:1.0.0", "Bar:2.0.0"]);
+        const command = getInputCommand(logger, task);
+        expect(command.Packages).toStrictEqual(["Baz:2.5.0", "Step1:Foo:1.0.0", "Bar:2.0.0"]);
     });
 
     test("duplicate variable name, variables field takes precedence", () => {
@@ -49,7 +49,7 @@ describe("getInputParameters", () => {
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("AdditionalArguments", "--package Bar:2.0.0");
 
-        const inputParameters = getInputParameters(logger, task);
-        expect(inputParameters.packages).toStrictEqual(["Bar:2.0.0", "Step1:Foo:1.0.0"]);
+        const command = getInputCommand(logger, task);
+        expect(command.Packages).toStrictEqual(["Bar:2.0.0", "Step1:Foo:1.0.0"]);
     });
 });

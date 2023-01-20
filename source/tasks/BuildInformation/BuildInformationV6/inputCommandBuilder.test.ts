@@ -1,6 +1,6 @@
 import { Logger } from "@octopusdeploy/api-client";
 import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
-import { getInputCommand } from "./inputParameters";
+import { getInputCommand } from "./inputCommandBuilder";
 import { VstsParameters, IVstsHelper } from "./vsts";
 
 class MockVsts implements IVstsHelper {

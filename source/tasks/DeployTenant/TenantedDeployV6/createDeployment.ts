@@ -1,5 +1,4 @@
 import { Client, CreateDeploymentTenantedCommandV1, DeploymentRepository, Logger, TenantRepository } from "@octopusdeploy/api-client";
-import { InputParameters } from "./input-parameters";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
@@ -8,21 +7,11 @@ export interface DeploymentResult {
     tenantName: string;
 }
 
-export async function createDeploymentFromInputs(client: Client, parameters: InputParameters, task: TaskWrapper, logger: Logger): Promise<DeploymentResult[]> {
+export async function createDeploymentFromInputs(client: Client, command: CreateDeploymentTenantedCommandV1, task: TaskWrapper, logger: Logger): Promise<DeploymentResult[]> {
     logger.info?.("🐙 Deploying a release in Octopus Deploy...");
-    const command: CreateDeploymentTenantedCommandV1 = {
-        spaceName: parameters.space,
-        ProjectName: parameters.project,
-        ReleaseVersion: parameters.releaseNumber,
-        EnvironmentName: parameters.environment,
-        Tenants: parameters.tenants,
-        TenantTags: parameters.tenantTags,
-        UseGuidedFailure: parameters.useGuidedFailure,
-        Variables: parameters.variables,
-    };
 
     try {
-        const deploymentRepository = new DeploymentRepository(client, parameters.space);
+        const deploymentRepository = new DeploymentRepository(client, command.spaceName);
         const response = await deploymentRepository.createTenanted(command);
 
         client.info(`🎉 ${response.DeploymentServerTasks.length} Deployment${response.DeploymentServerTasks.length > 1 ? "s" : ""} queued successfully!`);
@@ -39,7 +28,7 @@ export async function createDeploymentFromInputs(client: Client, parameters: Inp
         const deployments = await deploymentRepository.list({ ids: deploymentIds, take: deploymentIds.length });
 
         const tenantIds = deployments.Items.map((d) => d.TenantId || "");
-        const tenantRepository = new TenantRepository(client, parameters.space);
+        const tenantRepository = new TenantRepository(client, command.spaceName);
         const tenants = await tenantRepository.list({ ids: tenantIds, take: tenantIds.length });
 
         const results = response.DeploymentServerTasks.map((x) => {

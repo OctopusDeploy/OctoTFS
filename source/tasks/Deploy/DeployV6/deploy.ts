@@ -1,7 +1,7 @@
 import { Client, ClientConfiguration, Logger } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "../../Utils/connection";
 import { createDeploymentFromInputs } from "./createDeployment";
-import { getInputParameters } from "./input-parameters";
+import { getInputCommand } from "./inputCommandBuilder";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getUserAgentApp } from "../../Utils/pluginInformation";
@@ -11,7 +11,7 @@ export class Deploy {
 
     public async run() {
         try {
-            const inputParameters = getInputParameters(this.logger, this.task);
+            const command = getInputCommand(this.logger, this.task);
 
             const config: ClientConfiguration = {
                 userAgentApp: getUserAgentApp("release", "deploy", 6),
@@ -21,7 +21,7 @@ export class Deploy {
             };
             const client = await Client.create(config);
 
-            createDeploymentFromInputs(client, inputParameters, this.task, this.logger);
+            createDeploymentFromInputs(client, command, this.task, this.logger);
 
             this.task.setSuccess("Deployment succeeded.");
         } catch (error: unknown) {
