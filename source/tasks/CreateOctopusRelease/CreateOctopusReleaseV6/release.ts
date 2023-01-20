@@ -4,6 +4,7 @@ import { createReleaseFromInputs } from "./createRelease";
 import { getInputParameters } from "./input-parameters";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
+import { getUserAgentApp } from "../../Utils/pluginInformation";
 
 export class Release {
     constructor(readonly connection: OctoServerConnectionDetails, readonly task: TaskWrapper, readonly logger: Logger) {}
@@ -13,7 +14,7 @@ export class Release {
             const inputParameters = getInputParameters(this.logger, this.task);
 
             const config: ClientConfiguration = {
-                userAgentApp: "AzureDevOps (release;create;v6)",
+                userAgentApp: getUserAgentApp("release", "create", 6),
                 instanceURL: this.connection.url,
                 apiKey: this.connection.apiKey,
                 logging: this.logger,
