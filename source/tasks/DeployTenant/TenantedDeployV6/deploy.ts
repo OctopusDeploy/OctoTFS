@@ -4,6 +4,7 @@ import { createDeploymentFromInputs } from "./createDeployment";
 import { getInputParameters } from "./input-parameters";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
+import { getUserAgentApp } from "../../Utils/pluginInformation";
 
 export class Deploy {
     constructor(readonly connection: OctoServerConnectionDetails, readonly task: TaskWrapper, readonly logger: Logger) {}
@@ -13,7 +14,7 @@ export class Deploy {
             const inputParameters = getInputParameters(this.logger, this.task);
 
             const config: ClientConfiguration = {
-                userAgentApp: "AzureDevOps deploy-release-tenanted",
+                userAgentApp: getUserAgentApp("release", "deploy-tenanted", 6),
                 instanceURL: this.connection.url,
                 apiKey: this.connection.apiKey,
                 logging: this.logger,
