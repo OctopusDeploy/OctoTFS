@@ -1,6 +1,7 @@
 import { Client, ClientConfiguration, Logger, ServerTaskWaiter, TaskState } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "tasks/Utils/connection";
 import { TaskWrapper } from "tasks/Utils/taskInput";
+import { getUserAgentApp } from "../../Utils/pluginInformation";
 import { getInputParameters } from "./input-parameters";
 
 export interface DeploymentResult {
@@ -16,7 +17,7 @@ export class Waiter {
         const inputParameters = getInputParameters(this.logger, this.task);
 
         const config: ClientConfiguration = {
-            userAgentApp: "AzureDevOps (await-task;v6)",
+            userAgentApp: getUserAgentApp("task", "wait", 6),
             instanceURL: this.connection.url,
             apiKey: this.connection.apiKey,
             logging: this.logger,

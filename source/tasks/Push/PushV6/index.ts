@@ -4,6 +4,7 @@ import { getDefaultOctopusConnectionDetailsOrThrow } from "../../Utils/connectio
 import { getLineSeparatedItems, getOverwriteModeFromReplaceInput, getRequiredInput } from "../../Utils/inputs";
 import { Push } from "./push";
 import os from "os";
+import { getUserAgentApp } from "../../Utils/pluginInformation";
 
 async function run() {
     try {
@@ -29,7 +30,7 @@ async function run() {
         };
 
         const config: ClientConfiguration = {
-            userAgentApp: "AzureDevOps push",
+            userAgentApp: getUserAgentApp("package", "push", 6),
             instanceURL: connection.url,
             apiKey: connection.apiKey,
             logging: logger,
