@@ -1,5 +1,5 @@
 rm -r dist
-call npm run build
+call npm run build -- --extensionVersion %*
 rm -r modules
 
 setlocal

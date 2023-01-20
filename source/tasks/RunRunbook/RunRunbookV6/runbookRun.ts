@@ -1,12 +1,12 @@
 import { Client, ClientConfiguration, Logger } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "../../Utils/connection";
-import { createDeploymentFromInputs } from "./createDeployment";
+import { createRunbookRunFromInputs } from "./runRunbook";
 import { getInputParameters } from "./input-parameters";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getUserAgentApp } from "../../Utils/pluginInformation";
 
-export class Deploy {
+export class RunbookRun {
     constructor(readonly connection: OctoServerConnectionDetails, readonly task: TaskWrapper, readonly logger: Logger) {}
 
     public async run() {
@@ -14,21 +14,21 @@ export class Deploy {
             const inputParameters = getInputParameters(this.logger, this.task);
 
             const config: ClientConfiguration = {
-                userAgentApp: getUserAgentApp("release", "deploy", 6),
+                userAgentApp: getUserAgentApp("runbook", "run", 6),
                 instanceURL: this.connection.url,
                 apiKey: this.connection.apiKey,
                 logging: this.logger,
             };
             const client = await Client.create(config);
 
-            createDeploymentFromInputs(client, inputParameters, this.task, this.logger);
+            createRunbookRunFromInputs(client, inputParameters, this.task, this.logger);
 
-            this.task.setSuccess("Deployment succeeded.");
+            this.task.setSuccess("Runbook run succeeded.");
         } catch (error: unknown) {
             if (error instanceof Error) {
-                this.task.setFailure(`"Failed to successfully deploy release. ${error.message}${os.EOL}${error.stack}`, true);
+                this.task.setFailure(`"Failed to successfully run runbook. ${error.message}${os.EOL}${error.stack}`, true);
             } else {
-                this.task.setFailure(`"Failed to successfully deploy release. ${error}`, true);
+                this.task.setFailure(`"Failed to successfully run runbook. ${error}`, true);
             }
             throw error;
         }

@@ -1,0 +1,137 @@
+﻿{
+    "id": "4E131B60-5532-4362-95B6-7C67D9841B4F",
+    "name": "OctopusCreateRelease",
+    "friendlyName": "Create Octopus Release",
+    "description": "Create a Release in Octopus Deploy",
+    "helpMarkDown": "set-by-pack.ps1",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Octopus Deploy",
+    "version": {
+        "Major": 6,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [ ],
+    "minimumAgentVersion": "2.144.0",
+    "groups": [
+        {
+            "name": "versionControl",
+            "displayName": "Version Control",
+            "isExpanded": false
+        },
+        {
+            "name": "additional",
+            "displayName": "Additional Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "OctoConnectedServiceName",
+            "type": "connectedService:OctopusEndpoint",
+            "label": "Octopus Deploy Server",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Octopus Deploy server connection"
+        },
+        {
+            "name": "Space",
+            "type": "string",
+            "label": "Space",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The space within Octopus. This must be the name of the space, not the id."
+        },
+        {
+            "name": "Project",
+            "type": "string",
+            "label": "Project",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The project within Octopus. This must be the name of the project, not the id."
+        },
+        {
+            "name": "ReleaseNumber",
+            "type": "string",
+            "label": "Release Number",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The number to use for this release. You can leave this blank if the release number is calculated by Octopus."
+        },
+        {
+            "name": "Channel",
+            "type": "string",
+            "label": "Channel",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The [channel](https://g.octopushq.com/Channels) to use for the release. This must be the name of the channel, not the id."
+        },
+        {
+            "name": "DefaultPackageVersion",
+            "type": "string",
+            "label": "Default Package Version",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Set this to provide a default package version to use for all packages on all steps. Can be used in conjunction with the Packages field, which can be used to override versions for specific packages."
+        },
+        {
+            "name": "Packages",
+            "type": "multiLine",
+            "label": "Packages",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "A multi-line list of version numbers to use for a package in the release. Format: StepName:Version or PackageID:Version or StepName:PackageName:Version. StepName, PackageID, and PackageName can be replaced with an asterisk ('*'). An asterisk will be assumed for StepName, PackageID, or PackageName if they are omitted."
+        },
+        {
+            "name": "ReleaseNotes",
+            "type": "string",
+            "label": "Release Notes",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Octopus Release notes. This field supports markdown. To include newlines, you can use HTML linebreaks."
+        },
+        {
+            "name": "GitRef",
+            "type": "string",
+            "label": "Git Reference",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Git branch reference to use when creating the release for version controlled Projects.",
+            "groupName": "versionControl"
+        },
+        {
+            "name": "GitCommit",
+            "type": "string",
+            "label": "Git Commit",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Git commit to use when creating the release for version controlled Projects. Use in conjunction with the gitRef parameter to select any previous commit.",
+            "groupName": "versionControl"
+        },
+        {
+            "name": "AdditionalArguments",
+            "type": "string",
+            "label": "Additional Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields.",
+            "groupName": "additional"
+        }
+    ],
+    "OutputVariables": [
+        {
+            "name": "release_number",
+            "description": "The Octopus Deploy release number assigned to the Release."
+        }
+    ],
+    "instanceNameFormat": "Create Octopus Release",
+    "execution": {
+        "Node16": {
+            "target": "index.js"
+        }
+    }
+}
