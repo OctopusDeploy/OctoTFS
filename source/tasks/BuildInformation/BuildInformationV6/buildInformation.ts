@@ -4,6 +4,7 @@ import { BuildInformationRepository, Client, ClientConfiguration, Logger } from 
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getOverwriteMode } from "./overwriteMode";
 import { IVstsHelper } from "./vsts";
+import { getUserAgentApp } from "../../Utils/pluginInformation";
 
 export class BuildInformation {
     constructor(readonly connection: OctoServerConnectionDetails, readonly logger: Logger, readonly task: TaskWrapper, readonly vsts: IVstsHelper) {}
@@ -12,7 +13,7 @@ export class BuildInformation {
         const command = await getInputCommand(this.logger, this.task, this.vsts);
 
         const config: ClientConfiguration = {
-            userAgentApp: "AzureDevOps (build-information;push;v6)",
+            userAgentApp: getUserAgentApp("build-information", "push", 6),
             instanceURL: this.connection.url,
             apiKey: this.connection.apiKey,
             logging: this.logger,
