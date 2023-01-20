@@ -33,6 +33,9 @@ describe("getInputCommand", () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("Variables", "var1: value1\nvar2: value2");
         task.addVariableString("AdditionalArguments", "-v var3=value3 --variable var4=value4");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
 
         const command = getInputCommand(logger, task);
         expect(command.Variables).toStrictEqual({ var1: "value1", var2: "value2", var3: "value3", var4: "value4" });
@@ -40,15 +43,19 @@ describe("getInputCommand", () => {
 
     test("missing space", () => {
         const t = () => {
+            task.addVariableString("Environments", "test");
             getInputCommand(logger, task);
         };
-        expect(t).toThrowError("Failed to successfully build parameters: space name is required.");
+        expect(t).toThrowError("Input required: Space");
     });
 
     test("duplicate variable name, variables field takes precedence", () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("Variables", "var1: value1\nvar2: value2");
         task.addVariableString("AdditionalArguments", "-v var1=value3");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
         const command = getInputCommand(logger, task);
         expect(command.Variables).toStrictEqual({ var1: "value1", var2: "value2" });
     });
@@ -56,6 +63,8 @@ describe("getInputCommand", () => {
     test("multiline environments", () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("Environments", "dev, test\nprod");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
         const command = getInputCommand(logger, task);
         expect(command.EnvironmentNames).toStrictEqual(["dev", "test", "prod"]);
     });
