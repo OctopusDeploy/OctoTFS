@@ -159,6 +159,24 @@ Options include:
 -   **Replace Existing**: If the package build information already exists in the repository, the default behavior is to reject the new build information being pushed. Set this flag to 'True' to overwrite the existing package build information.
 -   **Additional Arguments**: Any additional [Octopus CLI arguments](https://g.octopushq.com/OctopusCliBuildInformation) to include.
 
+## <a name="push-package-build-information-to-octopus"></a>![Push Package Icon](img/octopus_push-01.png) Push Package Build Information to Octopus (v6 or later)
+
+![Configure Push Package Build Information Step](img/push-metadata-options.png)
+
+### 📥 Inputs
+
+| Name                       | Description                                                                                                                                                                                 |
+| :------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `OctoConnectedServiceName` | **Required.** The name of the Octopus Deploy [service connection](#Add-a-service-connection-to-Octopus-Deploy)                                                                              |
+| `Space`                    | **Required.** The space name within Octopus.                                                                                                                                                |
+| `PackageId`                | **Required.** Multi-line list of package Ids to push to Octopus.                                                                                                                            |
+| `Version`                  | **Required.** The version of the package; must be a valid [SemVer](http://semver.org/) version.                                                                                             |
+| `Replace`                  | Determines the action to perform with build information if it already exists in the repository. Valid input values are `FailIfExists` (default), `OverwriteExisting`, and `IgnoreIfExists`. |
+
+### 📤 Outputs
+
+None.
+
 ## <a name="create-octopus-release"></a>![Create Release Icon](img/octopus_create-release-04.png) Create Octopus Release
 
 ## 📥 Inputs

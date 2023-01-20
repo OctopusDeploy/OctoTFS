@@ -42,7 +42,7 @@ export class MockTaskWrapper implements TaskWrapper {
     }
 
     getVariable(name: string): string | undefined {
-        return this.outputVariables.get(name);
+        return this.stringValues.get(name);
     }
 
     getOutputVariable(_step: string, name: string): string | undefined {
