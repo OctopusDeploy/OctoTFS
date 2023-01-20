@@ -57,7 +57,7 @@ describe("getInputCommand", () => {
         expect(command.Packages[1].Version).toBe("1.2.3");
         expect(command.Branch).toBe("/refs/head/main");
         expect(command.BuildEnvironment).toBe("Azure DevOps");
-        expect(command.SpaceName).toBe("Default");
+        expect(command.spaceName).toBe("Default");
         expect(command.BuildNumber).toBe("buildNumber");
         expect(command.BuildUrl).toBe("http://teamcollectionuri/projectName/_build/results?buildId=1234");
         expect(command.Commits.length).toBe(1);

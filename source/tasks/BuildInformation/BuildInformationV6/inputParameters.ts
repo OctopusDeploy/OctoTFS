@@ -16,7 +16,7 @@ export async function getInputCommand(logger: Logger, task: TaskWrapper, vstsHel
     }
 
     const command: CreateOctopusBuildInformationCommand = {
-        SpaceName: task.getInput("Space") || "",
+        spaceName: task.getInput("Space") || "",
         BuildEnvironment: "Azure DevOps",
         BuildNumber: vsts.environment.buildNumber,
         BuildUrl: vsts.environment.teamCollectionUri.replace(/\/$/, "") + "/" + vsts.environment.projectName + "/_build/results?buildId=" + vsts.environment.buildId,
@@ -29,7 +29,7 @@ export async function getInputCommand(logger: Logger, task: TaskWrapper, vstsHel
     };
 
     const errors: string[] = [];
-    if (!command.SpaceName) {
+    if (!command.spaceName) {
         errors.push("space name is required");
     }
 
