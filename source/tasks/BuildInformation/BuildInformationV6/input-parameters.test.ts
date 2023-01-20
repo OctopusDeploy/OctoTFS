@@ -70,19 +70,19 @@ describe("getInputCommand", () => {
         expect(task.lastResultDone).toBeUndefined();
     });
 
-    test("missing parameters", () => {
-        const t = () => {
-            getInputCommand(logger, task, vsts);
+    test("missing parameters", async () => {
+        const t = async () => {
+            await getInputCommand(logger, task, vsts);
         };
-        expect(t).toThrowError("Failed to successfully build parameters:\nspace name is required\nmust specify at least one package name");
+        await expect(t).rejects.toThrow("Failed to successfully build parameters:\nspace name is required\nmust specify at least one package name");
     });
 
-    test("missing package version", () => {
-        const t = () => {
+    test("missing package version", async () => {
+        const t = async () => {
             task.addVariableString("Space", "Default");
             task.addVariableString("PackageId", "Package1");
-            getInputCommand(logger, task, vsts);
+            await getInputCommand(logger, task, vsts);
         };
-        expect(t).toThrowError("Failed to successfully build parameters:\nmust specify a package version number, in SemVer format");
+        await expect(t).rejects.toThrow("Failed to successfully build parameters:\nmust specify a package version number, in SemVer format");
     });
 });
