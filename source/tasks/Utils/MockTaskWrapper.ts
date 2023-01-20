@@ -18,8 +18,13 @@ export class MockTaskWrapper implements TaskWrapper {
         this.boolValues.set(name, value);
     }
 
-    getInput(name: string, _required?: boolean | undefined): string | undefined {
-        return this.stringValues.get(name);
+    getInput(name: string, required?: boolean | undefined): string | undefined {
+        const value = this.stringValues.get(name);
+        if (required && !value) {
+            // this replicates the functionality in the Azure Pipeline Task library
+            throw new Error(`Input required: ${name}`);
+        }
+        return value;
     }
 
     getBoolean(name: string, _required?: boolean | undefined): boolean | undefined {
