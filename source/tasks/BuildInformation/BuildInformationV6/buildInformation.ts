@@ -21,7 +21,7 @@ export class BuildInformation {
 
         const overwriteMode = await getOverwriteMode(this.logger, this.task);
         this.logger.debug?.(`Build Information:\n${JSON.stringify(command, null, 2)}`);
-        const repository = new BuildInformationRepository(client, command.SpaceName);
+        const repository = new BuildInformationRepository(client, command.spaceName);
         await repository.push(command, overwriteMode);
     }
 }
