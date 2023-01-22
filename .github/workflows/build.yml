@@ -21,9 +21,9 @@ on:
         required: true
 
 env:
-  PACKAGE_VERSION: 5.2.${{ github.run_number }}
-  OCTOPUS_CLI_SERVER: ${{ secrets.OCTOPUS_URL }}
-  OCTOPUS_CLI_API_KEY: ${{ secrets.INTEGRATIONS_API_KEY }}
+  PACKAGE_VERSION: 6.0.${{ github.run_number }}
+  OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
+  OCTOPUS_API_KEY: ${{ secrets.INTEGRATIONS_API_KEY }}
 
 jobs:
   build:
@@ -32,9 +32,9 @@ jobs:
     outputs:
       package_version: ${{ steps.build.outputs.package_version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16"
           cache: "npm"
@@ -45,7 +45,7 @@ jobs:
           npm ci
           npm run build -- --extensionVersion $PACKAGE_VERSION
           echo "::set-output name=package_version::$PACKAGE_VERSION"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
@@ -62,9 +62,9 @@ jobs:
       matrix:
         os: [windows-2022, ubuntu-20.04, macos-11]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16"
           cache: "npm"
@@ -88,21 +88,21 @@ jobs:
     if: github.event_name == 'release' || (github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]')
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
 
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16"
           cache: "npm"
 
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
-          go-version: "^1.17.7"
+          go-version: "^1.19.5"
 
       - name: Embed octo portable
         run: |
@@ -120,13 +120,8 @@ jobs:
           tar -czf OctoTFS.vsix.${{ needs.build.outputs.package_version }}.tar.gz ./Artifacts/**/*.vsix
           tar -czf OctoTFS.publish.${{ needs.build.outputs.package_version }}.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
 
-      - name: Install Octopus CLI 🐙
-        uses: OctopusDeploy/install-octopus-cli-action@v1.2.0
-        with:
-          version: "*"
-
       - name: Push Package 🐙
-        uses: OctopusDeploy/push-package-action@v1.1.2
+        uses: OctopusDeploy/push-package-action@v3
         with:
           space: "Integrations"
           packages: |
@@ -143,7 +138,7 @@ jobs:
           echo "::set-output name=release-note-file::$OUTPUT_FILE"
 
       - name: Create a release in Octopus Deploy 🐙
-        uses: OctopusDeploy/create-release-action@v1.1.1
+        uses: OctopusDeploy/create-release-action@v3
         with:
           space: "Integrations"
           project: "Azure DevOps Extension"
