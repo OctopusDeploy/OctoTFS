@@ -215,6 +215,16 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
+                "name": "tasks/OctopusMetadata"
+            }
+        },
+        {
+            "id": "octopus-build-information",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
                 "name": "tasks/BuildInformation"
             }
         },
