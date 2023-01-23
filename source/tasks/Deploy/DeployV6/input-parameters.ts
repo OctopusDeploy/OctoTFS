@@ -22,6 +22,7 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
     const additionalArguments = task.getInput("AdditionalArguments");
     logger.debug?.("AdditionalArguments:" + additionalArguments);
     if (additionalArguments) {
+        logger.warn?.("Additional arguments are no longer supported and will be removed in future versions. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields.");
         const optionDefs = [{ name: "variable", alias: "v", type: String, multiple: true }];
         const splitArgs = shlex.split(additionalArguments);
         const options = commandLineArgs(optionDefs, { argv: splitArgs });
