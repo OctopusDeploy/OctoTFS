@@ -36,7 +36,7 @@ export interface Endpoint {
 export class DownloadEndpointRetriever {
     private osPlat: string = os.platform();
 
-    constructor(readonly octopusUrl: string) {}
+    constructor(readonly octopurlsUrl: string) {}
 
     public async getEndpoint(versionSpec: string): Promise<Endpoint> {
         const octopurls = this.restClient();
@@ -48,7 +48,7 @@ export class DownloadEndpointRetriever {
 
         const version = new OctopusCLIVersionFetcher(versionsResponse.result.versions).getVersion(versionSpec);
 
-        tasks.debug(`Attempting to contact ${this.octopusUrl} to find Octopus CLI tool version ${version}`);
+        tasks.debug(`Attempting to contact ${this.octopurlsUrl} to find Octopus CLI tool version ${version}`);
 
         const response = await octopurls.get<LatestResponse>("LatestTools");
 
@@ -79,7 +79,7 @@ export class DownloadEndpointRetriever {
     }
 
     private restClient() {
-        const proxyConfiguration = tasks.getHttpProxyConfiguration(this.octopusUrl);
+        const proxyConfiguration = tasks.getHttpProxyConfiguration(this.octopurlsUrl);
         let proxySettings: IProxyConfiguration | undefined = undefined;
 
         if (proxyConfiguration) {
@@ -94,7 +94,7 @@ export class DownloadEndpointRetriever {
             };
         }
 
-        return new TypedRestClient.RestClient("OctoTFS/Tasks", this.octopusUrl, undefined, { proxy: proxySettings });
+        return new TypedRestClient.RestClient("OctoTFS/Tasks", this.octopurlsUrl, undefined, { proxy: proxySettings });
     }
 
     private applyTemplate(dictionary: Dictionary, template: string) {

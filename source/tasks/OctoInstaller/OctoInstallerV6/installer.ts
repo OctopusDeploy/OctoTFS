@@ -1,21 +1,19 @@
 import * as tools from "azure-pipelines-tool-lib";
 import * as tasks from "azure-pipelines-task-lib";
-import os from "os";
 import path from "path";
 import { executeWithSetResult } from "../../Utils/octopusTasks";
 import { DownloadEndpointRetriever, Endpoint } from "./downloadEndpointRetriever";
+import { Logger } from "@octopusdeploy/api-client";
 
-const TOOL_NAME = "octo";
-
-const osPlat: string = os.platform();
+const TOOL_NAME = "octopus";
 
 export class Installer {
-    constructor(readonly octopurlsUrl: string) {}
+    constructor(readonly releasesUrl: string, readonly osPlatform: string, readonly osArch: string, readonly logger: Logger) {}
 
     public async run(versionSpec: string) {
         await executeWithSetResult(
             async () => {
-                const endpoint = await new DownloadEndpointRetriever(this.octopurlsUrl).getEndpoint(versionSpec);
+                const endpoint = await new DownloadEndpointRetriever(this.releasesUrl, this.osPlatform, this.osArch, this.logger).getEndpoint(versionSpec);
                 let toolPath = tools.findLocalTool(TOOL_NAME, endpoint.version);
 
                 if (!toolPath) {
@@ -25,8 +23,8 @@ export class Installer {
 
                 tools.prependPath(toolPath);
             },
-            `Installed octo v${versionSpec}.`,
-            `Failed to install octo v${versionSpec}.`
+            `Installed octopus v${versionSpec}.`,
+            `Failed to install octopus v${versionSpec}.`
         );
     }
 
@@ -41,7 +39,7 @@ export class Installer {
         // Extract
         //
         let extPath: string;
-        if (osPlat == "win32") {
+        if (this.osPlatform == "win32") {
             extPath = tasks.getVariable("Agent.TempDirectory") || "";
             if (!extPath) {
                 throw new Error("Expected Agent.TempDirectory to be set");
