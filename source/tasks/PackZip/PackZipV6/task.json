@@ -72,6 +72,16 @@
             "groupName": "advanced"
         }
     ],
+    "OutputVariables": [
+        {
+            "name": "package_file_path",
+            "description": "The full path to the package file that was created."
+        },
+        {
+            "name": "package_filename",
+            "description": "The filename of the package that was created."
+        }
+    ],
     "instanceNameFormat": "Package Zip $(PackageId)",
     "execution": {
         "Node16": {
