@@ -2,7 +2,7 @@
     "id": "b1861ef4-b62e-40c1-bcb0-be00d454a8a7",
     "name": "OctopusMetadata",
     "friendlyName": "Push Package Build Information to Octopus (legacy)",
-    "description": "There is a later version of this task, we recommend using the latest version. Collect information related to the build, including work items from commit messages, and push to your Octopus Deploy Server.",
+    "description": "(legacy) There is a later version of this task, we recommend using the latest version. Collect information related to the build, including work items from commit messages, and push to your Octopus Deploy Server.",
     "helpMarkDown": "set-by-pack.ps1",
     "category": "Package",
     "visibility": ["Build"],
