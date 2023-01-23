@@ -1,6 +1,6 @@
 ﻿{
-    "id": "b1861ef4-b62e-40c1-bcb0-be00d454a8a7",
-    "name": "OctopusMetadata",
+    "id": "559b81c9-efc1-40f3-9058-71ab1810d837",
+    "name": "OctopusBuildInformation",
     "friendlyName": "Push Package Build Information to Octopus",
     "description": "Collect information related to the build, including work items from commit messages, and push to your Octopus Deploy Server.",
     "helpMarkDown": "set-by-pack.ps1",
