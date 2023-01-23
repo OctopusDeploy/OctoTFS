@@ -76,15 +76,15 @@ describe("OctopusInstaller", () => {
         });
 
         app.get("/OctopusDeploy/cli/releases/download/v7.4.1/octopus_7.4.1_windows_amd64.zip", (_, res) => {
-            res.statusCode = 200;
+            res.sendStatus(200);
         });
 
         app.get("/OctopusDeploy/cli/releases/download/v8.0.0/octopus_8.0.0_windows_amd64.zip", (_, res) => {
-            res.statusCode = 200;
+            res.sendStatus(200);
         });
 
         app.get("/OctopusDeploy/cli/releases/download/v8.2.0/octopus_8.2.0_windows_amd64.zip", (_, res) => {
-            res.statusCode = 200;
+            res.sendStatus(200);
         });
 
         server = await new Promise<Server>((resolve) => {
