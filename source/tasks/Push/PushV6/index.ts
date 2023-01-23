@@ -9,7 +9,7 @@ import { getUserAgentApp } from "../../Utils/pluginInformation";
 async function run() {
     try {
         const spaceName = getRequiredInput("Space");
-        const packages = getLineSeparatedItems(tasks.getInput("Package", true) || "");
+        const packages = getLineSeparatedItems(tasks.getInput("Packages", true) || "");
         const overwriteMode = getOverwriteModeFromReplaceInput(tasks.getInput("Replace", true) || "");
 
         const connection = getDefaultOctopusConnectionDetailsOrThrow();
@@ -38,7 +38,7 @@ async function run() {
 
         const client: Client = await Client.create(config);
 
-        new Push(client).run(spaceName, packages, overwriteMode);
+        await new Push(client).run(spaceName, packages, overwriteMode);
     } catch (error: unknown) {
         if (error instanceof Error) {
             tasks.setResult(tasks.TaskResult.Failed, `"Failed to execute push. ${error.message}${os.EOL}${error.stack}`, true);

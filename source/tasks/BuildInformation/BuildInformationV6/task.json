@@ -34,7 +34,7 @@
             "helpMarkDown": "The space within Octopus. This must be the name of the space, not the id."
         },
         {
-            "name": "PackageId",
+            "name": "PackageIds",
             "type": "multiLine",
             "label": "Package IDs",
             "defaultValue": "",
