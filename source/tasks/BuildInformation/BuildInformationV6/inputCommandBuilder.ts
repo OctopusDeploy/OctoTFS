@@ -5,8 +5,8 @@ import { IVstsHelper } from "./vsts";
 
 export async function createCommandFromInputs(logger: Logger, task: TaskWrapper, vstsHelper: IVstsHelper): Promise<CreateOctopusBuildInformationCommand> {
     const vsts = await vstsHelper.getVsts(logger);
-    const inputPackages = getLineSeparatedItems(task.getInput("PackageId") || "") || [];
-    logger.debug?.(`PackageId: ${inputPackages}`);
+    const inputPackages = getLineSeparatedItems(task.getInput("PackageIds") || "") || [];
+    logger.debug?.(`PackageIds: ${inputPackages}`);
     const packages: PackageIdentity[] = [];
     for (const packageId of inputPackages) {
         packages.push({
