@@ -59,6 +59,16 @@
             "helpMarkDown": "Duration, in seconds, to allow for completion before timing out. (Default: 600s)"
         }
     ],
+    "outputVariables": [
+        {
+            "name": "completed_successfully",
+            "description": "Whether the task(s) completed successfully or not. This will only be true if all tasks succeeded, and false if any tasks failed."
+        },
+        {
+            "name": "server_task_results",
+            "description": "JSON representation of all tasks results. { \"serverTaskId\": <task id>, \"tenantName\": <tenant name>, \"environmentName\": <environment name>, \"successful\": <true | false> }"
+        }
+    ],
     "instanceNameFormat": "Await Octopus Deploy Task",
     "execution": {
         "Node16": {
