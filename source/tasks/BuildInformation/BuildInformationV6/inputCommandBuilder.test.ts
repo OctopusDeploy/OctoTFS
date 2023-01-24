@@ -45,7 +45,7 @@ describe("getInputCommand", () => {
     test("all regular fields supplied", async () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("PackageVersion", "1.2.3");
-        task.addVariableString("PackageId", "Package1\nPackage2");
+        task.addVariableString("PackageIds", "Package1\nPackage2");
         task.addVariableString("ReleaseNumber", "1.0.0");
         task.addVariableString("Replace", "true");
 
@@ -80,7 +80,7 @@ describe("getInputCommand", () => {
     test("missing package version", async () => {
         const t = async () => {
             task.addVariableString("Space", "Default");
-            task.addVariableString("PackageId", "Package1");
+            task.addVariableString("PackageIds", "Package1");
             await createCommandFromInputs(logger, task, vsts);
         };
         await expect(t).rejects.toThrow("Failed to successfully build parameters:\nmust specify a package version number, in SemVer format");
