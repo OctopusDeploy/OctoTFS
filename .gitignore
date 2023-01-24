@@ -127,3 +127,4 @@ dist/
 
 modules/*
 reports/*
+.taskkey

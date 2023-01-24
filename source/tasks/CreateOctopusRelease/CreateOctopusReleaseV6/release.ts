@@ -1,7 +1,7 @@
 import { Client, ClientConfiguration, Logger } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "../../Utils/connection";
 import { createReleaseFromInputs } from "./createRelease";
-import { getInputParameters } from "./input-parameters";
+import { createCommandFromInputs } from "./inputCommandBuilder";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getUserAgentApp } from "../../Utils/pluginInformation";
@@ -11,7 +11,7 @@ export class Release {
 
     public async run() {
         try {
-            const inputParameters = getInputParameters(this.logger, this.task);
+            const command = createCommandFromInputs(this.logger, this.task);
 
             const config: ClientConfiguration = {
                 userAgentApp: getUserAgentApp("release", "create", 6),
@@ -21,7 +21,7 @@ export class Release {
             };
             const client = await Client.create(config);
 
-            await createReleaseFromInputs(client, inputParameters, this.task, this.logger);
+            await createReleaseFromInputs(client, command, this.task, this.logger);
 
             this.task.setSuccess("Release creation succeeded.");
         } catch (error: unknown) {

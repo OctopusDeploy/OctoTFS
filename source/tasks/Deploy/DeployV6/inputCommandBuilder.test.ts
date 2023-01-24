@@ -1,8 +1,8 @@
 import { Logger } from "@octopusdeploy/api-client";
-import { getInputParameters } from "./input-parameters";
+import { createCommandFromInputs } from "./inputCommandBuilder";
 import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
 
-describe("getInputParameters", () => {
+describe("getInputCommand", () => {
     let logger: Logger;
     let task: MockTaskWrapper;
     beforeEach(() => {
@@ -17,12 +17,12 @@ describe("getInputParameters", () => {
         task.addVariableString("Project", "Awesome project");
         task.addVariableString("ReleaseNumber", "1.0.0");
 
-        const inputParameters = getInputParameters(logger, task);
-        expect(inputParameters.environments).toStrictEqual(["dev", "test"]);
-        expect(inputParameters.project).toBe("Awesome project");
-        expect(inputParameters.releaseNumber).toBe("1.0.0");
-        expect(inputParameters.space).toBe("Default");
-        expect(inputParameters.variables).toStrictEqual({ var1: "value1", var2: "value2" });
+        const command = createCommandFromInputs(logger, task);
+        expect(command.EnvironmentNames).toStrictEqual(["dev", "test"]);
+        expect(command.ProjectName).toBe("Awesome project");
+        expect(command.ReleaseVersion).toBe("1.0.0");
+        expect(command.spaceName).toBe("Default");
+        expect(command.Variables).toStrictEqual({ var1: "value1", var2: "value2" });
 
         expect(task.lastResult).toBeUndefined();
         expect(task.lastResultMessage).toBeUndefined();
@@ -37,14 +37,14 @@ describe("getInputParameters", () => {
         task.addVariableString("Project", "project 1");
         task.addVariableString("ReleaseNumber", "1.2.3");
 
-        const inputParameters = getInputParameters(logger, task);
-        expect(inputParameters.variables).toStrictEqual({ var1: "value1", var2: "value2", var3: "value3", var4: "value4" });
+        const command = createCommandFromInputs(logger, task);
+        expect(command.Variables).toStrictEqual({ var1: "value1", var2: "value2", var3: "value3", var4: "value4" });
     });
 
     test("missing space", () => {
         const t = () => {
             task.addVariableString("Environments", "test");
-            getInputParameters(logger, task);
+            createCommandFromInputs(logger, task);
         };
         expect(t).toThrowError("Input required: Space");
     });
@@ -56,8 +56,8 @@ describe("getInputParameters", () => {
         task.addVariableString("Environments", "test");
         task.addVariableString("Project", "project 1");
         task.addVariableString("ReleaseNumber", "1.2.3");
-        const inputParameters = getInputParameters(logger, task);
-        expect(inputParameters.variables).toStrictEqual({ var1: "value1", var2: "value2" });
+        const command = createCommandFromInputs(logger, task);
+        expect(command.Variables).toStrictEqual({ var1: "value1", var2: "value2" });
     });
 
     test("multiline environments", () => {
@@ -65,7 +65,7 @@ describe("getInputParameters", () => {
         task.addVariableString("Environments", "dev, test\nprod");
         task.addVariableString("Project", "project 1");
         task.addVariableString("ReleaseNumber", "1.2.3");
-        const inputParameters = getInputParameters(logger, task);
-        expect(inputParameters.environments).toStrictEqual(["dev", "test", "prod"]);
+        const command = createCommandFromInputs(logger, task);
+        expect(command.EnvironmentNames).toStrictEqual(["dev", "test", "prod"]);
     });
 });

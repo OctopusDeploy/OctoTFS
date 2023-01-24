@@ -1,5 +1,5 @@
 import { OctoServerConnectionDetails } from "../../Utils/connection";
-import { getInputCommand } from "./inputParameters";
+import { createCommandFromInputs } from "./inputCommandBuilder";
 import { BuildInformationRepository, Client, ClientConfiguration, Logger } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getOverwriteMode } from "./overwriteMode";
@@ -10,7 +10,7 @@ export class BuildInformation {
     constructor(readonly connection: OctoServerConnectionDetails, readonly logger: Logger, readonly task: TaskWrapper, readonly vsts: IVstsHelper) {}
 
     public async run() {
-        const command = await getInputCommand(this.logger, this.task, this.vsts);
+        const command = await createCommandFromInputs(this.logger, this.task, this.vsts);
 
         const config: ClientConfiguration = {
             userAgentApp: getUserAgentApp("build-information", "push", 6),

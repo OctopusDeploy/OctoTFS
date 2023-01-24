@@ -1,22 +1,10 @@
 import commandLineArgs from "command-line-args";
 import shlex from "shlex";
 import { getLineSeparatedItems } from "../../Utils/inputs";
-import { Logger } from "@octopusdeploy/api-client";
+import { CreateReleaseCommandV1, Logger } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
-export interface InputParameters {
-    space: string;
-    project: string;
-    releaseNumber: string | undefined;
-    channel: string | undefined;
-    defaultPackageVersion: string | undefined;
-    packages: string[] | undefined;
-    releaseNotes: string | undefined;
-    gitRef: string | undefined;
-    gitCommit: string | undefined;
-}
-
-export function getInputParameters(logger: Logger, task: TaskWrapper): InputParameters {
+export function createCommandFromInputs(logger: Logger, task: TaskWrapper): CreateReleaseCommandV1 {
     const packages: string[] = [];
     let defaultPackageVersion: string | undefined = undefined;
 
@@ -64,19 +52,19 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         defaultPackageVersion = defaultPackageVersionField;
     }
 
-    const parameters: InputParameters = {
-        space: task.getInput("Space", true) || "",
-        project: task.getInput("Project", true) || "",
-        releaseNumber: task.getInput("ReleaseNumber"),
-        channel: task.getInput("Channel"),
-        defaultPackageVersion: defaultPackageVersion,
-        packages: packages.length > 0 ? packages : undefined,
-        releaseNotes: task.getInput("ReleaseNotes"),
-        gitRef: task.getInput("GitRef"),
-        gitCommit: task.getInput("GitCommit"),
+    const command: CreateReleaseCommandV1 = {
+        spaceName: task.getInput("Space", true) || "",
+        ProjectName: task.getInput("Project", true) || "",
+        ReleaseVersion: task.getInput("ReleaseNumber"),
+        ChannelName: task.getInput("Channel"),
+        PackageVersion: defaultPackageVersion,
+        Packages: packages.length > 0 ? packages : undefined,
+        ReleaseNotes: task.getInput("ReleaseNotes"),
+        GitRef: task.getInput("GitRef"),
+        GitCommit: task.getInput("GitCommit"),
     };
 
-    logger.debug?.(JSON.stringify(parameters));
+    logger.debug?.(JSON.stringify(command));
 
-    return parameters;
+    return command;
 }
