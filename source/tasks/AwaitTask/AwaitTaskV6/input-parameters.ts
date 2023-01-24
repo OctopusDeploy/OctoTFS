@@ -1,11 +1,11 @@
 import { Logger } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
-import { DeploymentResult } from "./waiter";
+import { WaitExecutionResult } from "./waiter";
 
 export interface InputParameters {
     space: string;
     step: string;
-    tasks: DeploymentResult[];
+    tasks: WaitExecutionResult[];
     pollingInterval: number;
     timeout: number;
 }

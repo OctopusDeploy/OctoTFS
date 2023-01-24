@@ -1,14 +1,9 @@
 import { Client, CreateRunbookRunCommandV1, RunbookRunRepository, Logger, TenantRepository, EnvironmentRepository } from "@octopusdeploy/api-client";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
+import { ExecutionResult } from "../../Utils/executionResult";
 
-export interface RunbookRunResult {
-    serverTaskId: string;
-    environmentName: string;
-    tenantName: string | null;
-}
-
-export async function createRunbookRunFromInputs(client: Client, command: CreateRunbookRunCommandV1, task: TaskWrapper, logger: Logger): Promise<RunbookRunResult[]> {
+export async function createRunbookRunFromInputs(client: Client, command: CreateRunbookRunCommandV1, task: TaskWrapper, logger: Logger): Promise<ExecutionResult[]> {
     logger.info?.("🐙 Running a Runbook in Octopus Deploy...");
 
     try {
@@ -45,7 +40,8 @@ export async function createRunbookRunFromInputs(client: Client, command: Create
                 serverTaskId: x.ServerTaskId,
                 environmentName: envs.Items.filter((e) => e.Id === runs.Items.filter((d) => d.TaskId === x.ServerTaskId)[0].EnvironmentId)[0].Name,
                 tenantName: tenantName,
-            };
+                type: "Runbook run",
+            } as ExecutionResult;
         });
 
         const tasksJson = JSON.stringify(results);

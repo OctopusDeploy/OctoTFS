@@ -1,14 +1,10 @@
 import { Client, CreateDeploymentUntenantedCommandV1, DeploymentRepository, EnvironmentRepository, Logger } from "@octopusdeploy/api-client";
 import { InputParameters } from "./input-parameters";
 import os from "os";
-import { TaskWrapper } from "tasks/Utils/taskInput";
+import { TaskWrapper } from "../../Utils/taskInput";
+import { ExecutionResult } from "../../Utils/executionResult";
 
-export interface DeploymentResult {
-    serverTaskId: string;
-    environmentName: string;
-}
-
-export async function createDeploymentFromInputs(client: Client, parameters: InputParameters, task: TaskWrapper, logger: Logger): Promise<DeploymentResult[]> {
+export async function createDeploymentFromInputs(client: Client, parameters: InputParameters, task: TaskWrapper, logger: Logger): Promise<ExecutionResult[]> {
     logger.info?.("🐙 Deploying a release in Octopus Deploy...");
     const command: CreateDeploymentUntenantedCommandV1 = {
         spaceName: parameters.space,
@@ -44,7 +40,8 @@ export async function createDeploymentFromInputs(client: Client, parameters: Inp
             return {
                 serverTaskId: x.ServerTaskId,
                 environmentName: environments.Items.filter((e) => e.Id === deployments.Items.filter((d) => d.TaskId === x.ServerTaskId)[0].EnvironmentId)[0].Name,
-            };
+                type: "Deployment",
+            } as ExecutionResult;
         });
 
         task.setOutputVariable("server_tasks", JSON.stringify(results));

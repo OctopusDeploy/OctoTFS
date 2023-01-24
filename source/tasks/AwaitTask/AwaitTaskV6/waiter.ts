@@ -1,19 +1,11 @@
-import {
-    Client,
-    ClientConfiguration,
-    Logger,
-    ServerTaskWaiter, SpaceRepository,
-    TaskState
-} from "@octopusdeploy/api-client";
+import { Client, ClientConfiguration, Logger, ServerTaskWaiter, SpaceRepository, TaskState } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "tasks/Utils/connection";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getUserAgentApp } from "../../Utils/pluginInformation";
 import { getInputParameters } from "./input-parameters";
+import { ExecutionResult } from "../../Utils/executionResult";
 
-export interface DeploymentResult {
-    serverTaskId: string;
-    tenantName: string;
-    environmentName: string;
+export interface WaitExecutionResult extends ExecutionResult {
     successful: boolean;
 }
 
@@ -34,8 +26,8 @@ export class Waiter {
         const waiter = new ServerTaskWaiter(client, inputParameters.space);
 
         const taskIds: string[] = [];
-        const deploymentResults: DeploymentResult[] = [];
-        const lookup: Map<string, DeploymentResult> = new Map<string, DeploymentResult>();
+        const deploymentResults: WaitExecutionResult[] = [];
+        const lookup: Map<string, WaitExecutionResult> = new Map<string, WaitExecutionResult>();
         inputParameters.tasks.map((t) => {
             lookup.set(t.serverTaskId, t);
             taskIds.push(t.serverTaskId);
@@ -43,24 +35,24 @@ export class Waiter {
 
         await waiter.waitForServerTasksToComplete(taskIds, inputParameters.pollingInterval * 1000, inputParameters.timeout * 1000, (t) => {
             let context = "";
-            const deploymentResult = lookup.get(t.Id);
-            if (deploymentResult) {
-                if (deploymentResult?.environmentName) {
-                    context = ` to environment '${deploymentResult.environmentName}'`;
+            const taskResult = lookup.get(t.Id);
+            if (taskResult) {
+                if (taskResult?.environmentName) {
+                    context = ` to environment '${taskResult.environmentName}'`;
                 }
-                if (deploymentResult?.tenantName) {
-                    context += ` for tenant '${deploymentResult?.tenantName}'`;
+                if (taskResult?.tenantName) {
+                    context += ` for tenant '${taskResult?.tenantName}'`;
                 }
 
                 if (t.IsCompleted) {
-                    this.logger.info?.(`Deployment${context} ${t.State === TaskState.Success ? "completed successfully" : "did not complete successfully"}`);
+                    this.logger.info?.(`${taskResult.type}${context} ${t.State === TaskState.Success ? "completed successfully" : "did not complete successfully"}`);
                 } else {
-                    this.logger.info?.(`Deployment${context} is '${t.State}'`);
+                    this.logger.info?.(`${taskResult.type}${context} is '${t.State}'`);
                 }
 
                 if (t.IsCompleted) {
-                    deploymentResult.successful = t.IsCompleted && t.State == TaskState.Success;
-                    deploymentResults.push(deploymentResult);
+                    taskResult.successful = t.IsCompleted && t.State == TaskState.Success;
+                    deploymentResults.push(taskResult);
                 }
             }
         });
@@ -93,11 +85,11 @@ export class Waiter {
     async getSpaceId(client: Client, spaceName: string): Promise<string | undefined> {
         const spaceRepository = new SpaceRepository(client);
         const spaceList = await spaceRepository.list({ partialName: spaceName });
-        const matches = spaceList.Items.filter(s => s.Name.localeCompare(spaceName) === 0);
+        const matches = spaceList.Items.filter((s) => s.Name.localeCompare(spaceName) === 0);
         return matches.length > 0 ? matches[0].Id : undefined;
     }
 
-    getContext(result: DeploymentResult): string {
+    getContext(result: WaitExecutionResult): string {
         return result.tenantName ? result.tenantName.replace(" ", "_") : result.environmentName.replace(" ", "_");
     }
 }
