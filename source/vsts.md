@@ -270,22 +270,22 @@ From version 6, the deploy release step is split into two seperate functions for
 
 #### 📥 Inputs
 
-| Name                       | Description                                                  |
-| :------------------------- | :----------------------------------------------------------- |
-| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.         |
-| `Space`                    | **Required.** The Octopus space name the release is in.      |
-| `Project`                  | **Required.** The Octopus project name to deploy.            |
-| `Runbook`                  | **Required.** Runbook name to run.                           |
-| `Environments`             | **Required.** The environment names to run the runbook for. One tenant name per line. |
-| `Tenants`                  | The tenant names to run the runbook for. One tenant name per line. |
-| `TenantTags`               | Run for all tenants with the given tag(s). One tenant tag per line in the format `tag set name/tag name`. |
+| Name                       | Description                                                                                                                  |
+| :------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                                                                         |
+| `Space`                    | **Required.** The Octopus space name the release is in.                                                                      |
+| `Project`                  | **Required.** The Octopus project name to deploy.                                                                            |
+| `Runbook`                  | **Required.** Runbook name to run.                                                                                           |
+| `Environments`             | **Required.** The environment names to run the runbook for. One tenant name per line.                                        |
+| `Tenants`                  | The tenant names to run the runbook for. One tenant name per line.                                                           |
+| `TenantTags`               | Run for all tenants with the given tag(s). One tenant tag per line in the format `tag set name/tag name`.                    |
 | `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value` |
-| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the run. |
+| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the run.                                                           |
 
 #### 📤 Outputs
 
-| Name           | Description                                                  |
-| :------------- | :----------------------------------------------------------- |
+| Name           | Description                                                                                            |
+| :------------- | :----------------------------------------------------------------------------------------------------- |
 | `server_tasks` | A list of objects, containing `ServerTaskId`, `EnvironmentName` and `TenantName`, for each queued run. |
 
 ### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Await Task
@@ -304,7 +304,11 @@ The `Step` input parameter needs to be set to the `name` of the deployment step 
 
 #### 📤 Outputs
 
-None.
+| Name                               | Description                                                                                                                                                                                                      |
+| :--------------------------------- |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `completed_successfully`           | True if all execution tasks completed succcessfully, false if any execution tasks failed.                                                                                                                        |
+| `server_task_results`              | JSON representation of the tasks and their success. Schema: { "serverTaskId": <task id>, "tenantName": <tenant name>, "environmentName": <environment name>, "successful": <true/false> }                        |
+| `<context>.completed_successfully` | Contextual success flag for each task using the name of the environment or tenant, e.g `production.completed_successfully` or `uat_tenant.completed_successfully`. Spaces in names are replaced with underscores |
 
 ### <a name="promote-octopus-release"></a>![Promote Release Image](img/octopus_promote-05.png) Promote Octopus Release
 
