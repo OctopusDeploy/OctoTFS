@@ -1,7 +1,7 @@
 import { Client, ClientConfiguration, Logger } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "../../Utils/connection";
 import { createRunbookRunFromInputs } from "./runRunbook";
-import { getInputCommand } from "./inputCommandBuilder";
+import { createCommandFromInputs } from "./inputCommandBuilder";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getUserAgentApp } from "../../Utils/pluginInformation";
@@ -11,7 +11,7 @@ export class RunbookRun {
 
     public async run() {
         try {
-            const command = getInputCommand(this.logger, this.task);
+            const command = createCommandFromInputs(this.logger, this.task);
 
             const config: ClientConfiguration = {
                 userAgentApp: getUserAgentApp("runbook", "run", 6),

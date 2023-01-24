@@ -4,7 +4,7 @@ import { getLineSeparatedItems } from "../../Utils/inputs";
 import { CreateReleaseCommandV1, Logger } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
-export function getInputCommand(logger: Logger, task: TaskWrapper): CreateReleaseCommandV1 {
+export function createCommandFromInputs(logger: Logger, task: TaskWrapper): CreateReleaseCommandV1 {
     const packages: string[] = [];
     let defaultPackageVersion: string | undefined = undefined;
 

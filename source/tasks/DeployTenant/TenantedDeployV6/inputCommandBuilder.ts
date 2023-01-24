@@ -4,7 +4,7 @@ import { getLineSeparatedItems } from "../../Utils/inputs";
 import { CreateDeploymentTenantedCommandV1, Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
-export function getInputCommand(logger: Logger, task: TaskWrapper): CreateDeploymentTenantedCommandV1 {
+export function createCommandFromInputs(logger: Logger, task: TaskWrapper): CreateDeploymentTenantedCommandV1 {
     const space = task.getInput("Space");
     if (!space) {
         throw new Error("Failed to successfully build parameters: space name is required.");

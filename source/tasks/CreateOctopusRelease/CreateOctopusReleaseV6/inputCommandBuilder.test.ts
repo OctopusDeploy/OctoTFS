@@ -1,5 +1,5 @@
 import { Logger } from "@octopusdeploy/api-client";
-import { getInputCommand } from "./inputCommandBuilder";
+import { createCommandFromInputs } from "./inputCommandBuilder";
 import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
 
 describe("getInputCommand", () => {
@@ -19,7 +19,7 @@ describe("getInputCommand", () => {
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("GitRef", "main");
 
-        const command = getInputCommand(logger, task);
+        const command = createCommandFromInputs(logger, task);
         expect(command.spaceName).toBe("Default");
         expect(command.ProjectName).toBe("Awesome project");
         expect(command.ChannelName).toBe("Beta");
@@ -39,7 +39,7 @@ describe("getInputCommand", () => {
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("AdditionalArguments", "--package Baz:2.5.0");
 
-        const command = getInputCommand(logger, task);
+        const command = createCommandFromInputs(logger, task);
         expect(command.Packages).toStrictEqual(["Baz:2.5.0", "Step1:Foo:1.0.0", "Bar:2.0.0"]);
     });
 
@@ -49,7 +49,7 @@ describe("getInputCommand", () => {
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("AdditionalArguments", "--package Bar:2.0.0");
 
-        const command = getInputCommand(logger, task);
+        const command = createCommandFromInputs(logger, task);
         expect(command.Packages).toStrictEqual(["Bar:2.0.0", "Step1:Foo:1.0.0"]);
     });
 });

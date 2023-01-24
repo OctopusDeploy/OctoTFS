@@ -4,7 +4,7 @@ import { getLineSeparatedItems } from "../../Utils/inputs";
 import { CreateDeploymentUntenantedCommandV1, Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
-export function getInputCommand(logger: Logger, task: TaskWrapper): CreateDeploymentUntenantedCommandV1 {
+export function createCommandFromInputs(logger: Logger, task: TaskWrapper): CreateDeploymentUntenantedCommandV1 {
     const variablesMap: PromptedVariableValues | undefined = {};
 
     const additionalArguments = task.getInput("AdditionalArguments");

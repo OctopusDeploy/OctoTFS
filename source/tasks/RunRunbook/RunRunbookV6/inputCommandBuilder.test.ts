@@ -1,5 +1,5 @@
 import { Logger } from "@octopusdeploy/api-client";
-import { getInputCommand } from "./inputCommandBuilder";
+import { createCommandFromInputs } from "./inputCommandBuilder";
 import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
 
 describe("getInputCommand", () => {
@@ -19,7 +19,7 @@ describe("getInputCommand", () => {
         task.addVariableString("TenantTags", "tag set 1/tag 1\ntag set 1/tag 2");
         task.addVariableString("Variables", "var1: value1\nvar2: value2");
 
-        const command = getInputCommand(logger, task);
+        const command = createCommandFromInputs(logger, task);
         expect(command.spaceName).toBe("Default");
         expect(command.ProjectName).toBe("Awesome project");
         expect(command.RunbookName).toBe("A runbook");

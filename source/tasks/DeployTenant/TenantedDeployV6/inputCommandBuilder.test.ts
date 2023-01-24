@@ -1,5 +1,5 @@
 import { Logger } from "@octopusdeploy/api-client";
-import { getInputCommand } from "./inputCommandBuilder";
+import { createCommandFromInputs } from "./inputCommandBuilder";
 import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
 
 describe("getInputCommand", () => {
@@ -19,7 +19,7 @@ describe("getInputCommand", () => {
         task.addVariableString("DeployForTenants", "Tenant 1\nTenant 2");
         task.addVariableString("DeployForTenantTags", "tag set 1/tag 1\ntag set 1/tag 2");
 
-        const command = getInputCommand(logger, task);
+        const command = createCommandFromInputs(logger, task);
         expect(command.EnvironmentName).toBe("dev");
         expect(command.ProjectName).toBe("Awesome project");
         expect(command.ReleaseVersion).toBe("1.0.0");
@@ -42,13 +42,13 @@ describe("getInputCommand", () => {
         task.addVariableString("Environment", "test");
         task.addVariableString("ReleaseNumber", "1.2.3");
 
-        const command = getInputCommand(logger, task);
+        const command = createCommandFromInputs(logger, task);
         expect(command.Variables).toStrictEqual({ var1: "value1", var2: "value2", var3: "value3", var4: "value4" });
     });
 
     test("missing space", () => {
         const t = () => {
-            getInputCommand(logger, task);
+            createCommandFromInputs(logger, task);
         };
         expect(t).toThrowError("Failed to successfully build parameters: space name is required.");
     });
@@ -61,7 +61,7 @@ describe("getInputCommand", () => {
         task.addVariableString("Project", "project 1");
         task.addVariableString("Environment", "test");
         task.addVariableString("ReleaseNumber", "1.2.3");
-        const command = getInputCommand(logger, task);
+        const command = createCommandFromInputs(logger, task);
         expect(command.Variables).toStrictEqual({ var1: "value1", var2: "value2" });
     });
 
@@ -71,7 +71,7 @@ describe("getInputCommand", () => {
         task.addVariableString("ReleaseNumber", "1.2.3");
         task.addVariableString("Environment", "test");
         const t = () => {
-            getInputCommand(logger, task);
+            createCommandFromInputs(logger, task);
         };
 
         expect(t).toThrowError("Failed to successfully build parameters.\nMust provide at least one tenant or tenant tag.");
