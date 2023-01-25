@@ -3,7 +3,7 @@ import os from "os";
 import { TaskWrapper } from "../../Utils/taskInput";
 import { ExecutionResult } from "../../Utils/executionResult";
 
-export async function createDeploymentFromInputs(client: Client, command: CreateDeploymentUntenantedCommandV1, task: TaskWrapper, logger: Logger): Promise<DeploymentResult[]> {
+export async function createDeploymentFromInputs(client: Client, command: CreateDeploymentUntenantedCommandV1, task: TaskWrapper, logger: Logger): Promise<ExecutionResult[]> {
 
     logger.info?.("🐙 Deploying a release in Octopus Deploy...");
 

@@ -26,7 +26,7 @@ export class Waiter {
         const waiter = new ServerTaskWaiter(client, inputParameters.space);
 
         const taskIds: string[] = [];
-        const deploymentResults: WaitExecutionResult[] = [];
+        const waitExecutionResults: WaitExecutionResult[] = [];
         const lookup: Map<string, WaitExecutionResult> = new Map<string, WaitExecutionResult>();
         inputParameters.tasks.map((t) => {
             lookup.set(t.serverTaskId, t);
@@ -52,14 +52,14 @@ export class Waiter {
 
                 if (t.IsCompleted) {
                     taskResult.successful = t.IsCompleted && t.State == TaskState.Success;
-                    deploymentResults.push(taskResult);
+                    waitExecutionResults.push(taskResult);
                 }
             }
         });
 
         const spaceId = await this.getSpaceId(client, inputParameters.space);
         let failedDeploymentsCount = 0;
-        deploymentResults.map((r) => {
+        waitExecutionResults.map((r) => {
             const url = `${this.connection.url}app#/${spaceId}/tasks/${r.serverTaskId}`;
             const context = this.getContext(r);
             if (r.successful) {
@@ -79,7 +79,7 @@ export class Waiter {
             this.task.setOutputVariable("completed_successfully", "true");
         }
 
-        this.task.setOutputVariable("server_task_results", JSON.stringify(deploymentResults));
+        this.task.setOutputVariable("server_task_results", JSON.stringify(waitExecutionResults));
     }
 
     async getSpaceId(client: Client, spaceName: string): Promise<string | undefined> {
