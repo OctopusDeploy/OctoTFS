@@ -35,12 +35,12 @@
             "helpMarkDown": "The space name within Octopus."
         },
         {
-            "name": "Package",
+            "name": "Packages",
             "type": "multiLine",
-            "label": "Package",
+            "label": "Packages",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Package file to push. To push multiple packages, enter on multiple lines."
+            "helpMarkDown": "Package files to push. To push multiple packages, enter on multiple lines."
         },
         {
             "name": "Replace",

@@ -1,22 +1,14 @@
 import { Client, CreateDeploymentUntenantedCommandV1, DeploymentRepository, EnvironmentRepository, Logger } from "@octopusdeploy/api-client";
-import { InputParameters } from "./input-parameters";
 import os from "os";
 import { TaskWrapper } from "../../Utils/taskInput";
 import { ExecutionResult } from "../../Utils/executionResult";
 
-export async function createDeploymentFromInputs(client: Client, parameters: InputParameters, task: TaskWrapper, logger: Logger): Promise<ExecutionResult[]> {
+export async function createDeploymentFromInputs(client: Client, command: CreateDeploymentUntenantedCommandV1, task: TaskWrapper, logger: Logger): Promise<DeploymentResult[]> {
+
     logger.info?.("🐙 Deploying a release in Octopus Deploy...");
-    const command: CreateDeploymentUntenantedCommandV1 = {
-        spaceName: parameters.space,
-        ProjectName: parameters.project,
-        ReleaseVersion: parameters.releaseNumber,
-        EnvironmentNames: parameters.environments,
-        UseGuidedFailure: parameters.useGuidedFailure,
-        Variables: parameters.variables,
-    };
 
     try {
-        const deploymentRepository = new DeploymentRepository(client, parameters.space);
+        const deploymentRepository = new DeploymentRepository(client, command.spaceName);
         const response = await deploymentRepository.create(command);
 
         client.info(`🎉 ${response.DeploymentServerTasks.length} Deployment${response.DeploymentServerTasks.length > 1 ? "s" : ""} queued successfully!`);
@@ -33,7 +25,7 @@ export async function createDeploymentFromInputs(client: Client, parameters: Inp
         const deployments = await deploymentRepository.list({ ids: deploymentIds, take: deploymentIds.length });
 
         const envIds = deployments.Items.map((d) => d.EnvironmentId);
-        const envRepository = new EnvironmentRepository(client, parameters.space);
+        const envRepository = new EnvironmentRepository(client, command.spaceName);
         const environments = await envRepository.list({ ids: envIds, take: envIds.length });
 
         const results = response.DeploymentServerTasks.map((x) => {

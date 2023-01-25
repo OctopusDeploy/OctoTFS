@@ -1,22 +1,10 @@
 import commandLineArgs from "command-line-args";
 import shlex from "shlex";
 import { getLineSeparatedItems } from "../../Utils/inputs";
-import { Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
+import { CreateDeploymentUntenantedCommandV1, Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
-export interface InputParameters {
-    // Required
-    space: string;
-    project: string;
-    releaseNumber: string;
-    environments: string[];
-
-    // Optional
-    useGuidedFailure?: boolean;
-    variables?: PromptedVariableValues;
-}
-
-export function getInputParameters(logger: Logger, task: TaskWrapper): InputParameters {
+export function createCommandFromInputs(logger: Logger, task: TaskWrapper): CreateDeploymentUntenantedCommandV1 {
     const variablesMap: PromptedVariableValues | undefined = {};
 
     const additionalArguments = task.getInput("AdditionalArguments");
@@ -56,17 +44,17 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
     }
     logger.debug?.("Environments:" + environmentsField);
 
-    const parameters: InputParameters = {
-        space: task.getInput("Space", true) || "",
-        project: task.getInput("Project", true) || "",
-        releaseNumber: task.getInput("ReleaseNumber", true) || "",
-        environments: environments,
-        useGuidedFailure: task.getBoolean("UseGuidedFailure") || undefined,
-        variables: variablesMap || undefined,
+    const command: CreateDeploymentUntenantedCommandV1 = {
+        spaceName: task.getInput("Space", true) || "",
+        ProjectName: task.getInput("Project", true) || "",
+        ReleaseVersion: task.getInput("ReleaseNumber", true) || "",
+        EnvironmentNames: environments,
+        UseGuidedFailure: task.getBoolean("UseGuidedFailure") || undefined,
+        Variables: variablesMap || undefined,
     };
 
     const errors: string[] = [];
-    if (parameters.space === "") {
+    if (command.spaceName === "") {
         errors.push("The Octopus space name is required.");
     }
 
@@ -74,7 +62,7 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         throw new Error("Failed to successfully build parameters.\n" + errors.join("\n"));
     }
 
-    logger.debug?.(JSON.stringify(parameters));
+    logger.debug?.(JSON.stringify(command));
 
-    return parameters;
+    return command;
 }

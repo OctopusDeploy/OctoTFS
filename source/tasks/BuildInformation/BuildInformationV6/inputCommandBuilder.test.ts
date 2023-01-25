@@ -1,6 +1,6 @@
 import { Logger } from "@octopusdeploy/api-client";
 import { MockTaskWrapper } from "../../Utils/MockTaskWrapper";
-import { getInputCommand } from "./inputParameters";
+import { createCommandFromInputs } from "./inputCommandBuilder";
 import { VstsParameters, IVstsHelper } from "./vsts";
 
 class MockVsts implements IVstsHelper {
@@ -45,11 +45,11 @@ describe("getInputCommand", () => {
     test("all regular fields supplied", async () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("PackageVersion", "1.2.3");
-        task.addVariableString("PackageId", "Package1\nPackage2");
+        task.addVariableString("PackageIds", "Package1\nPackage2");
         task.addVariableString("ReleaseNumber", "1.0.0");
         task.addVariableString("Replace", "true");
 
-        const command = await getInputCommand(logger, task, vsts);
+        const command = await createCommandFromInputs(logger, task, vsts);
         expect(command.Packages.length).toBe(2);
         expect(command.Packages[0].Id).toBe("Package1");
         expect(command.Packages[0].Version).toBe("1.2.3");
@@ -72,7 +72,7 @@ describe("getInputCommand", () => {
 
     test("missing parameters", async () => {
         const t = async () => {
-            await getInputCommand(logger, task, vsts);
+            await createCommandFromInputs(logger, task, vsts);
         };
         await expect(t).rejects.toThrow("Failed to successfully build parameters:\nspace name is required\nmust specify at least one package name");
     });
@@ -80,8 +80,8 @@ describe("getInputCommand", () => {
     test("missing package version", async () => {
         const t = async () => {
             task.addVariableString("Space", "Default");
-            task.addVariableString("PackageId", "Package1");
-            await getInputCommand(logger, task, vsts);
+            task.addVariableString("PackageIds", "Package1");
+            await createCommandFromInputs(logger, task, vsts);
         };
         await expect(t).rejects.toThrow("Failed to successfully build parameters:\nmust specify a package version number, in SemVer format");
     });

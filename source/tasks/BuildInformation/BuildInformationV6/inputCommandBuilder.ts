@@ -3,10 +3,10 @@ import { getLineSeparatedItems } from "../../Utils/inputs";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { IVstsHelper } from "./vsts";
 
-export async function getInputCommand(logger: Logger, task: TaskWrapper, vstsHelper: IVstsHelper): Promise<CreateOctopusBuildInformationCommand> {
+export async function createCommandFromInputs(logger: Logger, task: TaskWrapper, vstsHelper: IVstsHelper): Promise<CreateOctopusBuildInformationCommand> {
     const vsts = await vstsHelper.getVsts(logger);
-    const inputPackages = getLineSeparatedItems(task.getInput("PackageId") || "") || [];
-    logger.debug?.(`PackageId: ${inputPackages}`);
+    const inputPackages = getLineSeparatedItems(task.getInput("PackageIds") || "") || [];
+    logger.debug?.(`PackageIds: ${inputPackages}`);
     const packages: PackageIdentity[] = [];
     for (const packageId of inputPackages) {
         packages.push({
