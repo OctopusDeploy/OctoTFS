@@ -17,7 +17,7 @@ async function run() {
         const configure = [connectionArguments(connection), includeAdditionalArguments(args)];
 
         const code: number = await octo
-            .map((x) => x.launchOcto(configure))
+            .map((x) => x.launchOcto(configure, "(cli;run;v4)"))
             .getOrElseL((x) => {
                 throw new Error(x);
             });

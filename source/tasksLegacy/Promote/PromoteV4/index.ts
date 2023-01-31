@@ -39,7 +39,7 @@ async function run() {
         ];
 
         const code: number = await octo
-            .map((x) => x.launchOcto(configure))
+            .map((x) => x.launchOcto(configure, "(release;promote;v4)"))
             .getOrElseL((x) => {
                 throw new Error(x);
             });

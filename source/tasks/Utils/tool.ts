@@ -2,12 +2,12 @@ import { IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 import Q from "q";
 import * as tasks from "azure-pipelines-task-lib";
 
-function getExecOptions(): IExecOptions {
-    return { env: { OCTOEXTENSION: process.env.EXTENSION_VERSION, ...process.env } };
+function getExecOptions(stepIdentifier: string): IExecOptions {
+    return { env: { OCTOEXTENSION: `${process.env.EXTENSION_VERSION} ${stepIdentifier}`, ...process.env } };
 }
 
-export function runOctopusCli(tool: OctopusToolRunner) {
-    return tool.exec(getExecOptions());
+export function runOctopusCli(tool: OctopusToolRunner, stepIdentifier: string) {
+    return tool.exec(getExecOptions(stepIdentifier));
 }
 
 export interface OctopusToolRunner {

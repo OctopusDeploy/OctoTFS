@@ -93,7 +93,7 @@ export class BuildInformation {
             this.tool.arg(["--package-id", item]);
         }
 
-        await executeTask(this.tool, this.connection, "Build information successfully pushed.", "Failed to push build information.", additionalArguments);
+        await executeTask(this.tool, "(build-information;push;v5)", this.connection, "Build information successfully pushed.", "Failed to push build information.", additionalArguments);
     }
 
     private getVcsTypeFromProvider = (buildRepositoryProvider: string) => {

@@ -31,6 +31,11 @@ export class Deploy {
             this.tool.arg(["--tenantTag", item]);
         }
 
-        await executeTask(this.tool, this.connection, "Deployment succeeded.", "Failed to deploy release.", additionalArguments);
+        let stepIdentifier = "(release;deploy;v5)";
+        if (deployForTenants.length > 0 || deployForTenantTags.length > 0) {
+            stepIdentifier = "(release;deploy-tenanted;v5)";
+        }
+
+        await executeTask(this.tool, stepIdentifier, this.connection, "Deployment succeeded.", "Failed to deploy release.", additionalArguments);
     }
 }

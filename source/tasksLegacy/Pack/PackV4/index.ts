@@ -99,7 +99,7 @@ Alternatively, if NuGet package metadata is required, consider using the 'NuGet'
         const configureTool = configure(getInputs());
 
         const code: number = await octo
-            .map((x) => x.launchOcto(configureTool))
+            .map((x) => x.launchOcto(configureTool, "(package;pack;v4)"))
             .getOrElseL((x) => {
                 throw new Error(x);
             });

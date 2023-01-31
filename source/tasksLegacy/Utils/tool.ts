@@ -25,20 +25,20 @@ export class OctoLauncher {
         this.runner = runner;
     }
 
-    private getExecOptions(): IExecOptions {
-        return { env: { OCTOEXTENSION: process.env.EXTENSION_VERSION, ...process.env } };
+    private getExecOptions(stepIdentifier: string): IExecOptions {
+        return { env: { OCTOEXTENSION: `${process.env.EXTENSION_VERSION} ${stepIdentifier}`, ...process.env } };
     }
 
-    public launchOcto(configurations: Array<(tool: ToolRunner) => ToolRunner>): Q.Promise<number> {
+    public launchOcto(configurations: Array<(tool: ToolRunner) => ToolRunner>, stepIdentifier: string): Q.Promise<number> {
         configureTool(configurations)(this.runner);
 
-        return this.runner.exec(this.getExecOptions());
+        return this.runner.exec(this.getExecOptions(stepIdentifier));
     }
 
-    public launchOctoSync(configurations: Array<(tool: ToolRunner) => ToolRunner>): IExecSyncResult {
+    public launchOctoSync(configurations: Array<(tool: ToolRunner) => ToolRunner>, stepIdentifier: string): IExecSyncResult {
         configureTool(configurations)(this.runner);
 
-        return this.runner.execSync(this.getExecOptions());
+        return this.runner.execSync(this.getExecOptions(stepIdentifier));
     }
 }
 
@@ -90,7 +90,7 @@ export function getPortableOctoCommandRunner(command: string): Option<ToolRunner
 export const assertOctoVersionAcceptsIds = async function (): Promise<void> {
     const octo = await getOrInstallOctoCommandRunner("version");
     const result = octo
-        .map((x) => x.launchOctoSync([]))
+        .map((x) => x.launchOctoSync([], "version"))
         .getOrElseL((x) => {
             throw new Error(x);
         });

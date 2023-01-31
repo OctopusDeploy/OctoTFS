@@ -4,13 +4,13 @@ import { OctoServerConnectionDetails } from "./connection";
 import { connectionArguments, includeAdditionalArgumentsAndProxyConfig } from "./inputs";
 import { OctopusToolRunner, runOctopusCli } from "./tool";
 
-export async function executeTask(tool: OctopusToolRunner, connection: OctoServerConnectionDetails, successMessage: string, failureMessage: string, additionalArguments?: string | undefined) {
+export async function executeTask(tool: OctopusToolRunner, stepIdentifier: string, connection: OctoServerConnectionDetails, successMessage: string, failureMessage: string, additionalArguments?: string | undefined) {
     return executeWithSetResult(
         async () => {
             connectionArguments(connection, tool);
             includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments, tool);
 
-            await runOctopusCli(tool);
+            await runOctopusCli(tool, stepIdentifier);
         },
         successMessage,
         failureMessage
