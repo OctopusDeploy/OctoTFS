@@ -24,7 +24,7 @@ export const getInputs = (): InputParameters => {
         sourcePath: removeTrailingSlashes(safeTrim(tasks.getPathInput("SourcePath"))) || ".",
         include: getLineSeparatedItems(tasks.getInput("Include") || "**"),
         nuGetDescription: tasks.getInput("NuGetDescription", true) || "",
-        nuGetAuthors: getLineSeparatedItems(tasks.getInput("NuGetAuthor", true) || ""),
+        nuGetAuthors: getLineSeparatedItems(tasks.getInput("NuGetAuthors", true) || ""),
         nuGetTitle: tasks.getInput("NuGetTitle"),
         nuGetReleaseNotes: tasks.getInput("NuGetReleaseNotes"),
         nuGetReleaseNotesFile: tasks.getInput("NuGetReleaseNotesFile", false),
