@@ -50,3 +50,11 @@ export function includeAdditionalArgumentsAndProxyConfig(url: string, additional
 
     tool.line(additionalArgs || "");
 }
+
+export function safeTrim(value: string | null | undefined): string | null | undefined {
+    return value ? value.trim() : value;
+}
+
+export function removeTrailingSlashes(value: string | null | undefined): string | null | undefined {
+    return value ? value.replace(/[/\\]+(?=\s*)$/, "") : value;
+}

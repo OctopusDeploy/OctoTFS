@@ -27,7 +27,6 @@ function entryPoints() {
 
     const entries = {};
     doReplacements(entries, "tasks");
-    doReplacements(entries, "tasksLegacy");
 
     return entries;
 }
@@ -77,7 +76,6 @@ build({
         copyStaticFiles({ src: "./source/widgets", dest: "dist/widgets" }),
         copyStaticFiles({ src: "./node_modules/vss-web-extension-sdk/lib", dest: "dist/widgets/ProjectStatus/lib" }),
         copyStaticFiles({ src: "./source/tasks", dest: "dist/tasks", filter: noTSFiles }),
-        copyStaticFiles({ src: "./source/tasksLegacy", dest: "dist/tasks", filter: noTSFiles }),
         bundleAsMuchAsWeCan,
     ],
     logLimit: 0,

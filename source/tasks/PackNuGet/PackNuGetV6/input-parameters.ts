@@ -1,6 +1,5 @@
 import * as tasks from "azure-pipelines-task-lib/task";
-import { removeTrailingSlashes, safeTrim } from "tasksLegacy/Utils/inputs";
-import { getLineSeparatedItems } from "../../Utils/inputs";
+import { getLineSeparatedItems, removeTrailingSlashes, safeTrim } from "../../Utils/inputs";
 
 export interface InputParameters {
     packageId: string;
