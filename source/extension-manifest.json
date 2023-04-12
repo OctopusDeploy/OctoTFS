@@ -169,16 +169,6 @@
             }
         },
         {
-            "id": "octopus-pack",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "tasks/Pack"
-            }
-        },
-        {
             "id": "octopus-pack-zip",
             "type": "ms.vss-distributed-task.task",
             "targets": [

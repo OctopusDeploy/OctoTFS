@@ -47,7 +47,7 @@ function Resolve-Version($version, $option) {
 function Resolve-InstallerTask($path){
     $taskManifestFiles = Get-ChildItem $path -Include "task.json" -Recurse
     foreach ($taskManifestFile in $taskManifestFiles) {
-        if((Split-Path (Split-Path $taskManifestFile -Parent) -Leaf) -ieq "OctoInstallerV4")
+        if((Split-Path (Split-Path $taskManifestFile -Parent) -Leaf) -ieq "OctoInstallerV6")
         {
             return Split-Path $taskManifestFile -Parent
         }
