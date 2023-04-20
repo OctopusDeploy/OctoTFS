@@ -1,10 +1,10 @@
-import { Client, ClientConfiguration, Logger } from "@octopusdeploy/api-client";
+import { Logger } from "@octopusdeploy/api-client";
 import * as tasks from "azure-pipelines-task-lib/task";
 import { getDefaultOctopusConnectionDetailsOrThrow } from "../../Utils/connection";
 import { getLineSeparatedItems, getOverwriteModeFromReplaceInput, getRequiredInput } from "../../Utils/inputs";
 import { Push } from "./push";
 import os from "os";
-import { getUserAgentApp } from "../../Utils/pluginInformation";
+import { getClient } from "../../Utils/client";
 
 async function run() {
     try {
@@ -29,15 +29,7 @@ async function run() {
             },
         };
 
-        const config: ClientConfiguration = {
-            userAgentApp: getUserAgentApp("package", "push", 6),
-            instanceURL: connection.url,
-            apiKey: connection.apiKey,
-            logging: logger,
-        };
-
-        const client: Client = await Client.create(config);
-
+        const client = await getClient(connection, logger, "package", "push", 6);
         await new Push(client).run(spaceName, packages, overwriteMode);
     } catch (error: unknown) {
         if (error instanceof Error) {

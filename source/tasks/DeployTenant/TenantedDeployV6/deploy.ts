@@ -1,10 +1,10 @@
-import { Client, ClientConfiguration, Logger } from "@octopusdeploy/api-client";
+import { Logger } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "../../Utils/connection";
 import { createDeploymentFromInputs } from "./createDeployment";
 import { createCommandFromInputs } from "./inputCommandBuilder";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
-import { getUserAgentApp } from "../../Utils/pluginInformation";
+import { getClient } from "../../Utils/client";
 
 export class Deploy {
     constructor(readonly connection: OctoServerConnectionDetails, readonly task: TaskWrapper, readonly logger: Logger) {}
@@ -12,14 +12,7 @@ export class Deploy {
     public async run() {
         try {
             const command = createCommandFromInputs(this.logger, this.task);
-
-            const config: ClientConfiguration = {
-                userAgentApp: getUserAgentApp("release", "deploy-tenanted", 6),
-                instanceURL: this.connection.url,
-                apiKey: this.connection.apiKey,
-                logging: this.logger,
-            };
-            const client = await Client.create(config);
+            const client = await getClient(this.connection, this.logger, "release", "deploy-tenanted", 6);
 
             createDeploymentFromInputs(client, command, this.task, this.logger);
 

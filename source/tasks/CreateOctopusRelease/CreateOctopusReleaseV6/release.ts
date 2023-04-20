@@ -1,23 +1,14 @@
-import {
-    Client,
-    ClientConfiguration,
-    CreateReleaseCommandV1,
-    Logger,
-    Project,
-    ProjectRepository,
-    Space,
-    SpaceRepository
-} from "@octopusdeploy/api-client";
+import { Client, CreateReleaseCommandV1, Logger, Project, ProjectRepository, Space, SpaceRepository } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "../../Utils/connection";
 import { createReleaseFromInputs } from "./createRelease";
 import { createCommandFromInputs } from "./inputCommandBuilder";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
-import { getUserAgentApp } from "../../Utils/pluginInformation";
 import path from "path";
 import { getVstsEnvironmentVariables } from "../../../tasksLegacy/Utils/environment";
 import { v4 as uuidv4 } from "uuid";
 import * as tasks from "azure-pipelines-task-lib";
+import { getClient } from "../../Utils/client";
 
 export class Release {
     constructor(readonly connection: OctoServerConnectionDetails, readonly task: TaskWrapper, readonly logger: Logger) {}
@@ -25,15 +16,7 @@ export class Release {
     public async run() {
         try {
             const command = createCommandFromInputs(this.logger, this.task);
-
-            const config: ClientConfiguration = {
-                userAgentApp: getUserAgentApp("release", "create", 6),
-                instanceURL: this.connection.url,
-                apiKey: this.connection.apiKey,
-                logging: this.logger,
-            };
-            const client = await Client.create(config);
-
+            const client = await getClient(this.connection, this.logger, "release", "create", 6);
             const version = await createReleaseFromInputs(client, command, this.task, this.logger);
 
             await this.tryCreateSummary(client, command, version);
