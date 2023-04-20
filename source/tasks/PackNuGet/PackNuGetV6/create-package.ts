@@ -2,6 +2,7 @@ import { Logger, NuGetPackageBuilder, NuGetPackArgs } from "@octopusdeploy/api-c
 import path from "path";
 import fs from "fs";
 import { InputParameters } from "./input-parameters";
+import { isNullOrWhitespace } from "../../../tasksLegacy/Utils/inputs";
 
 type createPackageResult = {
     filePath: string;
@@ -27,7 +28,7 @@ export async function createPackageFromInputs(parameters: InputParameters, logge
         releaseNotes: parameters.nuGetReleaseNotes,
     };
 
-    if (parameters.nuGetReleaseNotesFile) {
+    if (!isNullOrWhitespace(parameters.nuGetReleaseNotesFile) && fs.existsSync(parameters.nuGetReleaseNotesFile) && fs.lstatSync(parameters.nuGetReleaseNotesFile).isFile()) {
         inputs.nuspecArgs.releaseNotes = fs.readFileSync(parameters.nuGetReleaseNotesFile).toString();
     }
 
