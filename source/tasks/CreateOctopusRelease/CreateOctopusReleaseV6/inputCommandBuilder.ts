@@ -3,6 +3,8 @@ import shlex from "shlex";
 import { getLineSeparatedItems } from "../../Utils/inputs";
 import { CreateReleaseCommandV1, Logger } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
+import { isNullOrWhitespace } from "../../../tasksLegacy/Utils/inputs";
+import fs from "fs";
 
 export function createCommandFromInputs(logger: Logger, task: TaskWrapper): CreateReleaseCommandV1 {
     const packages: string[] = [];
@@ -63,6 +65,13 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
         GitRef: task.getInput("GitRef"),
         GitCommit: task.getInput("GitCommit"),
     };
+
+    if (!command.ReleaseNotes) {
+        const releaseNotesFile = task.getInput("ReleaseNotesFile");
+        if (!isNullOrWhitespace(releaseNotesFile) && fs.existsSync(releaseNotesFile) && fs.lstatSync(releaseNotesFile).isFile()) {
+            command.ReleaseNotes = fs.readFileSync(releaseNotesFile).toString();
+        }
+    }
 
     logger.debug?.(JSON.stringify(command));
 
