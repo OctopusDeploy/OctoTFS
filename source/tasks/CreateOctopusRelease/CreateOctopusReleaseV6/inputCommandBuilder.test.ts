@@ -57,7 +57,21 @@ describe("getInputCommand", () => {
         fs.writeFileSync(notesPath, "this is a release note");
         const command = createCommandFromInputs(logger, task);
         expect(command.ReleaseNotes).toBe("this is a release note");
-    })
+    });
+
+    test("release notes takes precedence", async () => {
+        const tempOutDir = await fs.mkdtempSync(path.join(os.tmpdir(), "octopus_"));
+        const notesPath = path.join(tempOutDir, "notes.txt");
+
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Project", "Awesome project");
+        task.addVariableString("ReleaseNotes", "inline release notes");
+        task.addVariableString("ReleaseNotesFile", notesPath);
+
+        fs.writeFileSync(notesPath, "this is a release note");
+        const command = createCommandFromInputs(logger, task);
+        expect(command.ReleaseNotes).toBe("inline release notes");
+    });
 
     test("duplicate variable name, variables field takes precedence", () => {
         task.addVariableString("Space", "Default");
