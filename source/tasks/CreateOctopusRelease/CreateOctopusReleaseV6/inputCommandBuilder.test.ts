@@ -59,7 +59,7 @@ describe("getInputCommand", () => {
         expect(command.ReleaseNotes).toBe("this is a release note");
     });
 
-    test("release notes takes precedence", async () => {
+    test("specifying both release notes and release notes file causes error", async () => {
         const tempOutDir = await fs.mkdtempSync(path.join(os.tmpdir(), "octopus_"));
         const notesPath = path.join(tempOutDir, "notes.txt");
 
@@ -69,8 +69,7 @@ describe("getInputCommand", () => {
         task.addVariableString("ReleaseNotesFile", notesPath);
 
         fs.writeFileSync(notesPath, "this is a release note");
-        const command = createCommandFromInputs(logger, task);
-        expect(command.ReleaseNotes).toBe("inline release notes");
+        expect(() => createCommandFromInputs(logger, task)).toThrowError("cannot specify ReleaseNotes and ReleaseNotesFile");
     });
 
     test("duplicate variable name, variables field takes precedence", () => {
