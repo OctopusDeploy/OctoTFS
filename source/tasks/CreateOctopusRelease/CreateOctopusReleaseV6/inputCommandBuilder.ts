@@ -66,8 +66,16 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
         GitCommit: task.getInput("GitCommit"),
     };
 
-    if (!command.ReleaseNotes) {
-        const releaseNotesFile = task.getInput("ReleaseNotesFile");
+    const releaseNotesFilePath = task.getInput("ReleaseNotesFile");
+
+    if (command.ReleaseNotes && releaseNotesFilePath) {
+        const message = "cannot specify ReleaseNotes and ReleaseNotesFile";
+        task.setFailure(message);
+        throw new Error(message);
+    }
+
+    if (releaseNotesFilePath) {
+        const releaseNotesFile = releaseNotesFilePath;
         if (!isNullOrWhitespace(releaseNotesFile) && fs.existsSync(releaseNotesFile) && fs.lstatSync(releaseNotesFile).isFile()) {
             command.ReleaseNotes = fs.readFileSync(releaseNotesFile).toString();
         }

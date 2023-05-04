@@ -92,7 +92,7 @@
             "label": "Release Notes",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Octopus Release notes. This field supports markdown. To include newlines, you can use HTML linebreaks."
+            "helpMarkDown": "Octopus Release notes. This field supports markdown. To include newlines, you can use HTML linebreaks. Can only specify this if 'ReleaseNotesFile' is not supplied."
         },
         {
             "name": "ReleaseNotesFile",
@@ -100,7 +100,7 @@
             "label": "Release Notes File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Octopus Release notes file. Path to a file that contains the release notes. Supports markdown. Will only be used if the Release Notes field is empty."
+            "helpMarkDown": "Octopus Release notes file. Path to a file that contains the release notes. Supports markdown. Can only specify this if 'ReleaseNotes' is not supplied."
         },
         {
             "name": "GitRef",
