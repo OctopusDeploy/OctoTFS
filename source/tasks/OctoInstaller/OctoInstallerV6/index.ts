@@ -22,7 +22,7 @@ async function run() {
             },
         };
 
-        new Installer("https://api.github.com/repos/OctopusDeploy/cli/releases", os.platform(), os.arch(), logger).run(version);
+        new Installer("https://raw.githubusercontent.com/OctopusDeploy/cli/main/releases.json", os.platform(), os.arch(), logger).run(version);
     } catch (error: unknown) {
         if (error instanceof Error) {
             tasks.setResult(tasks.TaskResult.Failed, `"Failed to execute pack. ${error.message}${os.EOL}${error.stack}`, true);
