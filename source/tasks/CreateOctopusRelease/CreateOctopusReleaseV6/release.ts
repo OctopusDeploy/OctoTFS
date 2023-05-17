@@ -49,7 +49,7 @@ export class Release {
             const markdown = `[Release ${version} created for '${matchedProjects[0].Name}'](${link})`;
             const markdownFile = path.join(getVstsEnvironmentVariables().defaultWorkingDirectory, `${uuidv4()}.md`);
             tasks.writeFile(markdownFile, markdown);
-            tasks.addAttachment("Distributedtask.Core.Summary", "Octopus Deploy", markdownFile);
+            tasks.uploadSummary(markdownFile);
         }
     }
 }
