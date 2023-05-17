@@ -58,6 +58,6 @@ export class Deploy {
 
         const markdownFile = path.join(getVstsEnvironmentVariables().defaultWorkingDirectory, `${uuidv4()}.md`);
         tasks.writeFile(markdownFile, markdown);
-        tasks.uploadSummary(markdownFile);
+        tasks.addAttachment("Distributedtask.Core.Summary", "Octopus Deploy", markdownFile);
     }
 }
