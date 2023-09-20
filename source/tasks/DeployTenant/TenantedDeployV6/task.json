@@ -63,7 +63,7 @@
             "label": "Deploy to Environment",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The "
+            "helpMarkDown": "The environment to deploy to. This must be the name of the environment, not the id."
         },
         {
             "name": "DeployForTenants",
@@ -71,7 +71,7 @@
             "label": "Tenant(s)",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Deploy the release for this list of tenants. Wildcard '*' will deploy to all tenants currently able to deploy to the above provided environment."
+            "helpMarkDown": "Deploy the release for this list of tenants. Wildcard '*' will deploy to all tenants currently able to deploy to the above-provided environment."
         },
         {
             "name": "DeployForTenantTags",
@@ -87,7 +87,7 @@
             "label": "Values for prompted variables",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Variable values to pass to the the deployment, use syntax `variable: value`"
+            "helpMarkDown": "Variable values to pass to the deployment, use syntax `variable: value`"
         },
         {
             "name": "UseGuidedFailure",
