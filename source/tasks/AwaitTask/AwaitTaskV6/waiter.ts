@@ -1,9 +1,9 @@
-import { Client, ClientConfiguration, Logger, ServerTaskWaiter, SpaceRepository, TaskState } from "@octopusdeploy/api-client";
+import { Client, Logger, ServerTaskWaiter, SpaceRepository, TaskState } from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "tasks/Utils/connection";
 import { TaskWrapper } from "tasks/Utils/taskInput";
-import { getUserAgentApp } from "../../Utils/pluginInformation";
 import { getInputParameters } from "./input-parameters";
 import { ExecutionResult } from "../../Utils/executionResult";
+import { getClient } from "../../Utils/client";
 
 export interface WaitExecutionResult extends ExecutionResult {
     successful: boolean;
@@ -15,13 +15,7 @@ export class Waiter {
     public async run() {
         const inputParameters = getInputParameters(this.logger, this.task);
 
-        const config: ClientConfiguration = {
-            userAgentApp: getUserAgentApp("task", "wait", 6),
-            instanceURL: this.connection.url,
-            apiKey: this.connection.apiKey,
-            logging: this.logger,
-        };
-        const client = await Client.create(config);
+        const client = await getClient(this.connection, this.logger, "task", "wait", 6)
 
         const waiter = new ServerTaskWaiter(client, inputParameters.space);
 
