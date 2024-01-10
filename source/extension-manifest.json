@@ -3,7 +3,7 @@
     "id": "set-by-extension-manifest.environment.json",
     "name": "set-by-extension-manifest.environment.json",
     "version": "set-by-extension-manifest.environment.json",
-    "publisher": "octopusdeploy",
+    "publisher": "octo-shane",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services.Cloud"
