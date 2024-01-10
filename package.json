@@ -49,7 +49,8 @@
     "semver": "^7.3.7",
     "shlex": "^2.1.2",
     "typed-rest-client": "1.8.9",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "vss-web-extension-sdk": "5.141.0"
   },
   "jest-junit": {
     "outputDirectory": "reports",
