@@ -20,8 +20,9 @@ step "push-to-azure-marketplace" {
                 # Install PowerShell
                 apt-get install -y powershell
                 
+                
                 environment=$(get_octopusvariable "Octopus.Environment.Name")
-                version=$(get_octopusvariable "Octopus.Release.Number")
+                version=$(get_octopusvariable "Octopus.Action.Package[OctoTFS.vsix].PackageVersion")
                 accessToken=$(get_octopusvariable "AccessToken")
                 shareWith=$(get_octopusvariable "ShareWith")
                 vsixPath=$(get_octopusvariable "Octopus.Action.Package[OctoTFS.vsix].ExtractedPath")
