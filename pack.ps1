@@ -54,6 +54,23 @@ function UpdateTaskManifests($workingDirectory, $version, $envName) {
     }
 }
 
+
+function IsUnsupportedNode($directory) {
+    $result = $directory | Select-String -Pattern 'node-(\d+)'
+    foreach ($r in $result) {
+        if ([int] $r.Matches.Groups[1].Value -gt 9) {
+            return $false
+        }
+    }
+    return $true
+}
+
+function PruneDeasync($moduleDirectory) {
+    Get-ChildItem $moduleDirectory\deasync\bin -Filter "*-ia32-*" -Directory | Remove-Item -Recurse
+
+    Get-ChildItem $moduleDirectory\deasync\bin -Directory | Where-Object {IsUnsupportedNode $_.FullName} | Remove-Item -Recurse
+}
+
 function SetupTaskDependencies($workingDirectory) {
     $tempPath = "$basePath/modules";
 
@@ -66,6 +83,7 @@ function SetupTaskDependencies($workingDirectory) {
     $command = "$goPath/bin/node-prune"
 
     Invoke-Expression "$command $tempPath/node_modules"
+    PruneDeasync "$tempPath/node_modules"
 
     $taskManifestFiles = Get-ChildItem $workingDirectory -Include "task.json" -Recurse
 
