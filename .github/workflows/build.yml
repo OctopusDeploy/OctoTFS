@@ -104,10 +104,6 @@ jobs:
         with:
           go-version: "^1.19.5"
 
-      - name: Embed octo portable
-        run: |
-          pwsh ./embed-octo.ps1
-
       - name: Replace versions in tasks and create vsix
         run: |
           ./pack.ps1 -environment Production -version ${{ needs.build.outputs.package_version }} -setupTaskDependencies
