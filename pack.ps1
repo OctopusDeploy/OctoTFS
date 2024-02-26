@@ -58,7 +58,7 @@ function SetupTaskDependencies($workingDirectory) {
     $tempPath = "$basePath/modules";
 
     mkdir "$tempPath/node_modules"
-    & npm install --prefix $tempPath azure-pipelines-task-lib azure-pipelines-tool-lib
+    & npm install --prefix $tempPath azure-pipelines-task-lib@4.3.1 azure-pipelines-tool-lib@2.0.4
     & npm dedup --prefix $tempPath
     & go install github.com/tj/node-prune@latest
 
