@@ -41,7 +41,7 @@ describe("OctopusInstaller", () => {
 
         const app = express();
 
-        app.get("/repos/OctopusDeploy/cli/releases", (_, res) => {
+        app.get("/OctopusDeploy/cli/main/releases.json", (_, res) => {
             const latestToolsPayload = `[
                 {
                     "tag_name": "v7.4.1",
@@ -94,7 +94,7 @@ describe("OctopusInstaller", () => {
         });
 
         const address = server.address() as AddressInfo;
-        releasesUrl = `http://localhost:${address.port}/repos/OctopusDeploy/cli/releases`;
+        releasesUrl = `http://localhost:${address.port}/OctopusDeploy/cli/main/releases.json`;
     });
 
     afterEach(async () => {

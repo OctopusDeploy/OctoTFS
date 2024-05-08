@@ -1,4 +1,11 @@
-import { Client, CreateReleaseCommandV1, Logger, Project, ProjectRepository, Space, SpaceRepository } from "@octopusdeploy/api-client";
+import {
+    Client,
+    CreateReleaseCommandV1,
+    Logger,
+    Project,
+    ProjectRepository,
+    resolveSpaceId,
+} from "@octopusdeploy/api-client";
 import { OctoServerConnectionDetails } from "../../Utils/connection";
 import { createReleaseFromInputs } from "./createRelease";
 import { createCommandFromInputs } from "./inputCommandBuilder";
@@ -33,20 +40,16 @@ export class Release {
     }
 
     private async tryCreateSummary(client: Client, command: CreateReleaseCommandV1, version: string) {
-        const spaceRepo = new SpaceRepository(client);
-        const spaces = await spaceRepo.list({ partialName: command.spaceName });
-        const matchedSpaces = spaces.Items.filter((s: Space) => s.Name.localeCompare(command.spaceName) === 0);
-        if (matchedSpaces.length === 1) {
-            const projectRepo = new ProjectRepository(client, command.spaceName);
-            const projects = await projectRepo.list({ partialName: command.ProjectName });
-            const matchedProjects = projects.Items.filter((p: Project) => p.Name.localeCompare(command.ProjectName) === 0);
-            if (matchedProjects.length === 1) {
-                const link = `${this.connection.url}app#/${matchedSpaces[0].Id}/projects/${matchedProjects[0].Id}/deployments/releases/${version}`;
-                const markdown = `[Release ${version} created for '${matchedProjects[0].Name}'](${link})`;
-                const markdownFile = path.join(getVstsEnvironmentVariables().defaultWorkingDirectory, `${uuidv4()}.md`);
-                tasks.writeFile(markdownFile, markdown);
-                tasks.addAttachment("Distributedtask.Core.Summary", "Octopus Deploy", markdownFile);
-            }
+        const spaceId = await resolveSpaceId(client, command.spaceName);
+        const projectRepo = new ProjectRepository(client, command.spaceName);
+        const projects = await projectRepo.list({ partialName: command.ProjectName });
+        const matchedProjects = projects.Items.filter((p: Project) => p.Name.localeCompare(command.ProjectName) === 0);
+        if (matchedProjects.length === 1) {
+            const link = `${this.connection.url}app#/${spaceId}/projects/${matchedProjects[0].Id}/deployments/releases/${version}`;
+            const markdown = `[Release ${version} created for '${matchedProjects[0].Name}'](${link})`;
+            const markdownFile = path.join(getVstsEnvironmentVariables().defaultWorkingDirectory, `${uuidv4()}.md`);
+            tasks.writeFile(markdownFile, markdown);
+            tasks.addAttachment("Distributedtask.Core.Summary", "Octopus Create Release", markdownFile);
         }
     }
 }

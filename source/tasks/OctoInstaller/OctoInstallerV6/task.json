@@ -35,7 +35,7 @@
             "type": "string",
             "label": "Octopus CLI Version",
             "required": true,
-            "helpMarkDown": "Specify version of Octopus CLI to install.<br/>Versions can be given in the following formats<li>`1.*` => Install latest in major version.</li><li>`7.3.*` => Install latest in major and minor version.</li><li>`8.0.1` => Install exact version.</li><li>`*` => Install whatever is latest.</li><br/>Find the value of `version` for installing Octopus CLI, from the [this link](https://github.com/OctopusDeploy/cli/releases)."
+            "helpMarkDown": "Specify version of Octopus CLI to install.<br/>Versions can be given in the following formats<li>`1.*` => Install latest in major version.</li><li>`7.3.*` => Install latest in major and minor version.</li><li>`8.0.1` => Install exact version.</li><li>`*` => Install whatever is latest.</li><br/>Find the value of `version` for installing Octopus CLI, from the [this link](https://raw.githubusercontent.com/OctopusDeploy/cli/main/releases.json)."
         }
     ],
     "instanceNameFormat": "Install Octopus CLI tool version $(version)",
