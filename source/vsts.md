@@ -19,7 +19,7 @@ A benefit of the native client is that it means the steps no longer depend on th
 
 As noted above the CLI is no longer are hard dependency for our out-of-the-box steps, but the installer step is still available should you wish to use the CLI in your own script steps.
 
-<div style="border:1px solid #888;background-color: #ffc;color:#444;padding:5px;">Note: The Octopus CLI installer step is still available, however v6 introduces a breaking change. v6 of the step will install the <a href="https://github.com/OctopusDeploy/cli">Go CLI</a>, not the <a href="https://github.com/OctopusDeploy/OcotpusCLI">C# CLI</a>.
+<div style="border:1px solid #888;background-color: #ffc;color:#444;padding:5px;">Note: The Octopus CLI installer step is still available, however v6 introduces a breaking change. v6 of the step will install the <a href="https://github.com/OctopusDeploy/cli">Go CLI</a>, not the <a href="https://github.com/OctopusDeploy/OctopusCLI">C# CLI</a>.
 </div>
 
 ## Step versions <6.0.0
