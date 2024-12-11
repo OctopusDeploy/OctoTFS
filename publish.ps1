@@ -38,11 +38,6 @@ function PublishVSIX($vsixFile, $environment) {
         throw "The valid environments are 'Test' and 'Production'"
     }
 
-    if(!(IsPublishRequired $manifest)){
-        Write-Host "Version already published. Skipping publishing."
-        return;
-    }
-
     if ($environment -eq "Production") {
         Write-Host "Publishing $vsixFile to everyone (public extension)..."
         & tfx extension publish --vsix $vsixFile --token $accessToken --no-prompt

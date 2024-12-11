@@ -3,9 +3,8 @@ connectivity_policy {
 }
 
 versioning_strategy {
-
     donor_package {
         package = "OctoTFS.vsix"
-        step = "Push to Azure Marketplace"
+        step = "push-to-azure-marketplace"
     }
 }
