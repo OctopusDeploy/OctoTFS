@@ -60,7 +60,7 @@ jobs:
       checks: write
     strategy:
       matrix:
-        os: [windows-2022, ubuntu-20.04, macos-12]
+        os: [windows-2022, ubuntu-20.04, macos-14]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
