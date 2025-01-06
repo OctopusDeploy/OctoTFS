@@ -1,6 +1,6 @@
 import commandLineArgs from "command-line-args";
 import shlex from "shlex";
-import { getLineSeparatedItems } from "../../Utils/inputs";
+import { getLineSeparatedItems, parseVariableString } from "../../Utils/inputs";
 import { CreateDeploymentUntenantedCommandV1, Logger, PromptedVariableValues } from "@octopusdeploy/api-client";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 
@@ -22,13 +22,13 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
     }
 
     const variablesField = task.getInput("Variables");
-    logger.debug?.("Variables:" + variablesField);
+    logger.debug?.("Variables: " + variablesField);
     if (variablesField) {
         const variables = getLineSeparatedItems(variablesField).map((p) => p.trim()) || undefined;
         if (variables) {
             for (const variable of variables) {
-                const variableMap = variable.split(":").map((x) => x.trim());
-                variablesMap[variableMap[0]] = variableMap[1];
+                const [name, value] = parseVariableString(variable);
+                variablesMap[name] = value;
             }
         }
     }
