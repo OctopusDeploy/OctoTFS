@@ -60,6 +60,33 @@ describe("getInputCommand", () => {
         expect(command.Variables).toStrictEqual({ var1: "value1", var2: "value2" });
     });
 
+    test("handles escaped colons in variable names", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Variables", "Test\\:Variable: Testing3");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "Test project");
+        task.addVariableString("ReleaseNumber", "1.0.0");
+        task.addVariableString("DeployForTenants", "Tenant 1");
+
+        const command = createCommandFromInputs(logger, task);
+        expect(command.Variables).toStrictEqual({ "Test:Variable": "Testing3" });
+    });
+
+    test("handles multiple variables with escaped and unescaped colons", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Variables", "Long\\:Variable\\:Name: Value123\nTest\\:Variable: Value: With: Colons");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "Test project");
+        task.addVariableString("ReleaseNumber", "1.0.0");
+        task.addVariableString("DeployForTenants", "Tenant 1");
+
+        const command = createCommandFromInputs(logger, task);
+        expect(command.Variables).toStrictEqual({ 
+            "Long:Variable:Name": "Value123",
+            "Test:Variable": "Value: With: Colons"
+        });
+    });
+    
     test("multiline environments", () => {
         task.addVariableString("Space", "Default");
         task.addVariableString("Environments", "dev, test\nprod");

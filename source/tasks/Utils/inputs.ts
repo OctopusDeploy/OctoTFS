@@ -12,6 +12,34 @@ export function getLineSeparatedItems(value: string): Array<string> {
     return value ? value.split(/[\r\n]+/g).map((x) => x.trim()) : [];
 }
 
+export function parseVariableString(input: string): [string, string] {
+    let escapeNext = false;
+    let colonIndex = -1;
+    
+    for (let i = 0; i < input.length; i++) {
+        if (input[i] === '\\' && !escapeNext) {
+            escapeNext = true;
+            continue;
+        }
+        
+        if (input[i] === ':' && !escapeNext) {
+            colonIndex = i;
+            break;
+        }
+        
+        escapeNext = false;
+    }
+    
+    if (colonIndex === -1) {
+        throw new Error(`Invalid variable format. Expected 'name: value' but got '${input}'`);
+    }
+    
+    const variableName = input.substring(0, colonIndex).replace(/\\:/g, ':').trim();
+    const variableValue = input.substring(colonIndex + 1).trim();
+    
+    return [variableName, variableValue];
+}
+
 export function getOverwriteModeFromReplaceInput(replace: string): ReplaceOverwriteMode {
     return ReplaceOverwriteMode[replace as keyof typeof ReplaceOverwriteMode] || ReplaceOverwriteMode.false;
 }
