@@ -86,6 +86,14 @@
             "defaultValue": "False",
             "required": false,
             "helpMarkDown": "Whether to use guided failure mode if errors occur during the run."
+        },
+        {
+            "name": "GitRef",
+            "type": "string",
+            "label": "Git Reference",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The Git reference to run the runbook for. Only applies when runbooks are stored in a Git repository for config-as-code enabled projects."
         }
     ],
     "OutputVariables": [
