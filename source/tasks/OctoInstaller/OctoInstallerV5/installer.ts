@@ -15,7 +15,7 @@ export class Installer {
     public async run(versionSpec: string) {
         await executeWithSetResult(
             async () => {
-                tasks.warning("Octopus CLI v5 is using a deprecated version of the Octopus CLI, we recommend using the latest version.");
+                tasks.warning("This task is using a deprecated version of the Octopus CLI, we recommend using the latest version.");
                 const endpoint = await new DownloadEndpointRetriever(this.octopurlsUrl).getEndpoint(versionSpec);
                 let toolPath = tools.findLocalTool(TOOL_NAME, endpoint.version);
 
