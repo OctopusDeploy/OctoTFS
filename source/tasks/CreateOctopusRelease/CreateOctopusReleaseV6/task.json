@@ -121,6 +121,15 @@
             "groupName": "versionControl"
         },
         {
+            "name": "IgnoreIfAlreadyExists",
+            "type": "boolean",
+            "label": "Ignore Existing Release",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "If enabled will not attempt to create a new release if there is already one with the same version number",
+            "groupName": "additional"
+        },
+        {
             "name": "AdditionalArguments",
             "type": "string",
             "label": "Additional Arguments",
