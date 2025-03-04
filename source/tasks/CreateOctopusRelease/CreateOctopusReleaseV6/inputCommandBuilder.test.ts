@@ -21,6 +21,7 @@ describe("getInputCommand", () => {
         task.addVariableString("DefaultPackageVersion", "1.0.1");
         task.addVariableString("Packages", "Step1:Foo:1.0.0\nBar:2.0.0");
         task.addVariableString("GitRef", "main");
+        task.addVariableBoolean("IgnoreIfAlreadyExists", true);
 
         const command = createCommandFromInputs(logger, task);
         expect(command.spaceName).toBe("Default");
@@ -30,6 +31,7 @@ describe("getInputCommand", () => {
         expect(command.PackageVersion).toBe("1.0.1");
         expect(command.Packages).toStrictEqual(["Step1:Foo:1.0.0", "Bar:2.0.0"]);
         expect(command.GitRef).toBe("main");
+        expect(command.IgnoreIfAlreadyExists).toBe(true);
 
         expect(task.lastResult).toBeUndefined();
         expect(task.lastResultMessage).toBeUndefined();

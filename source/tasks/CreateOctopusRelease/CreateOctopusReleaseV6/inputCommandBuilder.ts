@@ -64,6 +64,7 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
         ReleaseNotes: task.getInput("ReleaseNotes"),
         GitRef: task.getInput("GitRef"),
         GitCommit: task.getInput("GitCommit"),
+        IgnoreIfAlreadyExists: task.getBoolean("IgnoreIfAlreadyExists") || undefined,
     };
 
     const releaseNotesFilePath = task.getInput("ReleaseNotesFile");
