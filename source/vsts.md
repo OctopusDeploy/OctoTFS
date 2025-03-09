@@ -273,17 +273,18 @@ From version 6, the deploy release step is split into two seperate functions for
 
 #### 📥 Inputs
 
-| Name                       | Description                                                                                                                  |
-| :------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
-| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                                                                         |
-| `Space`                    | **Required.** The Octopus space name the release is in.                                                                      |
-| `Project`                  | **Required.** The Octopus project name to deploy.                                                                            |
-| `Runbook`                  | **Required.** Runbook name to run.                                                                                           |
-| `Environments`             | **Required.** The environment names to run the runbook for. One tenant name per line.                                        |
-| `Tenants`                  | The tenant names to run the runbook for. One tenant name per line.                                                           |
-| `TenantTags`               | Run for all tenants with the given tag(s). One tenant tag per line in the format `tag set name/tag name`.                    |
-| `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value` |
-| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the run.                                                           |
+| Name                       | Description                                                                                                                                          |
+| :------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                                                                                                 |
+| `Space`                    | **Required.** The Octopus space name the release is in.                                                                                              |
+| `Project`                  | **Required.** The Octopus project name to deploy.                                                                                                    |
+| `Runbook`                  | **Required.** Runbook name to run.                                                                                                                   |
+| `Environments`             | **Required.** The environment names to run the runbook for. One environment name per line.                                                           |
+| `GitRef`                   | The Git reference to run the runbook for e.g. `main`. Only applies when runbooks are stored in a Git repository for config-as-code enabled projects. |
+| `Tenants`                  | The tenant names to run the runbook for. One tenant name per line.                                                                                   |
+| `TenantTags`               | Run for all tenants with the given tag(s). One tenant tag per line in the format `tag set name/tag name`.                                            |
+| `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                         |
+| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the run.                                                                                   |
 
 #### 📤 Outputs
 
