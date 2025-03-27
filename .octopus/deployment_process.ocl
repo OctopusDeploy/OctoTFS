@@ -1,4 +1,5 @@
-step "Push to Azure Marketplace" {
+step "push-to-azure-marketplace" {
+    name = "Push to Azure Marketplace"
 
     action {
         action_type = "Octopus.Script"
@@ -19,14 +20,17 @@ step "Push to Azure Marketplace" {
                 # Install PowerShell
                 apt-get install -y powershell
                 
+                
                 environment=$(get_octopusvariable "Octopus.Environment.Name")
-                version=$(get_octopusvariable "Octopus.Release.Number")
+                version=$(get_octopusvariable "Octopus.Action.Package[OctoTFS.vsix].PackageVersion")
                 accessToken=$(get_octopusvariable "AccessToken")
                 shareWith=$(get_octopusvariable "ShareWith")
                 vsixPath=$(get_octopusvariable "Octopus.Action.Package[OctoTFS.vsix].ExtractedPath")
                 publishPath=$(get_octopusvariable "Octopus.Action.Package[OctoTFS.publish].ExtractedPath")
                 
                 npm install -g tfx-cli
+                
+                export TFX_TRACE=1
                 
                 pwsh $publishPath/publish.ps1 -environment $environment -version $version -accessToken $accessToken -packagePath $vsixPath -manifestsPath $publishPath  -shareWith "$shareWith" || exit 1
                 
@@ -45,20 +49,20 @@ step "Push to Azure Marketplace" {
                 
                 new_octopusartifact "/home/Octopus/$artifactFile" "$artifactFile"
                  
-            EOT
+                EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "Bash"
         }
-        worker_pool = "Hosted Ubuntu"
+        worker_pool = "hosted-ubuntu"
 
         container {
-            feed = "Docker Hub"
+            feed = "docker-hub"
             image = "node:buster"
         }
 
         packages "OctoTFS.vsix" {
             acquisition_location = "Server"
-            feed = "Octopus Server (built-in)"
+            feed = "octopus-server-built-in"
             package_id = "OctoTFS.vsix"
             properties = {
                 Extract = "True"
@@ -69,7 +73,7 @@ step "Push to Azure Marketplace" {
 
         packages "OctoTFS.publish" {
             acquisition_location = "Server"
-            feed = "Octopus Server (built-in)"
+            feed = "octopus-server-built-in"
             package_id = "OctoTFS.publish"
             properties = {
                 Extract = "True"
@@ -80,11 +84,12 @@ step "Push to Azure Marketplace" {
     }
 }
 
-step "Queue and verify a test build" {
+step "queue-and-verify-a-test-build" {
+    name = "Queue and verify a test build"
 
     action {
         action_type = "Octopus.Script"
-        environments = ["Test"]
+        environments = ["test"]
         properties = {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 $queueBuildUrl = "https://octopus-deploy-test.visualstudio.com/DefaultCollection/VSTS.Extensions.TestProject/_apis/build/builds?api-version=2.0"
@@ -147,10 +152,10 @@ step "Queue and verify a test build" {
                     Write-Error "Build failed or didn't finish within 5 minutes!"
                 }
                 
-            EOT
+                EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
         }
-        worker_pool = "Hosted Ubuntu"
+        worker_pool = "hosted-ubuntu"
     }
 }
