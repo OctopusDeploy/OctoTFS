@@ -8,6 +8,7 @@ export interface InputParameters {
     tasks: WaitExecutionResult[];
     pollingInterval: number;
     timeout: number;
+    showProgress: boolean;
 }
 
 export function getInputParameters(logger: Logger, task: TaskWrapper): InputParameters {
@@ -21,9 +22,13 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         throw new Error("Failed to successfully build parameters: step name is required.");
     }
 
-    const tasks = task.getOutputVariable(step, "server_tasks");
-    if (tasks === undefined) {
+    const taskJson = task.getOutputVariable(step, "server_tasks");
+    if (taskJson === undefined) {
         throw new Error(`Failed to successfully build parameters: cannot find '${step}.server_tasks' variable from execution step`);
+    }
+    const tasks = JSON.parse(taskJson);
+    if (!Array.isArray(tasks)) {
+        throw new Error(`Failed to successfully build parameters: '${step}.server_tasks' variable from execution step is not an array`);
     }
 
     let pollingInterval = 10;
@@ -38,10 +43,16 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         timeoutSeconds = +timeoutField;
     }
 
+    const showProgress = task.getBoolean("ShowProgress") ?? false;
+    if (showProgress && tasks.length > 1) {
+        throw new Error("Failed to successfully build parameters: ShowProgress can only be enabled when waiting for a single task");
+    }
+
     const parameters: InputParameters = {
         space: task.getInput("Space") || "",
         step: step,
-        tasks: JSON.parse(tasks),
+        tasks: tasks,
+        showProgress: showProgress,
         pollingInterval: pollingInterval,
         timeout: timeoutSeconds,
     };
