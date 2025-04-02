@@ -52,7 +52,15 @@ This will generate the full extension content required to create the extension V
 
 In order to package and test the extension on a local TFS instance, without publishing to the marketplace, you can run the following at a PowerShell command prompt.
 
-`./pack.ps1 -environment localtest -version "x.x.x"`
+`./pack.ps1 -environment localtest -version "x.x.x" -setupTaskDependencies`
+
+Alternatively you can run the build + packaging scripts:
+
+Windows:
+`./localBuild.cmd`
+
+MacOS:
+`source localbuild.sh`
 
 ### Releasing
 
@@ -71,6 +79,7 @@ If you're doing updates, enhancements, or bug fixes, the fastest development flo
 It's highly recommended to set up two Virtual Machines running Windows Server. This is generally done locally, and it's best to give your VM at least 8 gigs of memory and 4 CPU cores, otherwise the TFS/ADO installation can fail or take hours.
 
 1. Microsoft TFS Server 2017 Update 1 - This is the first version of TFS that supported extensions, so it's very good for regression testing.
+    - Note that the `.exe` installers of older versions may fail to install due to broken dependency downloads. It's recommended to use the `.iso` downloads
 2. Microsoft Azure DevOps Server vLatest - This is the on-prem version of Microsoft's hosted Azure DevOps services/tooling. It's generally faster/easier to test this locally than continually publishing to the Azure DevOps Marketplace.
 
 To install locally, build and package the application as per the instructions above. Then install the extension by uploading it. Instructions to do this are available in Microsoft's [TFS/ADO docs](https://docs.microsoft.com/en-us/vsts/marketplace/get-tfs-extensions?view=tfs-2018#install-extensions-for-disconnected-tfs).
@@ -86,6 +95,13 @@ To install locally, build and package the application as per the instructions ab
 * If you design a build pipeline with the current live extension, you can't upgrade it to a local version. You need to install the `localtest` extension first and use it in your builds. Then you can upgrade it and you will get your latest changes.
 * We need to maintain backwards compatibility, and we need to ensure any existing builds will not break after we publish an update. Therefore regression testing is critical. The recommended approach for regression testing is to build the current live extension for `localtest` and create build pipelines covering the areas you're changing. Then update the extension and re-run all your builds to ensure everything is still green/working.
 * Building on the previous point, there is no way to roll back an extension so testing is difficult as well. The recommended approach to this is to snapshot your local test VMs when you have a working build, so you can update the extension and revert back to the snapshot as needed.
+* Older versions of Azure DevOps/Team Foundation Server has limits on the size of extensions to upload which may prevent you from installing the extension.
+  - For Azure Devops 2019. You can increase the limit by running the following SQL script on the Azure Devops "Configuration" database. (``)
+    ```
+    DECLARE @keyvalues dbo.typ_keyvaluepairstringtablenullable;
+    INSERT @keyvalues VALUES ('#\Configuration\Service\Gallery\LargeExtensionUpload\MaxPackageSizeMB', '50')
+    exec prc_UpdateRegistry 1, @keyvalues;
+    ```
 * During manual testing against our test environment on Azure DevOps, the `devops@...` account has access for publishing to test and production environments (if you try to do this from your personal account, publishing will fail). When you create your security tokens, do this from the devops account and either setup an expiry and/or remove the token when you are finished with it.
 * At the time of writing, we have a [build pipeline on ADO](https://octopus-deploy.visualstudio.com/VstsExtension/_build?definitionId=5&_a=summary), which builds and pushes packages to our [deployhq](https://deploy.octopushq.com/app#/Spaces-1/projects/azure-devops-extension/deployments) project, where we can then release to Test and Production.
 * If the deployHQ task fails due to a timeout (which is common), trying again on the octopusHQ task *will not fix it*. You need to squirrel into the VSTS task (see the task log in octopusHQ, it will have a link to the VSTS task in the log, which will have a link to the `Web`, click that and it'll take you to the problem), see that it's failing on all the steps related to v4 of our octo tool, *run the same task again (as new)* (don't re-run the existing task that's failed), wait for that to succeed, then re-run our task in deployHQ and it will then succeed. We want to allocate time to investigate why this is so awkward, but for now, we're documenting here for discoverability.
