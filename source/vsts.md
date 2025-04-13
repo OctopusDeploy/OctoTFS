@@ -296,13 +296,14 @@ From version 6, the deploy release step is split into two seperate functions for
 
 #### 📥 Inputs
 
-| Name                       | Description                                                                      |
-| :------------------------- | :------------------------------------------------------------------------------- |
-| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                             |
-| `Space`                    | **Required.** The Octopus space the release is in.                               |
-| `Step`                     | **Required** The name of the step that queued the deployment/runbook run.        |
-| `PollingInterval`          | How frequently, in seconds, to check the status. (Default: 10s)                  |
-| `TimeoutAfter`             | Duration, in seconds, to allow for completion before timing out. (Default: 600s) |
+| Name                          | Description                                                                       |
+| :---------------------------- | :-------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName`    | **Required.** Name of the Octopus Server connection.                              |
+| `Space`                       | **Required.** The Octopus space the release is in.                                |
+| `Step`                        | **Required** The name of the step that queued the deployment/runbook run.         |
+| `PollingInterval`             | How frequently, in seconds, to check the status. (Default: 10s)                   |
+| `TimeoutAfter`                | Duration, in seconds, to allow for completion before timing out. (Default: 600s)  |
+| `ShowProgress`                | Log Octopus task outputs to Azure DevOps output. (Default: false)                 |
 
 The `Step` input parameter needs to be set to the `name` of the deployment step that generated the server tasks to be waited. In the classic-pipeline mode, you need to set the reference name on the `server_tasks` output variable and use that value for `Step`.
 

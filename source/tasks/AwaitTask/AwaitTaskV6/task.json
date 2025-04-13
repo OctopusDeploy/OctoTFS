@@ -57,6 +57,14 @@
             "defaultValue": "600",
             "required": false,
             "helpMarkDown": "Duration, in seconds, to allow for completion before timing out. (Default: 600s)"
+        },
+        {
+            "name": "ShowProgress",
+            "type": "boolean",
+            "label": "Show Progress",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Log Octopus task outputs to Azure DevOps output. (Default: false)"
         }
     ],
     "outputVariables": [
