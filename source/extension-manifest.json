@@ -3,7 +3,7 @@
     "id": "set-by-extension-manifest.environment.json",
     "name": "set-by-extension-manifest.environment.json",
     "version": "set-by-extension-manifest.environment.json",
-    "publisher": "octopusdeploy",
+    "publisher": "octo-shane",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services.Cloud"
@@ -166,16 +166,6 @@
             "targets": ["ms.vss-distributed-task.tasks"],
             "properties": {
                 "name": "tasks/RunRunbook"
-            }
-        },
-        {
-            "id": "octopus-pack",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "tasks/Pack"
             }
         },
         {
