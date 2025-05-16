@@ -30,3 +30,10 @@ function getOctopusConnectionDetails(name: string): OctoServerConnectionDetails 
         ignoreSslErrors: !!ignoreSSL && ignoreSSL.toLowerCase() === "true",
     };
 }
+
+export function getDeepLink(baseUrl: string, path: string): string {
+    if (baseUrl.endsWith("/")) {
+        baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+    }
+    return `${baseUrl}/app#/${path}`;
+}

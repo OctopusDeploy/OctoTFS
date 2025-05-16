@@ -1,5 +1,5 @@
 import { CreateDeploymentTenantedCommandV1, Logger, Client, resolveSpaceId, SpaceServerTaskRepository, ServerTask } from "@octopusdeploy/api-client";
-import { OctoServerConnectionDetails } from "../../Utils/connection";
+import { getDeepLink, OctoServerConnectionDetails } from "../../Utils/connection";
 import { createDeploymentFromInputs } from "./createDeployment";
 import { createCommandFromInputs } from "./inputCommandBuilder";
 import os from "os";
@@ -52,7 +52,7 @@ export class Deploy {
         results.forEach(function (result) {
             const task = taskLookup.get(result.serverTaskId);
             if (task != null) {
-                const link = `${url}app#/${spaceId}/deployments/${task.Arguments.DeploymentId}`;
+                const link = getDeepLink(url, `${spaceId}/deployments/${task.Arguments.DeploymentId}`);
                 markdown += `[${result.tenantName}](${link})\n`;
             }
         });

@@ -1,12 +1,5 @@
-import {
-    Client,
-    CreateReleaseCommandV1,
-    Logger,
-    Project,
-    ProjectRepository,
-    resolveSpaceId,
-} from "@octopusdeploy/api-client";
-import { OctoServerConnectionDetails } from "../../Utils/connection";
+import { Client, CreateReleaseCommandV1, Logger, Project, ProjectRepository, resolveSpaceId } from "@octopusdeploy/api-client";
+import { getDeepLink, OctoServerConnectionDetails } from "../../Utils/connection";
 import { createReleaseFromInputs } from "./createRelease";
 import { createCommandFromInputs } from "./inputCommandBuilder";
 import os from "os";
@@ -45,7 +38,7 @@ export class Release {
         const projects = await projectRepo.list({ partialName: command.ProjectName });
         const matchedProjects = projects.Items.filter((p: Project) => p.Name.localeCompare(command.ProjectName) === 0);
         if (matchedProjects.length === 1) {
-            const link = `${this.connection.url}app#/${spaceId}/projects/${matchedProjects[0].Id}/deployments/releases/${version}`;
+            const link = getDeepLink(this.connection.url, `${spaceId}/projects/${matchedProjects[0].Id}/deployments/releases/${version}`);
             const markdown = `[Release ${version} created for '${matchedProjects[0].Name}'](${link})`;
             const markdownFile = path.join(getVstsEnvironmentVariables().defaultWorkingDirectory, `${uuidv4()}.md`);
             tasks.writeFile(markdownFile, markdown);
