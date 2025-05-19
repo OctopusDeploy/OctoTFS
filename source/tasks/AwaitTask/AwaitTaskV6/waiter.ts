@@ -1,5 +1,5 @@
 import { ActivityElement, ActivityLogEntryCategory, ActivityStatus, Client, Logger, ServerTaskWaiter, SpaceRepository, SpaceServerTaskRepository, TaskState } from "@octopusdeploy/api-client";
-import { OctoServerConnectionDetails } from "tasks/Utils/connection";
+import { getDeepLink, OctoServerConnectionDetails } from "tasks/Utils/connection";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { getInputParameters, InputParameters } from "./input-parameters";
 import { ExecutionResult } from "../../Utils/executionResult";
@@ -10,7 +10,7 @@ export interface WaitExecutionResult extends ExecutionResult {
 }
 
 export class Waiter {
-    constructor(readonly connection: OctoServerConnectionDetails, readonly task: TaskWrapper, readonly logger: Logger) { }
+    constructor(readonly connection: OctoServerConnectionDetails, readonly task: TaskWrapper, readonly logger: Logger) {}
 
     public async run() {
         const inputParameters = getInputParameters(this.logger, this.task);
@@ -19,15 +19,16 @@ export class Waiter {
 
         const waitExecutionResults = inputParameters.showProgress ? await this.waitWithProgress(client, inputParameters) : await this.waitWithoutProgress(client, inputParameters);
 
+        const url = this.connection.url;
         const spaceId = await this.getSpaceId(client, inputParameters.space);
         let failedDeploymentsCount = 0;
         waitExecutionResults.map((r) => {
-            const url = `${this.connection.url}app#/${spaceId}/tasks/${r.serverTaskId}`;
+            const link = getDeepLink(url, `${spaceId}/tasks/${r.serverTaskId}`);
             const context = this.getContext(r);
             if (r.successful) {
-                this.logger.info?.(`Succeeded: ${url}`);
+                this.logger.info?.(`Succeeded: ${link}`);
             } else {
-                this.logger.warn?.(`Failed: ${url}`);
+                this.logger.warn?.(`Failed: ${link}`);
                 failedDeploymentsCount++;
             }
             this.task.setOutputVariable(`${context}.completed_successfully`, r.successful.toString());
