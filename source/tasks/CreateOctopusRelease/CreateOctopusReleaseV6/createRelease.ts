@@ -10,7 +10,11 @@ export async function createReleaseFromInputs(client: Client, command: CreateRel
         const repository = new ReleaseRepository(client, command.spaceName);
         const response = await repository.create(command);
 
-        client.info(`🎉 Release ${response.ReleaseVersion} created successfully!`);
+        if (command.IgnoreIfAlreadyExists) {
+            client.info(`🎉 Release ${response.ReleaseVersion} is ready for deployment!`);
+        } else {
+            client.info(`🎉 Release ${response.ReleaseVersion} created successfully!`);
+        }
 
         task.setOutputVariable("release_number", response.ReleaseVersion);
 

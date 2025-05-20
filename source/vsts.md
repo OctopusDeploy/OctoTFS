@@ -138,7 +138,7 @@ Use this task to push your NuGet or Zip package to your Octopus Deploy Server. *
 | :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `OctoConnectedServiceName` | **Required.** The name of the Octopus Deploy [service connection](#Add-a-service-connection-to-Octopus-Deploy)                                                           |
 | `Space`                    | **Required.** The space name within Octopus.                                                                                                                             |
-| `Package`                  | **Required.** Multi-line list of packages to push to Octopus                                                                                                             |
+| `Packages`                  | **Required.** Multi-line list of packages to push to Octopus                                                                                                             |
 | `Replace`                  | Whether to replace the existing package(s). Valid options are true, false (default), IgnoreIfExists. If false is set the upload will fail if the package already exists. |
 
 ### 📤 Outputs
@@ -169,8 +169,8 @@ Options include:
 | :------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `OctoConnectedServiceName` | **Required.** The name of the Octopus Deploy [service connection](#Add-a-service-connection-to-Octopus-Deploy)                                                                              |
 | `Space`                    | **Required.** The space name within Octopus.                                                                                                                                                |
-| `PackageId`                | **Required.** Multi-line list of package Ids to push to Octopus.                                                                                                                            |
-| `Version`                  | **Required.** The version of the package; must be a valid [SemVer](http://semver.org/) version.                                                                                             |
+| `PackageIds`               | **Required.** Multi-line list of package Ids to push to Octopus.                                                                                                                            |
+| `PackageVersion`           | **Required.** The version of the package; must be a valid [SemVer](http://semver.org/) version.                                                                                             |
 | `Replace`                  | Determines the action to perform with build information if it already exists in the repository. Valid input values are `FailIfExists` (default), `OverwriteExisting`, and `IgnoreIfExists`. |
 
 ### 📤 Outputs
@@ -193,7 +193,8 @@ None.
 | `Channel`                  | The [channel](https://g.octopushq.com/Channels) to use for the release. This must be the name of the channel, not the id.                                                                                                                                                                                                             |
 | `DefaultPackageVersion`    | Set this to provide a default package version to use for all packages on all steps. Can be used in conjunction with the Packages field, which can be used to override versions for specific packages.                                                                                                                                 |
 | `Packages`                 | A multi-line list of version numbers to use for a package in the release. Format: `StepName:Version` or `PackageID:Version` or `StepName:PackageName:Version`. StepName, PackageID, and PackageName can be replaced with an asterisk ('\*'). An asterisk will be assumed for StepName, PackageID, or PackageName if they are omitted. |
-| `CustomReleaseNotes`       | Octopus Release notes. This field supports markdown. To include newlines, you can use HTML linebreaks.                                                                                                                                                                                                                                |
+| `ReleaseNotes`             | Octopus Release notes. This field supports markdown. To include newlines, you can use HTML linebreaks. Can only specify this if 'ReleaseNotesFile' is not supplied.                                                                                                                                                                   |
+| `ReleaseNotesFile`         | Octopus Release notes file. Path to a file that contains the release notes. Supports markdown. Can only specify this if 'ReleaseNotes' is not supplied.                                                                                                                                                                               |
 | `GitRef`                   | Git branch reference to use when creating the release for version controlled Projects.                                                                                                                                                                                                                                                |
 | `GitCommit`                | Git commit to use when creating the release for version controlled Projects. Use in conjunction with the gitRef parameter to select any previous commit.                                                                                                                                                                              |
 
@@ -236,6 +237,7 @@ From version 6, the deploy release step is split into two seperate functions for
 | `ReleaseNumber`            | **Required.** Release number for the new release.                                                                                                                                         |
 | `Environments`             | **Required.** List of environments to deploy to, one environment per line. A comma-separated list of environments is also supported to ease migration from earlier versions for the step. |
 | `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                                                              |
+| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the deployment.                                                                                                                 |
 | `AdditionalArguments`      | Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields.      |
 
 #### 📤 Outputs
@@ -258,6 +260,7 @@ From version 6, the deploy release step is split into two seperate functions for
 | `DeployForTenants`         | List of tenant names to deploy for. One tenant name per line.                                                                                                                        |
 | `DeployForTenantTags`      | List of tenant tag names to deploy for. One tenant tag per line in the format `tag set name/tag name`.                                                                               |
 | `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                                                         |
+| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the deployment.                                                                                                            |
 | `AdditionalArguments`      | Additional arguments are no longer supported. This field has been retained to ease migration from earlier versions of the step but values should be moved to the appropriate fields. |
 
 #### 📤 Outputs
@@ -270,17 +273,18 @@ From version 6, the deploy release step is split into two seperate functions for
 
 #### 📥 Inputs
 
-| Name                       | Description                                                                                                                  |
-| :------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
-| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                                                                         |
-| `Space`                    | **Required.** The Octopus space name the release is in.                                                                      |
-| `Project`                  | **Required.** The Octopus project name to deploy.                                                                            |
-| `Runbook`                  | **Required.** Runbook name to run.                                                                                           |
-| `Environments`             | **Required.** The environment names to run the runbook for. One tenant name per line.                                        |
-| `Tenants`                  | The tenant names to run the runbook for. One tenant name per line.                                                           |
-| `TenantTags`               | Run for all tenants with the given tag(s). One tenant tag per line in the format `tag set name/tag name`.                    |
-| `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value` |
-| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the run.                                                           |
+| Name                       | Description                                                                                                                                          |
+| :------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                                                                                                 |
+| `Space`                    | **Required.** The Octopus space name the release is in.                                                                                              |
+| `Project`                  | **Required.** The Octopus project name to deploy.                                                                                                    |
+| `Runbook`                  | **Required.** Runbook name to run.                                                                                                                   |
+| `Environments`             | **Required.** The environment names to run the runbook for. One environment name per line.                                                           |
+| `GitRef`                   | The Git reference to run the runbook for e.g. `main`. Only applies when runbooks are stored in a Git repository for config-as-code enabled projects. |
+| `Tenants`                  | The tenant names to run the runbook for. One tenant name per line.                                                                                   |
+| `TenantTags`               | Run for all tenants with the given tag(s). One tenant tag per line in the format `tag set name/tag name`.                                            |
+| `Variables`                | List of prompted variable values, one variable-value pair per line. Each variable should be in format `variable name: value`                         |
+| `UseGuidedFailure`         | Whether to use guided failure mode if errors occur during the run.                                                                                   |
 
 #### 📤 Outputs
 
@@ -292,13 +296,14 @@ From version 6, the deploy release step is split into two seperate functions for
 
 #### 📥 Inputs
 
-| Name                       | Description                                                                      |
-| :------------------------- | :------------------------------------------------------------------------------- |
-| `OctoConnectedServiceName` | **Required.** Name of the Octopus Server connection.                             |
-| `Space`                    | **Required.** The Octopus space the release is in.                               |
-| `Step`                     | **Required** The name of the step that queued the deployment/runbook run.        |
-| `PollingInterval`          | How frequently, in seconds, to check the status. (Default: 10s)                  |
-| `TimeoutAfter`             | Duration, in seconds, to allow for completion before timing out. (Default: 600s) |
+| Name                          | Description                                                                       |
+| :---------------------------- | :-------------------------------------------------------------------------------- |
+| `OctoConnectedServiceName`    | **Required.** Name of the Octopus Server connection.                              |
+| `Space`                       | **Required.** The Octopus space the release is in.                                |
+| `Step`                        | **Required** The name of the step that queued the deployment/runbook run.         |
+| `PollingInterval`             | How frequently, in seconds, to check the status. (Default: 10s)                   |
+| `TimeoutAfter`                | Duration, in seconds, to allow for completion before timing out. (Default: 600s)  |
+| `ShowProgress`                | Log Octopus task outputs to Azure DevOps output. (Default: false)                 |
 
 The `Step` input parameter needs to be set to the `name` of the deployment step that generated the server tasks to be waited. In the classic-pipeline mode, you need to set the reference name on the `server_tasks` output variable and use that value for `Step`.
 

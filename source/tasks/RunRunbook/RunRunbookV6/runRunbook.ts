@@ -1,14 +1,17 @@
-import { Client, CreateRunbookRunCommandV1, RunbookRunRepository, Logger, TenantRepository, EnvironmentRepository } from "@octopusdeploy/api-client";
+import { Client, CreateRunbookRunCommandV1, RunbookRunRepository, Logger, TenantRepository, EnvironmentRepository, CreateRunbookRunResponseV1 } from "@octopusdeploy/api-client";
 import os from "os";
 import { TaskWrapper } from "tasks/Utils/taskInput";
 import { ExecutionResult } from "../../Utils/executionResult";
+import { CreateGitRunbookRunCommandV1, isCreateGitRunbookRunCommand } from "./inputCommandBuilder";
+import { RunGitRunbookResponse } from "@octopusdeploy/api-client/dist/features/projects/runbooks/runs/RunGitRunbookResponse";
 
-export async function createRunbookRunFromInputs(client: Client, command: CreateRunbookRunCommandV1, task: TaskWrapper, logger: Logger): Promise<ExecutionResult[]> {
+export async function createRunbookRunFromInputs(client: Client, command: CreateRunbookRunCommandV1 | CreateGitRunbookRunCommandV1, task: TaskWrapper, logger: Logger): Promise<ExecutionResult[]> {
     logger.info?.("🐙 Running a Runbook in Octopus Deploy...");
 
     try {
         const repository = new RunbookRunRepository(client, command.spaceName);
-        const response = await repository.create(command);
+
+        const response = await createRunbookRun(repository, command);
 
         logger.info?.(`🎉 ${response.RunbookRunServerTasks.length} Run${response.RunbookRunServerTasks.length > 1 ? "s" : ""} queued successfully!`);
 
@@ -57,4 +60,11 @@ export async function createRunbookRunFromInputs(client: Client, command: Create
         }
         throw error;
     }
+}
+
+async function createRunbookRun(repository: RunbookRunRepository, command: CreateRunbookRunCommandV1 | CreateGitRunbookRunCommandV1): Promise<CreateRunbookRunResponseV1 | RunGitRunbookResponse> {
+    if (isCreateGitRunbookRunCommand(command)) {
+        return await repository.createGit(command, command.GitRef);
+    }
+    return await repository.create(command);
 }
