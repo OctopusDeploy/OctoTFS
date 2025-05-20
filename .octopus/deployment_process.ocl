@@ -5,6 +5,8 @@ step "push-to-azure-marketplace" {
         action_type = "Octopus.Script"
         notes = "For Test environment this only pushes to the test project"
         properties = {
+            Octopus.Action.AutoRetry.MaximumCount = "3"
+            Octopus.Action.AutoRetry.MinimumBackoff = "15"
             Octopus.Action.Script.ScriptBody = <<-EOT
                 set -euo pipefail
                 
