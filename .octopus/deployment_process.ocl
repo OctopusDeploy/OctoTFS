@@ -97,7 +97,7 @@ step "queue-and-verify-a-test-build" {
                 $tokenBytes = [System.Text.Encoding]::UTF8.GetBytes(":$AccessToken");
                 $base64Pat = [System.Convert]::ToBase64String($tokenBytes);
                 
-                $builParameters =  ConvertTo-Json @{
+                $buildParameters =  ConvertTo-Json @{
                   "system.debug" = "true"
                   "BuildConfiguration" = "debug"
                   "BuildPlatform" = "x64"
@@ -108,7 +108,7 @@ step "queue-and-verify-a-test-build" {
                         "id" = $TestProjectDefinitionId
                     }
                     "sourceBranch" = "refs/heads/master"
-                    "parameters" = $builParameters
+                    "parameters" = $buildParameters
                 } -Depth 100
                 
                 #$postData = '{"definition": {"id": ' + $TestProjectDefinitionId + ',"sourceBranch": "refs/heads/master", "parameters": "{\"system.debug\":\"true\",\"BuildConfiguration\":\"debug\",\"BuildPlatform\":\"x64\"}"}"}'
