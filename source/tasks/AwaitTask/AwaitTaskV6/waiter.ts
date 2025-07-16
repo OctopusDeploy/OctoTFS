@@ -13,36 +13,50 @@ export class Waiter {
     constructor(readonly connection: OctoServerConnectionDetails, readonly task: TaskWrapper, readonly logger: Logger) {}
 
     public async run() {
-        const inputParameters = getInputParameters(this.logger, this.task);
+        try {
+            const inputParameters = getInputParameters(this.logger, this.task);
 
-        const client = await getClient(this.connection, this.logger, "task", "wait", 6);
-
-        const waitExecutionResults = inputParameters.showProgress ? await this.waitWithProgress(client, inputParameters) : await this.waitWithoutProgress(client, inputParameters);
-
-        const url = this.connection.url;
-        const spaceId = await this.getSpaceId(client, inputParameters.space);
-        let failedDeploymentsCount = 0;
-        waitExecutionResults.map((r) => {
-            const link = getDeepLink(url, `${spaceId}/tasks/${r.serverTaskId}`);
-            const context = this.getContext(r);
-            if (r.successful) {
-                this.logger.info?.(`Succeeded: ${link}`);
+            const client = await getClient(this.connection, this.logger, "task", "wait", 6);
+    
+            const waitExecutionResults = inputParameters.showProgress 
+                ? await this.waitWithProgress(client, inputParameters) 
+                : await this.waitWithoutProgress(client, inputParameters);
+    
+            const url = this.connection.url;
+            const spaceId = await this.getSpaceId(client, inputParameters.space);
+            let failedDeploymentsCount = 0;
+            waitExecutionResults.map((r) => {
+                const link = getDeepLink(url, `${spaceId}/tasks/${r.serverTaskId}`);
+                const context = this.getContext(r);
+                if (r.successful) {
+                    this.logger.info?.(`Succeeded: ${link}`);
+                } else {
+                    this.logger.warn?.(`Failed: ${link}`);
+                    failedDeploymentsCount++;
+                }
+                this.task.setOutputVariable(`${context}.completed_successfully`, r.successful.toString());
+            });
+    
+            if (failedDeploymentsCount > 0) {
+                this.task.setFailure(`${failedDeploymentsCount} ${failedDeploymentsCount == 1 ? "task" : "tasks"} failed.`);
+                this.task.setOutputVariable("completed_successfully", "false");
             } else {
-                this.logger.warn?.(`Failed: ${link}`);
-                failedDeploymentsCount++;
+                this.task.setSuccess("All tasks completed successfully");
+                this.task.setOutputVariable("completed_successfully", "true");
             }
-            this.task.setOutputVariable(`${context}.completed_successfully`, r.successful.toString());
-        });
-
-        if (failedDeploymentsCount > 0) {
-            this.task.setFailure(`${failedDeploymentsCount} ${failedDeploymentsCount == 1 ? "task" : "tasks"} failed.`);
+    
+            this.task.setOutputVariable("server_task_results", JSON.stringify(waitExecutionResults));
+    
+        } catch (error) {
+            if (error instanceof Error && error.message.includes("Timeout reached") && error.message.includes("cancelled")) {
+                this.task.setFailure(error.message);
+                this.task.setOutputVariable("completed_successfully", "false");
+                return;
+            }
+            
+            this.task.setFailure(`Failed to wait for tasks: ${error}`);
             this.task.setOutputVariable("completed_successfully", "false");
-        } else {
-            this.task.setSuccess("All tasks completed successfully");
-            this.task.setOutputVariable("completed_successfully", "true");
         }
-
-        this.task.setOutputVariable("server_task_results", JSON.stringify(waitExecutionResults));
     }
 
     async getSpaceId(client: Client, spaceName: string): Promise<string | undefined> {
@@ -76,7 +90,9 @@ export class Waiter {
             this.logger.info?.(`${taskResult.type}${context} ${t.State === TaskState.Success ? "completed successfully" : "did not complete successfully"}`);
             taskResult.successful = t.State == TaskState.Success;
             results.push(taskResult);
-        });
+        },
+        inputParameters.cancelOnTimeout);
+      
         return results;
     }
 
@@ -106,7 +122,8 @@ export class Waiter {
             // Log details of the task
             const promise = this.printTaskDetails(taskRepository, taskResult, loggedChildTaskIds, results);
             promises.push(promise);
-        });
+        },
+        inputParameters.cancelOnTimeout);
 
         await Promise.all(promises);
         return results;

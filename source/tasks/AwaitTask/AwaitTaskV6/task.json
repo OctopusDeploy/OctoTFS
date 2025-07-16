@@ -65,6 +65,14 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Log Octopus task outputs to Azure DevOps output. (Default: false)"
+        },
+        {
+            "name": "CancelOnTimeout",
+            "type": "boolean",
+            "label": "Cancel Task on Timeout",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Cancel the Octopus task and mark this task as failed if the timeout is reached. (Default: false)"
         }
     ],
     "outputVariables": [
