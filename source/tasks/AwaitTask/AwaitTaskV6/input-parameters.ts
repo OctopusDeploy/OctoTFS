@@ -9,6 +9,7 @@ export interface InputParameters {
     pollingInterval: number;
     timeout: number;
     showProgress: boolean;
+    cancelOnTimeout: boolean;
 }
 
 export function getInputParameters(logger: Logger, task: TaskWrapper): InputParameters {
@@ -48,6 +49,8 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         throw new Error("Failed to successfully build parameters: ShowProgress can only be enabled when waiting for a single task");
     }
 
+    const cancelOnTimeout = task.getBoolean("CancelOnTimeout") ?? false;
+
     const parameters: InputParameters = {
         space: task.getInput("Space") || "",
         step: step,
@@ -55,6 +58,7 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         showProgress: showProgress,
         pollingInterval: pollingInterval,
         timeout: timeoutSeconds,
+        cancelOnTimeout: cancelOnTimeout
     };
 
     const errors: string[] = [];
