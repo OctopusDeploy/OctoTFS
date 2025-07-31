@@ -32,20 +32,14 @@ async function run() {
         const octo = await getOrInstallOctoCommandRunner("create-release");
 
         const configure = [
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "space", space),
-            // @ts-expect-error
             argumentEnquote("project", project),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "releaseNumber", releaseNumber),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "channel", channel),
             connectionArguments(connection),
             flag("enableServiceMessages", true),
             multiArgument(argumentEnquote, "deployTo", deployToEnvironments),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "gitRef", gitRef),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "gitCommit", gitCommit),
             flag("progress", deployToEnvironments.length > 0 && deploymentProgress),
             multiArgument(argumentEnquote, "tenant", deployForTenants),
@@ -63,7 +57,6 @@ async function run() {
             configure.push(argumentEnquote("releaseNotesFile", releaseNotesFile));
         }
 
-        // @ts-expect-error
         configure.push(includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments));
 
         const code: number = await octo

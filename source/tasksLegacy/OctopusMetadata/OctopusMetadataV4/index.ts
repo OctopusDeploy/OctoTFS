@@ -69,14 +69,11 @@ async function run() {
         const connection = getDefaultOctopusConnectionDetailsOrThrow();
         const configure: Array<(tool: ToolRunner) => ToolRunner> = [
             connectionArguments(connection),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "space", space),
             multiArgument(argumentEnquote, "package-id", packageIds),
-            // @ts-expect-error
             argument("version", packageVersion),
             argumentEnquote("file", buildInformationFile),
             argument("overwrite-mode", overwriteMode),
-            // @ts-expect-error
             includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments),
         ];
 

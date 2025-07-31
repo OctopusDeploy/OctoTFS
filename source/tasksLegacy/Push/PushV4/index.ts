@@ -24,11 +24,9 @@ async function run() {
 
         const configure = [
             connectionArguments(connection),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "space", space),
             multiArgument(argumentEnquote, "package", matchedPackages),
             argument("overwrite-mode", overwriteMode),
-            // @ts-expect-error
             includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments),
         ];
 
