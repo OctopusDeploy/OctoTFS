@@ -21,7 +21,7 @@ on:
         required: true
 
 env:
-  PACKAGE_VERSION: 6.0.${{ github.run_number }}
+  PACKAGE_VERSION: 7.0.${{ github.run_number }}
   OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
   OCTOPUS_API_KEY: ${{ secrets.INTEGRATIONS_API_KEY }}
 
@@ -36,7 +36,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "20"
           cache: "npm"
 
       - name: Build
@@ -44,7 +44,7 @@ jobs:
         run: |
           npm ci
           npm run build -- --extensionVersion $PACKAGE_VERSION
-          echo "::set-output name=package_version::$PACKAGE_VERSION"
+          echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
       - uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -66,7 +66,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "20"
           cache: "npm"
 
       - name: Test
@@ -96,7 +96,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "20"
           cache: "npm"
 
       - name: Install Go
@@ -135,7 +135,7 @@ jobs:
           echo "::debug::${{github.event_name}}"
           OUTPUT_FILE="release_notes.txt"
           jq --raw-output '.release.body' ${{ github.event_path }} | sed 's#\r#  #g' > $OUTPUT_FILE
-          echo "::set-output name=release-note-file::$OUTPUT_FILE"
+          echo "release-note-file=$OUTPUT_FILE" >> $GITHUB_OUTPUT
 
       - name: Create a release in Octopus Deploy 🐙
         uses: OctopusDeploy/create-release-action@v3

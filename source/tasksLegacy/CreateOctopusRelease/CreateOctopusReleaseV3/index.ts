@@ -40,12 +40,9 @@ async function run() {
         }, environmentVariables.defaultWorkingDirectory);
 
         const configure = [
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "space", space),
             argumentEnquote("project", project),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "releaseNumber", releaseNumber),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "channel", channel),
             connectionArguments(octoConnection),
             flag("enableServiceMessages", true),
@@ -54,7 +51,6 @@ async function run() {
             multiArgument(argumentEnquote, "tenant", deployForTenants),
             multiArgument(argumentEnquote, "tenanttag", deployForTenantTags),
             argumentEnquote("releaseNotesFile", releaseNotesFile),
-            // @ts-expect-error
             includeAdditionalArgumentsAndProxyConfig(octoConnection.url, additionalArguments),
         ];
 

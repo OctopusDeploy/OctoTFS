@@ -24,17 +24,14 @@ async function run() {
         const octo = await getOrInstallOctoCommandRunner("promote-release");
 
         const configure = [
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "space", space),
             argumentEnquote("project", project),
             connectionArguments(connection),
-            // @ts-expect-error
             argumentEnquote("from", from),
             multiArgument(argumentEnquote, "to", to),
             multiArgument(argumentEnquote, "tenant", deploymentForTenants),
             multiArgument(argumentEnquote, "tenanttag", deployForTenantTags),
             flag("progress", showProgress),
-            // @ts-expect-error
             includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments),
         ];
 

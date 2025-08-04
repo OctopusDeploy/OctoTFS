@@ -99,9 +99,9 @@ export const assertOctoVersionAcceptsIds = async function (): Promise<void> {
     const [, major, minor, patch] = outputLastLine.trim().match(/^(\d+)\.(\d+)\.(\d+)\b/) || [0, 0, 0, 0];
     const compatible =
         `${major}.${minor}.${patch}` == "1.0.0" || // allow dev versions
-        major > 6 ||
-        (major == 6 && minor > 10) ||
-        (major == 6 && minor == 10 && patch >= 0);
+        Number(major) > 6 ||
+        (major === 6 && Number(minor) > 10) ||
+        (major === 6 && minor === 10 && Number(patch) >= 0);
     if (!compatible) {
         throw new Error("The Octopus CLI tool is too old to run this task. Please use version 6.10.0 or newer, or downgrade the task to version 3.*.");
     }

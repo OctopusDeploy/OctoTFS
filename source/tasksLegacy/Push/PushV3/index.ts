@@ -22,11 +22,9 @@ async function run() {
 
         const configure = [
             connectionArguments(connection),
-            // @ts-expect-error
             argumentIfSet(argumentEnquote, "space", space),
             multiArgument(argumentEnquote, "package", matchedPackages),
             flag("replace-existing", replace),
-            // @ts-expect-error
             includeAdditionalArgumentsAndProxyConfig(connection.url, additionalArguments),
         ];
 
