@@ -223,7 +223,7 @@ Options include:
 
 ## Version 6 of Deploy Release step
 
-From version 6, the deploy release step is split into two seperate functions for normal deployments and tenanted deployments
+From version 6, the deploy release step is split into two separate functions for normal deployments and tenanted deployments
 
 ### <a name="deploy-octopus-release"></a>![Deploy Release Image](img/octopus_deploy-02.png) Deploy Octopus Release (v6 or later)
 
@@ -312,7 +312,7 @@ The `Step` input parameter needs to be set to the `name` of the deployment step 
 
 | Name                               | Description                                                                                                                                                                                                      |
 | :--------------------------------- |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `completed_successfully`           | True if all execution tasks completed succcessfully, false if any execution tasks failed.                                                                                                                        |
+| `completed_successfully`           | True if all execution tasks completed successfully, false if any execution tasks failed.                                                                                                                        |
 | `server_task_results`              | JSON representation of the tasks and their success. Schema: { "serverTaskId": <task id>, "tenantName": <tenant name>, "environmentName": <environment name>, "successful": <true/false> }                        |
 | `<context>.completed_successfully` | Contextual success flag for each task using the name of the environment or tenant, e.g `production.completed_successfully` or `uat_tenant.completed_successfully`. Spaces in names are replaced with underscores |
 
