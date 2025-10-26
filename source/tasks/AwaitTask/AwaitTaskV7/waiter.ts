@@ -48,12 +48,31 @@ export class Waiter {
             this.task.setOutputVariable("server_task_results", JSON.stringify(waitExecutionResults));
     
         } catch (error) {
-            if (error instanceof Error && error.message.includes("Timeout reached") && error.message.includes("cancelled")) {
-                this.task.setFailure(error.message);
+            if (error instanceof Error) {
+                if (error.message.includes("Timeout reached") && error.message.includes("cancelled")) {
+                    this.task.setFailure(error.message);
+                    this.task.setOutputVariable("completed_successfully", "false");
+                    return;
+                }
+
+                if (error.message.includes("Failed to connect to Octopus server after")) {
+                    this.task.setFailure(
+                        `${error.message}\n\n` +
+                        `This indicates repeated network failures. You can:\n` +
+                        `- Check network connectivity between ADO agent and Octopus server\n` +
+                        `- Increase MaxRetries or RetryBackoffSeconds parameters\n` +
+                        `- Check Octopus server health and logs`
+                    );
+                } else if (error.message.includes("Unknown task Id")) {
+                    this.task.setFailure(error.message);
+                } else {
+                    this.task.setFailure(`Failed to wait for tasks: ${error.message}`);
+                }
+
                 this.task.setOutputVariable("completed_successfully", "false");
                 return;
             }
-            
+
             this.task.setFailure(`Failed to wait for tasks: ${error}`);
             this.task.setOutputVariable("completed_successfully", "false");
         }
@@ -71,7 +90,10 @@ export class Waiter {
     }
 
     async waitWithoutProgress(client: Client, inputParameters: InputParameters): Promise<WaitExecutionResult[]> {
-        const waiter = new ServerTaskWaiter(client, inputParameters.space);
+        const waiter = new ServerTaskWaiter(client, inputParameters.space, {
+            maxRetries: inputParameters.maxRetries,
+            retryBackoffMs: inputParameters.retryBackoffSeconds * 1000,
+        });
         const taskIds = inputParameters.tasks.map((t) => t.serverTaskId);
         const lookup = new Map(inputParameters.tasks.map((t) => [t.serverTaskId, t]));
 
@@ -97,7 +119,10 @@ export class Waiter {
     }
 
     async waitWithProgress(client: Client, inputParameters: InputParameters): Promise<WaitExecutionResult[]> {
-        const waiter = new ServerTaskWaiter(client, inputParameters.space);
+        const waiter = new ServerTaskWaiter(client, inputParameters.space, {
+            maxRetries: inputParameters.maxRetries,
+            retryBackoffMs: inputParameters.retryBackoffSeconds * 1000,
+        });
         const taskIds = inputParameters.tasks.map((t) => t.serverTaskId);
         const taskLookup = new Map(inputParameters.tasks.map((t) => [t.serverTaskId, t]));
 

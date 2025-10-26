@@ -10,6 +10,8 @@ export interface InputParameters {
     timeout: number;
     showProgress: boolean;
     cancelOnTimeout: boolean;
+    maxRetries: number;
+    retryBackoffSeconds: number;
 }
 
 export function getInputParameters(logger: Logger, task: TaskWrapper): InputParameters {
@@ -51,6 +53,28 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
 
     const cancelOnTimeout = task.getBoolean("CancelOnTimeout") ?? false;
 
+    let maxRetries = 3;
+    const maxRetriesField = task.getInput("MaxRetries");
+    if (maxRetriesField) {
+        const parsed = parseInt(maxRetriesField, 10);
+        if (!isNaN(parsed)) {
+            maxRetries = parsed;
+        } else {
+            logger.warn?.(`Invalid MaxRetries value '${maxRetriesField}', using default: 3`);
+        }
+    }
+
+    let retryBackoffSeconds = 5;
+    const retryBackoffField = task.getInput("RetryBackoffSeconds");
+    if (retryBackoffField) {
+        const parsed = parseInt(retryBackoffField, 10);
+        if (!isNaN(parsed)) {
+            retryBackoffSeconds = parsed;
+        } else {
+            logger.warn?.(`Invalid RetryBackoffSeconds value '${retryBackoffField}', using default: 5`);
+        }
+    }
+
     const parameters: InputParameters = {
         space: task.getInput("Space") || "",
         step: step,
@@ -58,7 +82,9 @@ export function getInputParameters(logger: Logger, task: TaskWrapper): InputPara
         showProgress: showProgress,
         pollingInterval: pollingInterval,
         timeout: timeoutSeconds,
-        cancelOnTimeout: cancelOnTimeout
+        cancelOnTimeout: cancelOnTimeout,
+        maxRetries: maxRetries,
+        retryBackoffSeconds: retryBackoffSeconds
     };
 
     const errors: string[] = [];
