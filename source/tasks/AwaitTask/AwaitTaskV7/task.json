@@ -73,6 +73,22 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Cancel the Octopus task and mark this task as failed if the timeout is reached. (Default: false)"
+        },
+        {
+            "name": "MaxRetries",
+            "type": "int",
+            "label": "Max Retries",
+            "defaultValue": "3",
+            "required": false,
+            "helpMarkDown": "Number of times to retry failed HTTP requests due to network issues before failing. (Default: 3)"
+        },
+        {
+            "name": "RetryBackoffSeconds",
+            "type": "int",
+            "label": "Retry Backoff (seconds)",
+            "defaultValue": "5",
+            "required": false,
+            "helpMarkDown": "Initial delay between retries. Delay doubles with each retry (exponential backoff). (Default: 5s, then 10s, 20s, etc.)"
         }
     ],
     "outputVariables": [
