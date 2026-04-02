@@ -44,6 +44,9 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
     }
     logger.debug?.("Environments:" + environmentsField);
 
+    const deployAt = task.getInput("DeployAt");
+    const deployAtExpiry = task.getInput("DeployAtExpiry");
+
     const command: CreateDeploymentUntenantedCommandV1 = {
         spaceName: task.getInput("Space", true) || "",
         ProjectName: task.getInput("Project", true) || "",
@@ -51,6 +54,8 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
         EnvironmentNames: environments,
         UseGuidedFailure: task.getBoolean("UseGuidedFailure") || undefined,
         Variables: variablesMap || undefined,
+        RunAt: deployAt ? new Date(deployAt) : undefined,
+        NoRunAfter: deployAtExpiry ? new Date(deployAtExpiry) : undefined,
     };
 
     const errors: string[] = [];
