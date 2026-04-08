@@ -131,4 +131,24 @@ describe("getInputCommand", () => {
         expect(command.RunAt).toBeUndefined();
         expect(command.NoRunAfter).toBeUndefined();
     });
+
+    test("invalid DeployAt throws error", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
+        task.addVariableString("DeployAt", "notadate");
+
+        expect(() => createCommandFromInputs(logger, task)).toThrowError("DeployAt 'notadate' is not a valid ISO 8601 date-time string.");
+    });
+
+    test("invalid DeployAtExpiry throws error", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
+        task.addVariableString("DeployAtExpiry", "notadate");
+
+        expect(() => createCommandFromInputs(logger, task)).toThrowError("DeployAtExpiry 'notadate' is not a valid ISO 8601 date-time string.");
+    });
 });

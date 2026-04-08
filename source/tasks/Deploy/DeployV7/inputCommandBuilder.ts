@@ -62,6 +62,12 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
     if (command.spaceName === "") {
         errors.push("The Octopus space name is required.");
     }
+    if (deployAt && isNaN(new Date(deployAt).getTime())) {
+        errors.push(`DeployAt '${deployAt}' is not a valid ISO 8601 date-time string.`);
+    }
+    if (deployAtExpiry && isNaN(new Date(deployAtExpiry).getTime())) {
+        errors.push(`DeployAtExpiry '${deployAtExpiry}' is not a valid ISO 8601 date-time string.`);
+    }
 
     if (errors.length > 0) {
         throw new Error("Failed to successfully build parameters.\n" + errors.join("\n"));
