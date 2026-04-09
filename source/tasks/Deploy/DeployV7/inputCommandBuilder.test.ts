@@ -95,4 +95,60 @@ describe("getInputCommand", () => {
         const command = createCommandFromInputs(logger, task);
         expect(command.EnvironmentNames).toStrictEqual(["dev", "test", "prod"]);
     });
+
+    test("DeployAt populates RunAt", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
+        task.addVariableString("DeployAt", "2026-04-02T09:00:00+10:00");
+
+        const command = createCommandFromInputs(logger, task);
+        expect(command.RunAt).toStrictEqual(new Date("2026-04-02T09:00:00+10:00"));
+        expect(command.NoRunAfter).toBeUndefined();
+    });
+
+    test("DeployAtExpiry populates NoRunAfter", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
+        task.addVariableString("DeployAt", "2026-04-02T09:00:00+10:00");
+        task.addVariableString("DeployAtExpiry", "2026-04-02T17:00:00+10:00");
+
+        const command = createCommandFromInputs(logger, task);
+        expect(command.RunAt).toStrictEqual(new Date("2026-04-02T09:00:00+10:00"));
+        expect(command.NoRunAfter).toStrictEqual(new Date("2026-04-02T17:00:00+10:00"));
+    });
+
+    test("DeployAt and DeployAtExpiry absent when inputs not provided", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
+
+        const command = createCommandFromInputs(logger, task);
+        expect(command.RunAt).toBeUndefined();
+        expect(command.NoRunAfter).toBeUndefined();
+    });
+
+    test("invalid DeployAt throws error", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
+        task.addVariableString("DeployAt", "notadate");
+
+        expect(() => createCommandFromInputs(logger, task)).toThrowError("DeployAt 'notadate' is not a valid ISO 8601 date-time string.");
+    });
+
+    test("invalid DeployAtExpiry throws error", () => {
+        task.addVariableString("Space", "Default");
+        task.addVariableString("Environments", "test");
+        task.addVariableString("Project", "project 1");
+        task.addVariableString("ReleaseNumber", "1.2.3");
+        task.addVariableString("DeployAtExpiry", "notadate");
+
+        expect(() => createCommandFromInputs(logger, task)).toThrowError("DeployAtExpiry 'notadate' is not a valid ISO 8601 date-time string.");
+    });
 });

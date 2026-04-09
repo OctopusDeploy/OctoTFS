@@ -82,6 +82,24 @@
             "helpMarkDown": "Whether to use guided failure mode if errors occur during the deployment."
         },
         {
+            "name": "DeployAt",
+            "type": "string",
+            "label": "Scheduled deployment time",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Schedule the deployment to run at a specific time. Accepts an ISO 8601 date-time string.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "DeployAtExpiry",
+            "type": "string",
+            "label": "Deployment expiry time",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Cancel the deployment if it has not started by this time. Accepts an ISO 8601 date-time string.",
+            "groupName": "advanced"
+        },
+        {
             "name": "AdditionalArguments",
             "type": "string",
             "label": "Additional Arguments (deprecated)",

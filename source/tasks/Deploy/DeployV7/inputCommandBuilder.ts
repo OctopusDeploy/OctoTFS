@@ -44,6 +44,9 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
     }
     logger.debug?.("Environments:" + environmentsField);
 
+    const deployAt = task.getInput("DeployAt");
+    const deployAtExpiry = task.getInput("DeployAtExpiry");
+
     const command: CreateDeploymentUntenantedCommandV1 = {
         spaceName: task.getInput("Space", true) || "",
         ProjectName: task.getInput("Project", true) || "",
@@ -51,11 +54,19 @@ export function createCommandFromInputs(logger: Logger, task: TaskWrapper): Crea
         EnvironmentNames: environments,
         UseGuidedFailure: task.getBoolean("UseGuidedFailure") || undefined,
         Variables: variablesMap || undefined,
+        RunAt: deployAt ? new Date(deployAt) : undefined,
+        NoRunAfter: deployAtExpiry ? new Date(deployAtExpiry) : undefined,
     };
 
     const errors: string[] = [];
     if (command.spaceName === "") {
         errors.push("The Octopus space name is required.");
+    }
+    if (deployAt && isNaN(new Date(deployAt).getTime())) {
+        errors.push(`DeployAt '${deployAt}' is not a valid ISO 8601 date-time string.`);
+    }
+    if (deployAtExpiry && isNaN(new Date(deployAtExpiry).getTime())) {
+        errors.push(`DeployAtExpiry '${deployAtExpiry}' is not a valid ISO 8601 date-time string.`);
     }
 
     if (errors.length > 0) {
