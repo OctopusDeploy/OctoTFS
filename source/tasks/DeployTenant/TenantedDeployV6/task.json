@@ -87,7 +87,7 @@
             "label": "Values for prompted variables",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Variable values to pass to the the deployment, use syntax `variable: value`"
+            "helpMarkDown": "Variable values to pass to the deployment, use syntax `variable: value`"
         },
         {
             "name": "UseGuidedFailure",
