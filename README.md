@@ -75,11 +75,11 @@ To create a new release:
 
 ### How to test the extension
 
-If you're doing updates, enhancements, or bug fixes, the fastest development flow is to code locally, build, package and deploy locally. Once your changes are stable, it's a good idea to deploy to Test for further testing, and finally Production.
+If you're doing updates, enhancements, or bug fixes, the fastest development flow is to code locally, build, package and deploy to an Azure VM. Once your changes are stable, it's a good idea to deploy to Test for further testing, and finally Production.
 
-### Local
+### Azure VM
 
-It's highly recommended to set up two Virtual Machines running Windows Server. This is generally done locally, and it's best to give your VM at least 8 gigs of memory and 4 CPU cores, otherwise the TFS/ADO installation can fail or take hours.
+It's recommended to set up two Virtual Machines running Windows Server. The preferred approach is to run these in Azure (e.g. `Standard_D4s_v3` or similar with 4 vCPUs and 16 GB RAM). Running them locally is also possible, but you'll need to allocate at least 8 GB of memory and 4 CPU cores to the VM, otherwise the TFS/ADO installation can fail or take hours.
 
 1. Microsoft TFS Server 2017 Update 1 - This is the first version of TFS that supported extensions, so it's very good for regression testing.
     - Note that the `.exe` installers of older versions may fail to install due to broken dependency downloads. It's recommended to use the `.iso` downloads
