@@ -32,9 +32,9 @@ jobs:
     outputs:
       package_version: ${{ steps.build.outputs.package_version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: "20"
           cache: "npm"
@@ -45,7 +45,7 @@ jobs:
           npm ci
           npm run build -- --extensionVersion $PACKAGE_VERSION
           echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
@@ -62,9 +62,9 @@ jobs:
       matrix:
         os: [windows-2022, ubuntu-22.04, macos-14]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: "20"
           cache: "npm"
@@ -73,7 +73,7 @@ jobs:
         run: |
           npm ci
           npm run test
-      - uses: dorny/test-reporter@v1
+      - uses: dorny/test-reporter@v3
         if: success() || failure()
         name: Tests report
         with:
@@ -87,20 +87,20 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'release' || (github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]')
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: "20"
           cache: "npm"
 
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v7
         with:
           go-version: "^1.19.5"
 
@@ -121,7 +121,7 @@ jobs:
           tar -czf OctoTFS.publish.${{ needs.build.outputs.package_version }}.tar.gz ./publish.ps1 ./dist/extension-manifest*.json
 
       - name: Push Package 🐙
-        uses: OctopusDeploy/push-package-action@v3
+        uses: OctopusDeploy/push-package-action@v4
         with:
           space: "Integrations"
           packages: |
@@ -138,7 +138,7 @@ jobs:
           echo "release-note-file=$OUTPUT_FILE" >> $GITHUB_OUTPUT
 
       - name: Create a release in Octopus Deploy 🐙
-        uses: OctopusDeploy/create-release-action@v3
+        uses: OctopusDeploy/create-release-action@v4
         with:
           space: "Integrations"
           project: "Azure DevOps Extension"
